@@ -1,0 +1,56 @@
+﻿<UserControl x:Class="HypertensionControlUI.Sources.Views.Components.IllnessProbabilityChart"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             d:DesignHeight="150" d:DesignWidth="300" x:Name="Container">
+    <Grid>
+        <Border Margin="5,26,5,16">
+            <Border.Background>
+                <LinearGradientBrush>
+                    <GradientStop Color="#00FF00" Offset="0" />
+                    <GradientStop Color="#FFFFFF" Offset="{Binding CutOffValue, ElementName=Container}" />
+                    <GradientStop Color="#FF0000" Offset="1" />
+                </LinearGradientBrush>
+            </Border.Background>
+        </Border>
+
+        <Track Minimum="0" Maximum="1" Value="{Binding CutOffValue, ElementName=Container}" x:Name="LineTrack"
+               Margin="5,26,5,16">
+            <Track.Thumb>
+                <Thumb>
+                    <Thumb.Template>
+                        <ControlTemplate>
+                            <StackPanel ClipToBounds="False">
+                                <Line Y2="{Binding ActualHeight, RelativeSource={RelativeSource FindAncestor, AncestorType=Track} }"
+                                      Stroke="Black" StrokeThickness="1" StrokeDashArray="5,5"
+                                      HorizontalAlignment="Center" />
+<!--                                <TextBlock Foreground="Black"-->
+<!--                                           Text="123"-->
+<!--                                           Height="16" HorizontalAlignment="Center" />-->
+                            </StackPanel>
+                        </ControlTemplate>
+                    </Thumb.Template>
+                </Thumb>
+            </Track.Thumb>
+        </Track>
+        <Track Minimum="0" Maximum="1" Value="{Binding ThumbValue, ElementName=Container}">
+            <Track.Thumb>
+                <Thumb>
+                    <Thumb.Template>
+                        <ControlTemplate>
+                            <StackPanel>
+                                <TextBlock Foreground="Black"
+                                           Text="{Binding Value, RelativeSource={RelativeSource FindAncestor, AncestorType=Track}, StringFormat={}{0:f3}}"
+                                           Height="16" HorizontalAlignment="Center" />
+                                <Path Stroke="Black" Fill="White" Data="M0,0 L5,10 L10,0 Z"
+                                      HorizontalAlignment="Center" />
+                            </StackPanel>
+                        </ControlTemplate>
+                    </Thumb.Template>
+                </Thumb>
+            </Track.Thumb>
+        </Track>
+    </Grid>
+</UserControl>

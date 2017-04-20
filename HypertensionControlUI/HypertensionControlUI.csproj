@@ -1,0 +1,373 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{80FD0A9B-6E7C-4E61-9D18-3032C27A8EC9}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>HypertensionControlUI</RootNamespace>
+    <AssemblyName>HypertensionControlUI</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="ReachFramework" />
+    <Reference Include="SimpleInjector">
+      <HintPath>..\packages\SimpleInjector.3.1.2\lib\net45\SimpleInjector.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.SQLite.EF6, Version=1.0.105.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.SQLite.EF6.1.0.105.0\lib\net45\System.Data.SQLite.EF6.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="Migrations\201605100007255_UpdatePatientHistory.cs" />
+    <Compile Include="Migrations\201605100007255_UpdatePatientHistory.Designer.cs">
+      <DependentUpon>201605100007255_UpdatePatientHistory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201605101648132_UpdatePatientHistory1.cs" />
+    <Compile Include="Migrations\201605101648132_UpdatePatientHistory1.Designer.cs">
+      <DependentUpon>201605101648132_UpdatePatientHistory1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201605101743399_UpdatePatientHistory2.cs" />
+    <Compile Include="Migrations\201605101743399_UpdatePatientHistory2.Designer.cs">
+      <DependentUpon>201605101743399_UpdatePatientHistory2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201605102209599_UpdateGenderType.cs" />
+    <Compile Include="Migrations\201605102209599_UpdateGenderType.Designer.cs">
+      <DependentUpon>201605102209599_UpdateGenderType.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201605102254308_UpdateNotMappedData.cs" />
+    <Compile Include="Migrations\201605102254308_UpdateNotMappedData.Designer.cs">
+      <DependentUpon>201605102254308_UpdateNotMappedData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Sources\Collections\IdentityScaler.cs" />
+    <Compile Include="Sources\Collections\IScaler.cs" />
+    <Compile Include="Sources\Services\OptimalCutOffCalculator.cs" />
+    <Compile Include="Sources\Services\SqlDbInitializer.cs" />
+    <Compile Include="Sources\CompositionRoot\DbContextFactory.cs" />
+    <Compile Include="Sources\CompositionRoot\PatientClassificatorFactory.cs" />
+    <Compile Include="Sources\Models\AlcoholСonsumption.cs" />
+    <Compile Include="Sources\Models\BloodPressure.cs" />
+    <Compile Include="Sources\Models\ClassificationModel.cs" />
+    <Compile Include="Sources\Models\Clinic.cs" />
+    <Compile Include="Sources\Models\DietaryHabits.cs" />
+    <Compile Include="Sources\Models\Gene.cs" />
+    <Compile Include="Sources\Models\HypertensionAncestralAnamnesis.cs" />
+    <Compile Include="Sources\Models\JobTest.cs" />
+    <Compile Include="Sources\Models\LimitPoint.cs" />
+    <Compile Include="Sources\Models\Medicine.cs" />
+    <Compile Include="Sources\Models\ModelProperty.cs" />
+    <Compile Include="Sources\Models\ModelScaleEntry.cs" />
+    <Compile Include="Sources\Models\Patient.cs" />
+    <Compile Include="Sources\Models\PhysicalActivity.cs" />
+    <Compile Include="Sources\Collections\RangedListScaler.cs" />
+    <Compile Include="Sources\Collections\RangeEntry.cs" />
+    <Compile Include="Sources\Models\Runtime\RuntimeClassificationModel.cs" />
+    <Compile Include="Sources\Models\Runtime\RuntimeModelProperty.cs" />
+    <Compile Include="Sources\Models\SaltSensitivityTest.cs" />
+    <Compile Include="Sources\Models\Smoking.cs" />
+    <Compile Include="Sources\Services\ISettingsProvider.cs" />
+    <Compile Include="Sources\Services\PatientClassificator.cs" />
+    <Compile Include="Sources\Services\PatientPropertyProvider.cs" />
+    <Compile Include="Sources\Services\SqlDbContext.cs" />
+    <Compile Include="Sources\Utils\PatientParser.cs" />
+    <Compile Include="Sources\ViewModels\AddPatientViewModel.cs" />
+    <Compile Include="Sources\ViewModels\ClassificationTunningViewModel.cs" />
+    <Compile Include="Sources\ViewModels\IndividualPatientCardViewModel.cs" />
+    <Compile Include="Sources\ViewModels\IViewProvider.cs" />
+    <Compile Include="Sources\ViewModels\IViewResult.cs" />
+    <Compile Include="Sources\CompositionRoot\ViewProvider.cs" />
+    <Compile Include="Sources\Models\User.cs" />
+    <Compile Include="Properties\Annotations.cs" />
+    <Compile Include="Sources\Services\LoginService.cs" />
+    <Compile Include="Sources\Utils\AsyncDelegateCommand.cs" />
+    <Compile Include="Sources\Utils\DictionaryExtensions.cs" />
+    <Compile Include="Sources\ViewModels\IWindowViewModel.cs" />
+    <Compile Include="Sources\ViewModels\LoginViewModel.cs" />
+    <Compile Include="Sources\ViewModels\MainViewModel.cs" />
+    <Compile Include="Sources\ViewModels\MainWindowViewModel.cs" />
+    <Compile Include="Sources\ViewModels\PatientsViewModel.cs" />
+    <Compile Include="Sources\ViewModels\PageViewModelBase.cs" />
+    <Compile Include="Sources\ViewModels\UserViewModel.cs" />
+    <Compile Include="Sources\ViewModels\WindowViewModelBase.cs" />
+    <Compile Include="Sources\Views\Components\DocumentPaginatorWrapper.cs" />
+    <Compile Include="Sources\Views\Components\HyperlinkButton.xaml.cs">
+      <DependentUpon>HyperlinkButton.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Sources\Views\Components\IllnessProbabilityChart.xaml.cs">
+      <DependentUpon>IllnessProbabilityChart.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Sources\Views\Converters\AlcoholConsumptionConverter.cs" />
+    <Compile Include="Sources\Views\Converters\BirthDateToYears.cs" />
+    <Compile Include="Sources\Views\Converters\BoolConverters.cs" />
+    <Compile Include="Sources\Views\Converters\EnumBooleanConverter.cs" />
+    <Compile Include="Sources\Views\Converters\EqualityConverter.cs" />
+    <Compile Include="Sources\Views\Converters\HypertensionAncestralAnamnesisConverter.cs" />
+    <Compile Include="Sources\Views\Converters\NotNullToVisibilityConverter.cs" />
+    <Compile Include="Sources\Views\Converters\PhysicalActivityConverter.cs" />
+    <Compile Include="Sources\Views\Pages\AddPatientView.xaml.cs">
+      <DependentUpon>AddPatientView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Sources\Views\Converters\ImtConverter.cs" />
+    <Compile Include="Sources\Views\MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Sources\Views\Pages\ClassificationTunningView.xaml.cs">
+      <DependentUpon>ClassificationTunningView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Sources\Views\Pages\IndividualPatientCardView.xaml.cs">
+      <DependentUpon>IndividualPatientCardView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Sources\Views\Pages\QuestionnaireBasicPatientInfo.xaml.cs">
+      <DependentUpon>QuestionnaireBasicPatientInfo.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Sources\Views\Pages\QuestionnaireDietaryHabitsTest.xaml.cs">
+      <DependentUpon>QuestionnaireDietaryHabitsTest.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Sources\Views\Pages\QuestionnaireHealthInformation.xaml.cs">
+      <DependentUpon>QuestionnaireHealthInformation.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Sources\Views\Pages\PrepareGenerateRealReport.xaml.cs">
+      <DependentUpon>PrepareGenerateRealReport.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Sources\Views\Pages\QuestionnaireLifeStyle.xaml.cs">
+      <DependentUpon>QuestionnaireLifeStyle.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Sources\Views\Pages\QuestionnairePhysicalParameters.xaml.cs">
+      <DependentUpon>QuestionnairePhysicalParameters.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Sources\Views\Pages\QuestionnaireTests.xaml.cs">
+      <DependentUpon>QuestionnaireTests.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Sources\Views\Pages\UserView.xaml.cs">
+      <DependentUpon>UserView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Sources\Views\PageViewBase.cs" />
+    <Compile Include="Sources\Views\Pages\MainView.xaml.cs">
+      <DependentUpon>MainView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Sources\Views\Pages\PatientsView.xaml.cs">
+      <DependentUpon>PatientsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Sources\Views\WindowViewBase.cs" />
+    <Page Include="Sources\Views\Components\HyperlinkButton.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Sources\Views\Components\IllnessProbabilityChart.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Sources\Views\Pages\AddPatientView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Sources\Views\Pages\ClassificationTunningView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Sources\Views\Pages\IndividualPatientCardView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Sources\Views\Pages\QuestionnaireBasicPatientInfo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Sources\Views\Pages\QuestionnaireDietaryHabitsTest.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Sources\Views\Pages\QuestionnaireHealthInformation.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Sources\Views\Pages\LoginView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Sources\Views\Pages\LoginView.xaml.cs">
+      <DependentUpon>LoginView.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Page Include="Sources\Views\Pages\MainView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Sources\Views\MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Sources\Views\Pages\PrepareGenerateRealReport.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Sources\Views\Pages\QuestionnaireLifeStyle.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Sources\Views\Pages\QuestionnairePhysicalParameters.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Sources\Views\Pages\PatientsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Sources\Views\Pages\QuestionnaireTests.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Sources\Views\Pages\UserView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Migrations\201605100007255_UpdatePatientHistory.resx">
+      <DependentUpon>201605100007255_UpdatePatientHistory.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201605101648132_UpdatePatientHistory1.resx">
+      <DependentUpon>201605101648132_UpdatePatientHistory1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201605101743399_UpdatePatientHistory2.resx">
+      <DependentUpon>201605101743399_UpdatePatientHistory2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201605102209599_UpdateGenderType.resx">
+      <DependentUpon>201605102209599_UpdateGenderType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201605102254308_UpdateNotMappedData.resx">
+      <DependentUpon>201605102254308_UpdateNotMappedData.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\user_man_kid.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.5">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.5 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\hypertensiondb.mdf" />
+    <Content Include="Resources\hypertensiondb_log.ldf">
+      <DependentUpon>hypertensiondb.mdf</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
