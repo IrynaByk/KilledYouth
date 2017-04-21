@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Windows.Documents;
 using HypertensionControlUI.Models;
 
@@ -10,7 +11,7 @@ namespace HypertensionControlUI.Utils
         public static Patient ReadPatientFromDictionary(IDictionary<string, string> patientProperties)
         {
             var patient = new Patient();
-            PatientVisitData patientVisitData = new PatientVisitData();
+            PatientVisitData patientVisitData = new PatientVisitData {Patient = patient};
             patient.PatientVisitDataHistory.Add(patientVisitData);
 
             var nameParts = patientProperties["name"].Split(' ');
@@ -34,9 +35,14 @@ namespace HypertensionControlUI.Utils
                     Value = Convert.ToInt32(patientProperties["AGTR2"])
                 });
             }
-
-            patient.MaleHeredity = Convert.ToBoolean(patientProperties["MaleHeredity"]);
-            patient.FemaleHeredity = Convert.ToBoolean(patientProperties["FemaleHeredity"]);
+            if (!String.IsNullOrEmpty(patientProperties["MaleHeredity"]))
+            {
+                patient.MaleHeredity = Convert.ToBoolean(Convert.ToInt32(patientProperties["MaleHeredity"]));
+            }
+            if (!String.IsNullOrEmpty(patientProperties["FemaleHeredity"]))
+            {
+                patient.FemaleHeredity = Convert.ToBoolean(Convert.ToInt32(patientProperties["FemaleHeredity"]));
+            }
 
             if (patientProperties["smoke"].Contains("1"))
             {
@@ -51,8 +57,16 @@ namespace HypertensionControlUI.Utils
                 patientVisitData.Smoking.Type = SmokingType.Now;
             }
 
-            patientVisitData.WaistCircumference = Convert.ToDouble(patientProperties["WaistCircumference"]);
-            patientVisitData.TemporaryBMI = Convert.ToInt32(patientProperties["BMI"]);
+            var ruCulture = new CultureInfo("RU-ru");
+
+            if (!String.IsNullOrEmpty(patientProperties["WaistCircumference"]))
+            {
+                patientVisitData.WaistCircumference = Convert.ToDouble(patientProperties["WaistCircumference"], ruCulture);
+            }
+            if (!String.IsNullOrEmpty(patientProperties["BMI"]))
+            {
+                patientVisitData.TemporaryBMI = Convert.ToDouble(patientProperties["BMI"], ruCulture);
+            }
             if (patientProperties["HStage"].Contains("1"))
             {
                 patientVisitData.HypertensionStage = HypertensionStage.Stage1;

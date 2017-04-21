@@ -7,6 +7,17 @@ namespace HypertensionControlUI.Models
 {
     public class Patient
     {
+        #region Initialization
+
+        public Patient()
+        {
+            PatientVisitDataHistory = new List<PatientVisitData>();
+            Genes = new List<Gene>();
+            Medicine = new List<Medicine>();
+        }
+
+        #endregion
+
         #region Auto-properties
 
         //        [DatabaseGenerated( DatabaseGeneratedOption.Identity )]
@@ -14,7 +25,15 @@ namespace HypertensionControlUI.Models
         public string Name { get; set; }
         public string MiddleName { get; set; }
         public string Surname { get; set; }
-        public DateTime BirthDate { get; set; }
+
+        [NotMapped]
+        public DateTime BirthDate
+        {
+            get { return new DateTime(BirthDateTicks); }
+            set { BirthDateTicks = value.Ticks; }
+        }
+
+        public long BirthDateTicks { get; set; }
         public string BirthPlace { get; set; }
         public GenderType Gender { get; set; }
         public string Nationality { get; set; }
@@ -37,7 +56,6 @@ namespace HypertensionControlUI.Models
 
         #endregion
 
-
         #region Properties
 
         [NotMapped]
@@ -47,45 +65,31 @@ namespace HypertensionControlUI.Models
         }
 
         [NotMapped]
-
         public int? AGT_AGTR2
         {
             get
             {
                 int? agt = null;
                 int? agtr2 = null;
-                foreach ( var gene in Genes )
+                foreach (var gene in Genes)
                 {
-                    if ( gene.Name.Equals( "AGT" ) )
+                    if (gene.Name.Equals("AGT"))
                         agt = gene.Value;
-                    if ( gene.Name.Equals( "AGTR2" ) )
+                    if (gene.Name.Equals("AGTR2"))
                         agtr2 = gene.Value;
                 }
-                if ( agt == null || agtr2 == null )
+                if (agt == null || agtr2 == null)
                     return null;
-                if ( agtr2 == 3 && agt >= 2 )
+                if (agtr2 == 3 && agt >= 2)
                     return 1;
                 return 0;
             }
         }
 
         [NotMapped]
-
         public HypertensionStage Stage
         {
             get { return PatientVisitDataHistory.OrderByDescending(d => d.VisitData).First().HypertensionStage; }
-        }
-
-        #endregion
-
-
-        #region Initialization
-
-        public Patient()
-        {
-            PatientVisitDataHistory = new List<PatientVisitData>();
-            Genes = new List<Gene>();
-            Medicine = new List<Medicine>();
         }
 
         #endregion
@@ -96,6 +100,7 @@ namespace HypertensionControlUI.Models
         Female,
         Male
     }
+
     public enum HypertensionStage
     {
         Healthy,
@@ -106,6 +111,15 @@ namespace HypertensionControlUI.Models
 
     public class PatientVisitData
     {
+        public PatientVisitData()
+        {
+            VisitData = DateTime.Today;
+            Smoking = new Smoking();
+            DietaryHabits = new DietaryHabits {TesDate = DateTime.Today};
+            BloodPressure = new BloodPressure();
+            SaltSensitivity = new SaltSensitivityTest {TestDate = DateTime.Today};
+        }
+
         public int Id { get; set; }
         public DateTime VisitData { get; set; }
         public AlcoholСonsumption AlcoholСonsumption { get; set; }
@@ -123,30 +137,23 @@ namespace HypertensionControlUI.Models
         public HypertensionStage HypertensionStage { get; set; }
         public virtual Patient Patient { get; set; }
 
-        public PatientVisitData()
-        {
-            VisitData = DateTime.Today;
-            Smoking = new Smoking();
-            DietaryHabits = new DietaryHabits { TesDate = DateTime.Today };
-            BloodPressure = new BloodPressure();
-            SaltSensitivity = new SaltSensitivityTest { TestDate = DateTime.Today };
-        }
         [NotMapped]
         public double BMI
         {
             get
             {
                 if (Weight != 0 && Height != 0)
-                    return (Weight / Height / Height) * 10000;
-                else 
-                    return TemporaryBMI;
+                    return Weight/Height/Height*10000;
+                return TemporaryBMI;
             }
         }
+
         [NotMapped]
         public bool ObesityBMI
         {
             get { return BMI >= 30; }
         }
+
         [NotMapped]
         public bool ObesityWaistCircumference
         {

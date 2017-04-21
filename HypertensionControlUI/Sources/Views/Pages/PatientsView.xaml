@@ -38,6 +38,7 @@
         <ListBox x:Name="PatientsList"
                  Grid.Column="0"
                  Grid.Row="2"
+                 MaxHeight="300"
                  ItemsSource="{Binding Patients}"
                  SelectedItem="{Binding SelectedPatient, Mode=TwoWay}">
             <ListBox.ItemTemplate>
