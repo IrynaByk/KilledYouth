@@ -7,6 +7,14 @@ namespace HypertensionControlUI.Models
     public class SaltSensitivityTest
     {
         public double? SaltSensitivity { get; set; }
-        public DateTime? TestDate { get; set; }
+
+        [NotMapped]
+        public DateTime? TestDate
+        {
+            get { return  TestDateTicks != null ? new DateTime((long) TestDateTicks) : (DateTime?)null; }
+            set { TestDateTicks = value?.Ticks; }
+        }
+
+        public long? TestDateTicks { get; set; }
     }
 }

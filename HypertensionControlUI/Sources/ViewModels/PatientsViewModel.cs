@@ -71,7 +71,7 @@ namespace HypertensionControlUI.ViewModels
                 m.ActualPatientVisitData =
                     SelectedPatient
                      .PatientVisitDataHistory
-                     .OrderByDescending( pvd => pvd.VisitData )
+                     .OrderByDescending( pvd => pvd.VisitDate )
                      .First();
             } ) );
             ShowPatientCommand = new AsyncDelegateCommand(o => _viewProvider.NavigateToPage<IndividualPatientCardViewModel>(m =>
@@ -80,7 +80,7 @@ namespace HypertensionControlUI.ViewModels
                 m.PatientVisitData =
                     SelectedPatient
                      .PatientVisitDataHistory
-                     .OrderByDescending( pvd => pvd.VisitData )
+                     .OrderByDescending( pvd => pvd.VisitDate )
                      .First();
             } ) );
             

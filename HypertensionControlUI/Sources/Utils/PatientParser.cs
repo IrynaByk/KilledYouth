@@ -12,11 +12,52 @@ namespace HypertensionControlUI.Utils
         {
             var patient = new Patient();
             PatientVisitData patientVisitData = new PatientVisitData {Patient = patient};
+
+            var ruCulture = new CultureInfo("RU-ru");
+
             patient.PatientVisitDataHistory.Add(patientVisitData);
 
+            if (!String.IsNullOrEmpty(patientProperties["HDurability"]))
+            {
+                double duration = 0;
+                try
+                {
+                    duration = Convert.ToDouble(patientProperties["HDurability"], ruCulture);
+                }
+                catch (Exception e)
+                {
+                   
+                }
+                patient.TreatmentDuration = duration;
+            }
+            else
+            {
+                patient.TreatmentDuration = 0;
+            }
+            if (!String.IsNullOrEmpty(patientProperties["Hheredity"]))
+            {
+                var hHeredity = Convert.ToInt32(patientProperties["Hheredity"]);
+                if (hHeredity == 3)
+                {
+                    patient.HypertensionAncestralAnamnesis = HypertensionAncestralAnamnesis.BothMotherAndFather;
+                }
+                else if (hHeredity == 2)
+                {
+                    patient.HypertensionAncestralAnamnesis = HypertensionAncestralAnamnesis.Father;
+                }
+                else if (hHeredity == 1)
+                {
+                    patient.HypertensionAncestralAnamnesis = HypertensionAncestralAnamnesis.Mother;
+                }
+                else
+                {
+                    patient.HypertensionAncestralAnamnesis = HypertensionAncestralAnamnesis.None;
+                }
+
+            }
             var nameParts = patientProperties["name"].Split(' ');
-            patient.Name = nameParts[0];
-            patient.Surname = nameParts[1];
+            patient.Name = nameParts[1];
+            patient.Surname = nameParts[0];
             patient.MiddleName = nameParts[2];
 
             patient.BirthDate = DateTime.Today - TimeSpan.FromDays(Convert.ToInt32(patientProperties["age"])*365);
@@ -57,7 +98,7 @@ namespace HypertensionControlUI.Utils
                 patientVisitData.Smoking.Type = SmokingType.Now;
             }
 
-            var ruCulture = new CultureInfo("RU-ru");
+            
 
             if (!String.IsNullOrEmpty(patientProperties["WaistCircumference"]))
             {

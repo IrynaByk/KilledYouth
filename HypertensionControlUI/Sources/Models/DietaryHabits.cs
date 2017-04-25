@@ -27,6 +27,13 @@ namespace HypertensionControlUI.Models
         public DietaryFrequency Sweets { get; set; }
         public DietaryFrequency ColdDrinks { get; set; }
         public DietaryFrequency Eggs { get; set; }
-        public DateTime TesDate { get; set; }
+        [NotMapped]
+        public DateTime TesDate
+        {
+            get { return  new DateTime( TestDateTicks); }
+            set { TestDateTicks = value.Ticks; }
+        }
+
+        public long TestDateTicks { get; set; }
     }
 }

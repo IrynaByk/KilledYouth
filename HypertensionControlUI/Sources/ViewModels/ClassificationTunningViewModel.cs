@@ -181,8 +181,8 @@ namespace HypertensionControlUI.ViewModels
         {
             var patientClassificator = PatientClassificatorFactory.GetClassificator(SelectedClassificationModel);
 
-            Result = patientClassificator.Classify(Patient,Patient.PatientVisitDataHistory.OrderByDescending(pvd => pvd.VisitData).First());
-            PossibleResult = patientClassificator.Classify(PossiblePatient,PossiblePatient.PatientVisitDataHistory.OrderByDescending(pvd => pvd.VisitData).First());
+            Result = patientClassificator.Classify(Patient,Patient.PatientVisitDataHistory.OrderByDescending(pvd => pvd.VisitDate).First());
+            PossibleResult = patientClassificator.Classify(PossiblePatient,PossiblePatient.PatientVisitDataHistory.OrderByDescending(pvd => pvd.VisitDate).First());
         }
 
         private bool IsApplicable( Patient patient, PatientVisitData visitData, ClassificationModel classificationModel )

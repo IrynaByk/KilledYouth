@@ -89,7 +89,7 @@ namespace HypertensionControlUI.Models
         [NotMapped]
         public HypertensionStage Stage
         {
-            get { return PatientVisitDataHistory.OrderByDescending(d => d.VisitData).First().HypertensionStage; }
+            get { return PatientVisitDataHistory.OrderByDescending(d => d.VisitDate).First().HypertensionStage; }
         }
 
         #endregion
@@ -113,7 +113,7 @@ namespace HypertensionControlUI.Models
     {
         public PatientVisitData()
         {
-            VisitData = DateTime.Today;
+            VisitDate = DateTime.Today;
             Smoking = new Smoking();
             DietaryHabits = new DietaryHabits {TesDate = DateTime.Today};
             BloodPressure = new BloodPressure();
@@ -121,7 +121,13 @@ namespace HypertensionControlUI.Models
         }
 
         public int Id { get; set; }
-        public DateTime VisitData { get; set; }
+        [NotMapped]
+        public DateTime VisitDate 
+        {
+            get { return new DateTime(VisitDateTicks); }
+            set { VisitDateTicks = value.Ticks; }
+        }
+        public long VisitDateTicks { get; set; }
         public AlcoholСonsumption AlcoholСonsumption { get; set; }
         public int StressPointsPSM_25 { get; set; }
         public int DepressionPointsCES_D { get; set; }

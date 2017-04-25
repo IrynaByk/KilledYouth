@@ -26,7 +26,7 @@ namespace HypertensionControlUI.Services
                 patients.Select(patient => new
                                            {
                                                Patient = patient,
-                                               Score = classificator.Classify(patient, patient.PatientVisitDataHistory.OrderByDescending(d => d.VisitData).First())
+                                               Score = classificator.Classify(patient, patient.PatientVisitDataHistory.OrderByDescending(d => d.VisitDate).First())
                                            })
                         .GroupBy(patientScore => patientScore.Score)
                         .OrderBy(scoreGroup => scoreGroup.Key)

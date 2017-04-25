@@ -72,7 +72,7 @@
             <CheckBox IsChecked="{Binding Patient.MaleHeredity}" Style="{StaticResource InputStyle}">
                 у мужчин младше 55 лет
             </CheckBox>
-            <CheckBox IsChecked="{Binding Patient.FemaleHeredity, Converter={x:Static converters:BoolConverters.Not}, Mode=OneWay}"
+            <CheckBox IsChecked="{Binding Patient.FemaleHeredity}"
                          Style="{StaticResource InputStyle}">
                 у женщин младше 65 лет
             </CheckBox>
