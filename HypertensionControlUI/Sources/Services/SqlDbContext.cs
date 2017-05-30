@@ -235,6 +235,7 @@ namespace HypertensionControlUI.Services
                                  LimitPoints = new List<LimitPoint> {new LimitPoint {Point = 0.5}},
                                  Name = "TestModel",
                                  FreeCoefficient = -1.193050,
+                                 OptimalCutOff = 0.654,
                                  Properties = new List<ModelProperty>
                                               {
                                                   new ModelProperty
@@ -283,6 +284,7 @@ namespace HypertensionControlUI.Services
                                  LimitPoints = new List<LimitPoint> {new LimitPoint {Point = 0.5}},
                                  Name = "TestModelNoGene",
                                  FreeCoefficient = -0.819416,
+                                 OptimalCutOff = 0.654,
                                  Properties = new List<ModelProperty>
                                               {
                                                   new ModelProperty
@@ -322,12 +324,12 @@ namespace HypertensionControlUI.Services
                              }
                          };
 
-            var optimalCutOffCalculator = new OptimalCutOffCalculator(new PatientPropertyProvider());
-
-            foreach (var model in models)
-            {
-                model.OptimalCutOff = optimalCutOffCalculator.CalculateOptimalCutOff(model, patients);
-            }
+//            var optimalCutOffCalculator = new OptimalCutOffCalculator(new PatientPropertyProvider());
+//
+//            foreach (var model in models)
+//            {
+//                model.OptimalCutOff = optimalCutOffCalculator.CalculateOptimalCutOff(model, patients);
+//            }
 
             ClassificationModels.AddRange(models);
             Patients.AddRange(patients);

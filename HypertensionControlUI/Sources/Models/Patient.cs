@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Windows.Media.Animation;
 
 namespace HypertensionControlUI.Models
 {
@@ -139,36 +140,42 @@ namespace HypertensionControlUI.Models
         public Smoking Smoking { get; set; }
         public DietaryHabits DietaryHabits { get; set; }
         public BloodPressure BloodPressure { get; set; }
-        public PhysicalActivity PhysicalActivity { get; set; }
+        public PhysicalActivity? PhysicalActivity { get; set; }
         public HypertensionStage HypertensionStage { get; set; }
         public virtual Patient Patient { get; set; }
 
         [NotMapped]
-        public double BMI
+        public double? BMI
         {
             get
             {
-                if (Weight != 0 && Height != 0)
+               if (Weight != 0 && Height != 0)
                     return Weight/Height/Height*10000;
+               if (TemporaryBMI > 0)
                 return TemporaryBMI;
+                return null;
             }
         }
 
         [NotMapped]
-        public bool ObesityBMI
+        public bool? ObesityBMI
         {
-            get { return BMI >= 30; }
+            get { return (BMI != null) ? (bool?)(BMI >= 30) : null; }
         }
 
         [NotMapped]
-        public bool ObesityWaistCircumference
+        public bool? ObesityWaistCircumference
         {
             get
             {
-                if (Patient.Gender == 0)
-                    return WaistCircumference > 88;
+                if (WaistCircumference > 0)
+                {
+                    if (Patient.Gender == 0)
+                        return WaistCircumference > 88;
 
-                return WaistCircumference > 102;
+                    return WaistCircumference > 102;
+                }
+                return null;
             }
         }
     }

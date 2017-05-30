@@ -128,6 +128,32 @@ namespace HypertensionControlUI.Utils
                 patientVisitData.HypertensionStage = HypertensionStage.Healthy;
 
             }
+
+            if (!String.IsNullOrEmpty(patientProperties["phiz"]))
+            {
+                var phiz = Convert.ToInt32(patientProperties["phiz"]);
+                if (phiz == 4)
+                {
+                    patientVisitData.PhysicalActivity = PhysicalActivity.MoreThenTreeTimesPerWeek;
+                }
+                else if (phiz == 3)
+                {
+                    patientVisitData.PhysicalActivity = PhysicalActivity.FromOneToThreeTimesPerWeek;
+                }
+                else if (phiz == 2)
+                {
+                    patientVisitData.PhysicalActivity = PhysicalActivity.OncePerWeekOrLess;
+                }
+                else
+                {
+                    patientVisitData.PhysicalActivity = PhysicalActivity.Never;
+                }
+
+            }
+            else
+            {
+                
+            }
             return patient;
         }
     }

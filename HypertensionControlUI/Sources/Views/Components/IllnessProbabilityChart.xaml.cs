@@ -25,8 +25,8 @@ namespace HypertensionControlUI.Sources.Views.Components
 
         public double CutOffValue
         {
-            get { return (double) GetValue( CutOffValueProperty ); }
-            set { SetValue( CutOffValueProperty, value ); }
+            get => (double) GetValue( CutOffValueProperty );
+            set => SetValue( CutOffValueProperty, value );
         }
 
         public static readonly DependencyProperty ThumbValueProperty = DependencyProperty.Register(
@@ -34,8 +34,8 @@ namespace HypertensionControlUI.Sources.Views.Components
 
         public double ThumbValue
         {
-            get { return (double) GetValue( ThumbValueProperty ); }
-            set { SetValue( ThumbValueProperty, value ); }
+            get => (double) GetValue( ThumbValueProperty );
+            set => SetValue( ThumbValueProperty, value );
         }
 
         public IllnessProbabilityChart()

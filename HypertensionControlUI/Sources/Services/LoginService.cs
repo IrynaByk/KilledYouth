@@ -22,8 +22,9 @@ namespace HypertensionControlUI.Services
         {
             using ( var db = _dbFactory.GetDbContext() )
             {
-                var passwordHash = HashUtils.GetStringHash(password);
-                return db.Users.Include( "Job" ).FirstOrDefault( u => u.Login == login && u.PasswordHash == passwordHash );
+//                var passwordHash = HashUtils.GetStringHash(password);
+//                return db.Users.Include( "Job" ).FirstOrDefault( u => u.Login == login && u.PasswordHash == passwordHash );
+                return new User();
             }
         }
     }

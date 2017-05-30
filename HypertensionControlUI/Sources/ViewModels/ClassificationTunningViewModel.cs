@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Windows.Input;
+using AutoMapper;
 using HypertensionControlUI.CompositionRoot;
 using HypertensionControlUI.Models;
 using HypertensionControlUI.Services;
@@ -30,8 +31,9 @@ namespace HypertensionControlUI.ViewModels
         public List<ClassificationModel> AvailableClassificationModels { get; set; }
         public PatientPropertyProvider PatientPropertyProvider { get; set; }
         public PatientClassificatorFactory PatientClassificatorFactory { get; set; }
-        public PatientClassificator PatientClassificator { get; set; }
+     //   public PatientClassificator PatientClassificator { get; set; }
         public ICommand ClassifyPatientCommand { get; private set; }
+        public ICommand ClassifyPossiblePatientCommand { get; private set; }
         public Patient PossiblePatient { get; set; }
 
         #endregion
@@ -59,45 +61,46 @@ namespace HypertensionControlUI.ViewModels
                 if ( Equals( value, _selectedClassificationModel ) )
                     return;
                 _selectedClassificationModel = value;
+
+                PossiblePatient = Mapper.Map<Patient>(Patient);
                 PossibleData = new List<PossibleData>
                 {
-                    new PossibleData { Key = "Возраст", Value1 = Patient.Age, Value2 = Patient.Age + 1 },
+                    new PossibleData
+                    {
+                        Key = "Возраст",
+                        Value1 = PatientPropertyProvider.GetPropertyValue( "Age", PossiblePatient, 
+                            PossiblePatient.PatientVisitDataHistory.OrderByDescending(d => d.VisitDate).First() ),
+                        Value2 = PatientPropertyProvider.GetPropertyValue( "Age", PossiblePatient,
+                            PossiblePatient.PatientVisitDataHistory.OrderByDescending(d => d.VisitDate).First() ),
+
+                    },
                     new PossibleData
                     {
                         Key = "Объем талии",
-                        Value1 = PatientVisitData.WaistCircumference,
-                        Value2 = PatientVisitData.WaistCircumference - 34
+                        Value1 = PatientPropertyProvider.GetPropertyValue( "{PatientVisitData}.WaistCircumference", PossiblePatient,
+                            PossiblePatient.PatientVisitDataHistory.OrderByDescending(d => d.VisitDate).First() ),
+                        Value2 =  PatientPropertyProvider.GetPropertyValue( "{PatientVisitData}.WaistCircumference", PossiblePatient,
+                            PossiblePatient.PatientVisitDataHistory.OrderByDescending(d => d.VisitDate).First() )
                     },
                     new PossibleData
                     {
                         Key = "Вес",
-                        Value1 = PatientVisitData.Weight,
-                        Value2 = PatientVisitData.Weight - 35
+                        Value1 =  PatientPropertyProvider.GetPropertyValue( "{PatientVisitData}.Weight", PossiblePatient,
+                            PossiblePatient.PatientVisitDataHistory.OrderByDescending(d => d.VisitDate).First() ),
+                        Value2 = PatientPropertyProvider.GetPropertyValue( "{PatientVisitData}.Weight", PossiblePatient,
+                            PossiblePatient.PatientVisitDataHistory.OrderByDescending(d => d.VisitDate).First() )
                     },
-                    new PossibleData { Key = "Физ активность", Value1 = 2, Value2 = 3 }
+                    new PossibleData { Key = "Физ активность",
+                        Value1 =  PatientPropertyProvider.GetPropertyValue( "{PatientVisitData}.PhysicalActivity", PossiblePatient,
+                                             PossiblePatient.PatientVisitDataHistory.OrderByDescending(d => d.VisitDate).First() ),
+                        Value2 =  PatientPropertyProvider.GetPropertyValue( "{PatientVisitData}.PhysicalActivity", PossiblePatient,
+                                             PossiblePatient.PatientVisitDataHistory.OrderByDescending(d => d.VisitDate).First() ) }
                 };
-                PossiblePatient = new Patient
-                {
-                    BirthDate = new DateTime(1977, 11, 11),
-                    Gender = GenderType.Male,
-                    Genes =
-                    {
-                        new Gene { Name = "AGT", Value = 2 },
-                        new Gene { Name = "AGTR2", Value = 3 }
-                    }
-                };
-                var pvd = new PatientVisitData
-                {
-                    WaistCircumference = 90,
-                    Height = 182,
-                    Weight = 85,
-                    PhysicalActivity = PhysicalActivity.FromOneToThreeTimesPerWeek,
-                    Patient = PossiblePatient
-                };
-                PossiblePatient.PatientVisitDataHistory.Add(pvd);
+
                 OnPropertyChanged();
             }
         }
+        
 
         public double Result
         {
@@ -170,6 +173,7 @@ namespace HypertensionControlUI.ViewModels
             _dbContextFactory = dbContextFactory;
             PossibleData = new List<PossibleData>();
             ClassifyPatientCommand = new AsyncDelegateCommand( ClassifyPatientCommandHandler );
+            ClassifyPossiblePatientCommand = new AsyncDelegateCommand( ClassifyPossiblePatientCommandHandler );
         }
 
         #endregion
@@ -177,22 +181,19 @@ namespace HypertensionControlUI.ViewModels
 
         #region Non-public methods
 
-        private void ClassifyPatientCommandHandler(object obj)
+        private void ClassifyPatientCommandHandler(object obj )
         {
             var patientClassificator = PatientClassificatorFactory.GetClassificator(SelectedClassificationModel);
-
-            Result = patientClassificator.Classify(Patient,Patient.PatientVisitDataHistory.OrderByDescending(pvd => pvd.VisitDate).First());
-            PossibleResult = patientClassificator.Classify(PossiblePatient,PossiblePatient.PatientVisitDataHistory.OrderByDescending(pvd => pvd.VisitDate).First());
+            Result = patientClassificator.Classify(Patient, Patient.PatientVisitDataHistory.OrderByDescending(pvd => pvd.VisitDate).First());
+           
         }
-
+        private void ClassifyPossiblePatientCommandHandler(object obj)
+        {
+            var patientClassificator = PatientClassificatorFactory.GetClassificator(SelectedClassificationModel);
+            PossibleResult = patientClassificator.Classify(PossiblePatient, PossiblePatient.PatientVisitDataHistory.OrderByDescending(pvd => pvd.VisitDate).First());
+        }
         private bool IsApplicable( Patient patient, PatientVisitData visitData, ClassificationModel classificationModel )
         {
-            var temp = classificationModel
-                .Properties
-                .All( p => PatientPropertyProvider.GetPropertyValue( p.Name, patient, visitData ) != null );
-
-            var name = classificationModel.Properties.FirstOrDefault( p => PatientPropertyProvider.GetPropertyValue( p.Name, patient, visitData ) == null );
-
             return classificationModel
                 .Properties
                 .All( p => PatientPropertyProvider.GetPropertyValue( p.Name, patient, visitData ) != null );
@@ -201,13 +202,24 @@ namespace HypertensionControlUI.ViewModels
         #endregion
     }
 
-    public class PossibleData
+    public class PossibleData : ViewModelBase
     {
+        private object _value2;
         #region Auto-properties
-
+        private Patient _patient;
+        private string _property;
         public string Key { get; set; }
-        public double Value1 { get; set; }
-        public double Value2 { get; set; }
+        public object Value1 { get; set; }
+
+        public object Value2
+        {
+            get { return _value2; }
+            set
+            {
+                _value2 = value;
+                
+            }
+        }
 
         #endregion
     }

@@ -8,6 +8,7 @@ namespace HypertensionControlUI.Models
 
         public int Id { get; set; }
         public string Name { get; set; }
+        public string Description { get; set; }
         public virtual ICollection<LimitPoint> LimitPoints { get; set; }
         public double FreeCoefficient { get; set; }
         public virtual ICollection<ModelProperty> Properties { get; set; }

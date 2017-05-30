@@ -12,7 +12,8 @@
       d:DesignHeight="300" d:DesignWidth="640"
       d:DataContext="{d:DesignInstance d:Type=viewModels:AddPatientViewModel, 
         IsDesignTimeCreatable=False }"
-      Title="QuestionnaireHealthInformation">
+      Title="QuestionnaireHealthInformation"
+      Background="White">
 
     <Grid>
         <Grid.Resources>
@@ -94,40 +95,41 @@
         <TextBox Grid.Row="7" Grid.Column="1" Style="{StaticResource InputStyle}"
                    Visibility="{Binding HasTreatment, Converter={x:Static converters:BoolConverters.BoolToVisibility}}"
                    Text="{Binding TreatmentDuration}" />
-        <ListView Grid.Row="8" Grid.ColumnSpan="2"
+        <StackPanel Grid.Row="8" Grid.ColumnSpan="2">
+                        <FrameworkElement.Visibility>
+                            <Binding Path="HasTreatment" Converter="{x:Static converters:BoolConverters.BoolToVisibility}" />
+                        </FrameworkElement.Visibility>
+
+            <Button Command="{Binding AddMedicineCommand}" Content="Добавить препарат" HorizontalAlignment="Right" Margin="6" Padding="2"></Button>
+            <ListView 
                   MinHeight="32"
-                  Visibility="{Binding HasTreatment, Converter={x:Static converters:BoolConverters.BoolToVisibility}}"
                   ItemsSource="{Binding Medicines}"
-                  HorizontalContentAlignment="Stretch">
-            <ListView.ItemTemplate>
-                <DataTemplate DataType="{x:Type models:Medicine}">
-                    <Border Background="#EEEEEE" BorderBrush="DarkGray" BorderThickness="1">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="2*"></ColumnDefinition>
-                                <ColumnDefinition Width="*"></ColumnDefinition>
-                                <ColumnDefinition Width="2*"></ColumnDefinition>
-                                <ColumnDefinition Width="*"></ColumnDefinition>
-                                <ColumnDefinition Width="80"></ColumnDefinition>
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Style="{StaticResource LabelStyle}">Наименование препарата:</TextBlock>
-                            <TextBox Grid.Column="1" Style="{StaticResource InputStyle}" Text="{Binding Name}" />
-                            <TextBlock Grid.Column="2" Style="{StaticResource LabelStyle}">Дозировка:</TextBlock>
-                            <TextBox Grid.Column="3" Style="{StaticResource InputStyle}" Text="{Binding Dose}" />
-                            <Button Grid.Column="4" Margin="3" 
+                  HorizontalContentAlignment="Stretch" SelectionChanged="ListView_SelectionChanged">
+                <ListView.ItemTemplate>
+                    <DataTemplate DataType="{x:Type models:Medicine}">
+                        <Border Background="#EEEEEE" BorderBrush="DarkGray" BorderThickness="1">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*"></ColumnDefinition>
+                                    <ColumnDefinition Width="*"></ColumnDefinition>
+                                    <ColumnDefinition Width="2*"></ColumnDefinition>
+                                    <ColumnDefinition Width="*"></ColumnDefinition>
+                                    <ColumnDefinition Width="80"></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Style="{StaticResource LabelStyle}">Наименование препарата:</TextBlock>
+                                <TextBox Grid.Column="1" Style="{StaticResource InputStyle}" Text="{Binding Name}" />
+                                <TextBlock Grid.Column="2" Style="{StaticResource LabelStyle}">Дозировка:</TextBlock>
+                                <TextBox Grid.Column="3" Style="{StaticResource InputStyle}" Text="{Binding Dose}" />
+                                <Button Grid.Column="4" Margin="3" 
                                     Command="{Binding Path=DataContext.DeleteMedicineCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" 
                                     CommandParameter="{Binding}"
                                     Content="Удалить" />
-                        </Grid>
-                    </Border>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
-        <Button Grid.Row="9" Grid.Column="0"
-                Visibility="{Binding HasTreatment, Converter={x:Static converters:BoolConverters.BoolToVisibility}}"
-                Command="{Binding AddMedicineCommand}">
-            Добавить
-        </Button>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackPanel>
         <!--        <TextBlock Grid.Row="7" Grid.Column="0" Style="{StaticResource LabelStyle}" >Наименование препарата:</TextBlock>-->
         <!--        <TextBlock Grid.Row="7" Grid.Column="1" Style="{StaticResource LabelStyle}" Text="{Binding Patient.Medicine}"></TextBlock>-->
         <!--        <TextBlock Grid.Row="8" Grid.Column="0" Style="{StaticResource LabelStyle}" >Дозировка:</TextBlock>-->

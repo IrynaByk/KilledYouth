@@ -8,6 +8,8 @@
                     xmlns:viewModels="clr-namespace:HypertensionControlUI.ViewModels"
                     xmlns:converters="clr-namespace:HypertensionControlUI.Views.Converters"
                     xmlns:components="clr-namespace:HypertensionControlUI.Sources.Views.Components"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib"
+                    xmlns:models="clr-namespace:HypertensionControlUI.Models"
                     mc:Ignorable="d"
                     d:DataContext="{d:DesignInstance Type=viewModels:ClassificationTunningViewModel, IsDesignTimeCreatable=False}"
                     d:DesignHeight="500" d:DesignWidth="500"
@@ -23,6 +25,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
@@ -30,6 +33,14 @@
             </Grid.ColumnDefinitions>
             <Grid.Resources>
                 <converters:EqualityConverter x:Key="NotNullEqualityConverter" True="false" False="true" />
+                <ObjectDataProvider x:Key="PhysicalActivityProvider"
+                                    MethodName="GetValues"
+                                    ObjectType="{x:Type system:Enum}">
+                    <ObjectDataProvider.MethodParameters>
+                        <x:Type TypeName="models:PhysicalActivity" />
+                    </ObjectDataProvider.MethodParameters>
+                </ObjectDataProvider>
+                <converters:PhysicalActivityConverter x:Key="PhysicalActivityConverter" />
             </Grid.Resources>
 
 
@@ -42,19 +53,21 @@
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{Binding Name}" Margin="0, 0, 3, 0" />
+                            <TextBlock Text="{Binding Name}" TextWrapping="Wrap" Margin="0, 0, 3, 0" />
                         </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
             <StackPanel Grid.Row="1" Grid.Column="1" Margin="3,3,3,3">
+                <TextBlock Margin="0, 5, 3, 0" TextWrapping="Wrap" Text="{Binding SelectedClassificationModel.Description}" />
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Margin="0, 5, 3, 0" Text="--Подробное описание выбранной модели--" />
+                    <TextBlock Margin="0, 5, 3, 0" Text="Оптимальный порог отсечения:"/>
+                    <TextBlock Margin="0, 5, 3, 0" Text="{Binding SelectedClassificationModel.OptimalCutOff}" />
                 </StackPanel>
-<!--                <StackPanel Orientation="Horizontal">-->
-<!--                    <TextBlock Margin="0, 5, 3, 0" Text="Прогноз:"/>-->
-<!--                    <TextBlock Margin="0, 5, 3, 0" Text="{Binding Result}" />-->
-<!--                </StackPanel>-->
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Margin="0, 5, 3, 0" Text="Прогноз:"/>
+                    <TextBlock Margin="0, 5, 3, 0" Text="{Binding Result}" />
+                </StackPanel>
             </StackPanel>
             <Button Grid.Row="2" Grid.ColumnSpan="2"
                     Command="{Binding ClassifyPatientCommand}"
@@ -63,27 +76,75 @@
                 Спрогнозировать вероятность болезни
             </Button>
             <components:IllnessProbabilityChart Height="70" Grid.Row="3" Grid.ColumnSpan="2" Margin="4" 
-                                                ThumbValue="{Binding Result}"></components:IllnessProbabilityChart>
+                                                ThumbValue="{Binding Result}" 
+                                                CutOffValue="{Binding SelectedClassificationModel.OptimalCutOff}"></components:IllnessProbabilityChart>
             <TextBlock Grid.Row="4" Grid.ColumnSpan="2" Margin="5" TextAlignment="Center">Возможные изменения</TextBlock>
-            <ListView Grid.Row="5" Grid.ColumnSpan="2" Width="360" 
-                      ItemsSource="{Binding PossibleData}">
+            <ListView Grid.Row="5" Grid.ColumnSpan="2" Width="480" 
+                      ItemsSource="{Binding PossibleData}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalContentAlignment="Stretch">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="Фактор" Width="120" DisplayMemberBinding="{Binding Key}" />
-                        <GridViewColumn Header="Текущее значение" Width="120" DisplayMemberBinding="{Binding Value1, StringFormat={}{0:f2}}" />
-                        <GridViewColumn Header="Новое значение" Width="120" 
-                                        DisplayMemberBinding="{Binding Value2, StringFormat={}{0:f2}}">
-<!--                            <GridViewColumn.CellTemplate>-->
-<!--                                <DataTemplate>-->
-<!--                                    <TextBox Text="{Binding Value2, StringFormat={}{0:f2}}" TextDecorations="Underline" Foreground="Blue" Cursor="Hand" />-->
-<!--                                </DataTemplate>-->
-<!--                            </GridViewColumn.CellTemplate>-->
+                        <GridViewColumn Header="Текущее значение" Width="180" >
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate DataType="viewModels:PossibleData">
+                                    <ContentControl Content="{Binding Value1, Mode=OneTime}" HorizontalAlignment="Stretch">
+                                        <ContentControl.Resources>
+                                            <DataTemplate DataType="{x:Type models:PhysicalActivity}">
+                                                <ComboBox  ItemsSource="{Binding Source={StaticResource PhysicalActivityProvider}}"
+                                                           SelectedItem="{Binding Path=.}">
+                                                    <ComboBox.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <TextBlock Text="{Binding Path=., Converter={StaticResource PhysicalActivityConverter}}" />
+                                                        </DataTemplate>
+                                                    </ComboBox.ItemTemplate>
+                                                </ComboBox>
+                                            </DataTemplate>
+
+                                        </ContentControl.Resources>
+                                    </ContentControl>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Header="Новое значение" Width="180">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate DataType="viewModels:PossibleData">
+                                    <ContentControl Content="{Binding Value2}" HorizontalAlignment="Stretch">
+                                        <ContentControl.Resources>
+                                            
+                                            <DataTemplate DataType="{x:Type system:Double}">
+                                                <TextBox Text="{Binding Path=.}" Cursor="Hand" HorizontalAlignment="Stretch"/>
+                                            </DataTemplate>
+                                            <DataTemplate DataType="{x:Type system:Int32}">
+                                                <TextBox Text="{Binding Path=.}" Cursor="Hand" HorizontalAlignment="Stretch"/>
+                                            </DataTemplate>
+                                            <DataTemplate DataType="{x:Type models:PhysicalActivity}">
+                                                <ComboBox  ItemsSource="{Binding Source={StaticResource PhysicalActivityProvider}}"
+                                                          SelectedItem="{Binding Path=.}">
+                                                    <ComboBox.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <TextBlock Text="{Binding Path=., Converter={StaticResource PhysicalActivityConverter}}" />
+                                                        </DataTemplate>
+                                                    </ComboBox.ItemTemplate>
+                                                </ComboBox>
+                                            </DataTemplate>
+                                            
+                                        </ContentControl.Resources>
+                                    </ContentControl>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
                         </GridViewColumn>
                     </GridView>
                 </ListView.View>
             </ListView>
-            <components:IllnessProbabilityChart Height="70" Grid.Row="6" Grid.ColumnSpan="2" Margin="4" 
-                                                ThumbValue="{Binding PossibleResult}"></components:IllnessProbabilityChart>
+            <Button Grid.Row="6" Grid.ColumnSpan="2"
+                    Command="{Binding ClassifyPossiblePatientCommand}"
+                    IsEnabled="{Binding SelectedClassificationModel, 
+                Converter={StaticResource NotNullEqualityConverter}, ConverterParameter={x:Null}, Mode=OneWay}">
+                Спрогнозировать вероятность болезни после коррекции
+            </Button>
+            <components:IllnessProbabilityChart Height="70" Grid.Row="7" Grid.ColumnSpan="2" Margin="4" 
+                                                ThumbValue="{Binding PossibleResult}"
+                                                CutOffValue="{Binding SelectedClassificationModel.OptimalCutOff}"></components:IllnessProbabilityChart>
 
 
 

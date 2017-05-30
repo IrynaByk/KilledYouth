@@ -26,9 +26,9 @@
                                 <Line Y2="{Binding ActualHeight, RelativeSource={RelativeSource FindAncestor, AncestorType=Track} }"
                                       Stroke="Black" StrokeThickness="1" StrokeDashArray="5,5"
                                       HorizontalAlignment="Center" />
-<!--                                <TextBlock Foreground="Black"-->
-<!--                                           Text="123"-->
-<!--                                           Height="16" HorizontalAlignment="Center" />-->
+                                <TextBlock Foreground="Black"
+                                           Text="{Binding Value, RelativeSource={RelativeSource FindAncestor, AncestorType=Track}, StringFormat={}{0:f3}}"
+                                           Height="16" HorizontalAlignment="Center" />
                             </StackPanel>
                         </ControlTemplate>
                     </Thumb.Template>

@@ -1,6 +1,5 @@
-﻿using System;
-using System.IO;
-using System.Windows;
+﻿using System.Windows;
+using AutoMapper;
 using HypertensionControlUI.CompositionRoot;
 using HypertensionControlUI.Services;
 using HypertensionControlUI.ViewModels;
@@ -17,12 +16,14 @@ namespace HypertensionControlUI
     {
         #region Events and invocation
 
-        protected override void OnStartup( StartupEventArgs e )
+        protected override void OnStartup(StartupEventArgs e)
         {
-            base.OnStartup( e );
+            base.OnStartup(e);
             var container = Bootstrap();
 
-            ComposeObjects( container );
+            Mapper.Initialize(expression => expression.CreateMissingTypeMaps = true);
+
+            ComposeObjects(container);
         }
 
         #endregion
@@ -30,7 +31,7 @@ namespace HypertensionControlUI
 
         #region Non-public methods
 
-        private void ComposeObjects( Container container )
+        private void ComposeObjects(Container container)
         {
             Current.MainWindow = container.GetInstance<MainWindow>();
             Current.MainWindow.Show();
@@ -55,10 +56,10 @@ namespace HypertensionControlUI
 
             container.RegisterSingleton<MainWindowViewModel>();
             container.RegisterSingleton<MainWindow>();
-            container.RegisterSingleton( () => container.GetInstance<MainWindow>().MainWindowFrame );
+            container.RegisterSingleton(() => container.GetInstance<MainWindow>().MainWindowFrame);
 
             //            container.Register( typeof (WindowViewBase<>), new[] { typeof (App).Assembly } );
-            container.Register( typeof (PageViewBase<>), new[] { typeof (App).Assembly } );
+            container.Register(typeof(PageViewBase<>), new[] {typeof(App).Assembly});
             container.RegisterSingleton<ISettingsProvider, SettingsProvider>();
             container.Register<LoginViewModel>();
             container.Register<MainViewModel>();
@@ -69,9 +70,9 @@ namespace HypertensionControlUI
             container.Register<IndividualPatientCardViewModel>();
             container.Register<ClassificationTunningViewModel>();
 
-            container.GetRegistration( typeof (IDbContext) )
+            container.GetRegistration(typeof(IDbContext))
                      .Registration
-                     .SuppressDiagnosticWarning( DiagnosticType.DisposableTransientComponent, "Just because" );
+                     .SuppressDiagnosticWarning(DiagnosticType.DisposableTransientComponent, "Just because");
 
 //            container.Verify();
             return container;

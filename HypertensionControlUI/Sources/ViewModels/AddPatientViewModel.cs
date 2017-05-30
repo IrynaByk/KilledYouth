@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data.Entity.Core.Mapping;
 using System.Linq;
 using System.Windows.Input;
 using HypertensionControlUI.CompositionRoot;
@@ -60,10 +61,80 @@ namespace HypertensionControlUI.ViewModels
                 if ( value == TreatmentDuration )
                     return;
                 Patient.TreatmentDuration = value;
-                OnPropertyChanged("HasTreatment");
+                OnPropertyChanged(nameof(HasTreatment));
                 OnPropertyChanged();
             }
         }
+
+        public double Weight
+        {
+            get { return ActualPatientVisitData.Weight; }
+            set
+            {
+                if (value == Weight)
+                    return;
+                ActualPatientVisitData.Weight = value;
+                OnPropertyChanged(nameof(BMI));
+                OnPropertyChanged(nameof(ObesityBMI));
+                OnPropertyChanged(nameof(HaveHeightWidthWaist));
+                OnPropertyChanged();
+            }
+        }
+        public double Height
+        {
+            get { return ActualPatientVisitData.Height; }
+            set
+            {
+                if (value == Height)
+                    return;
+                ActualPatientVisitData.Height = value;
+                OnPropertyChanged(nameof(BMI));
+                OnPropertyChanged(nameof(ObesityBMI));
+                OnPropertyChanged(nameof(HaveHeightWidthWaist));
+                OnPropertyChanged();
+            }
+        }
+        public double WaistCircumference
+        {
+            get { return ActualPatientVisitData.WaistCircumference; }
+            set
+            {
+                if (value == WaistCircumference)
+                    return;
+                ActualPatientVisitData.WaistCircumference = value;
+                OnPropertyChanged(nameof(ObesityWaistCircumference));
+                OnPropertyChanged(nameof(HaveHeightWidthWaist));
+                OnPropertyChanged();
+            }
+        }
+        public double? BMI => ActualPatientVisitData.BMI;
+
+        public string ObesityBMI
+        {
+            get
+            {
+                if (ActualPatientVisitData.ObesityBMI != null)
+                {
+                    return (ActualPatientVisitData.ObesityBMI == true ) ? "Есть" : "Нет";
+                }
+                return "Нет данных";
+            }
+        
+        } 
+        public string ObesityWaistCircumference
+        {
+            get
+            {
+                if (ActualPatientVisitData.ObesityWaistCircumference != null)
+                {
+                    return (ActualPatientVisitData.ObesityWaistCircumference == true) ? "Есть" : "Нет";
+                }
+                return "Нет данных";
+            }
+
+        }
+        
+
         public SmokingType SmokingType
         {
             get { return ActualPatientVisitData.Smoking.Type; }
@@ -72,9 +143,9 @@ namespace HypertensionControlUI.ViewModels
                 if (value == SmokingType)
                     return;
                 ActualPatientVisitData.Smoking.Type = value;
-                OnPropertyChanged("NeverSmoke");
-                OnPropertyChanged("SmokingNow");
-                OnPropertyChanged("SmokingBefore");
+                OnPropertyChanged(nameof(NeverSmoke));
+                OnPropertyChanged(nameof(SmokingNow));
+                OnPropertyChanged(nameof(SmokingBefore));
                 OnPropertyChanged();
             }
         }
@@ -164,7 +235,7 @@ namespace HypertensionControlUI.ViewModels
                     return;
                 Patient.Name = value;
                 OnPropertyChanged();
-                OnPropertyChanged( "CanSaveAndProceed" );
+                OnPropertyChanged( nameof(HaveNameAndAge) );
             }
         }
         public GenderType PatientGender
@@ -188,7 +259,7 @@ namespace HypertensionControlUI.ViewModels
                     return;
                 Patient.MiddleName = value;
                 OnPropertyChanged();
-                OnPropertyChanged( "CanSaveAndProceed" );
+                OnPropertyChanged( nameof(HaveNameAndAge) );
             }
         }
 
@@ -201,7 +272,7 @@ namespace HypertensionControlUI.ViewModels
                     return;
                 Patient.Surname = value;
                 OnPropertyChanged();
-                OnPropertyChanged( "CanSaveAndProceed" );
+                OnPropertyChanged( nameof(HaveNameAndAge) );
             }
         }
 
@@ -214,17 +285,26 @@ namespace HypertensionControlUI.ViewModels
                     return;
                 Patient.BirthDate = value;
                 OnPropertyChanged();
-                OnPropertyChanged( "CanSaveAndProceed" );
+                OnPropertyChanged( nameof(HaveNameAndAge) );
             }
         }
 
-        public bool CanSaveAndProceed
+        public bool HaveNameAndAge
         {
             get
             {
                 return !string.IsNullOrEmpty( Patient.Name ) &&
                        !string.IsNullOrEmpty( Patient.Surname ) &&
                        Patient.Age > 0 && Patient.Age < 120;
+            }
+        }
+
+        public bool HaveHeightWidthWaist
+        {
+            get {
+                return (ActualPatientVisitData.Weight > 0) &&
+                       (ActualPatientVisitData.Height > 0) &&
+                       (ActualPatientVisitData.WaistCircumference > 0);
             }
         }
 

@@ -70,7 +70,7 @@ namespace HypertensionControlUI.ViewModels
             }
         }
 
-        public bool CanSaveAndProceed
+        public bool HaveNameAndAge
         {
             get
             {
