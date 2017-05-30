@@ -97,6 +97,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Sources\Views\Converters\IllnessProbabilityThumbConverter.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Sources\Collections\IdentityScaler.cs" />
     <Compile Include="Sources\Collections\IScaler.cs" />
