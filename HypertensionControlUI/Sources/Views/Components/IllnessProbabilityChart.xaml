@@ -3,10 +3,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:hypertensionControlUi="clr-namespace:HypertensionControlUI"
+             xmlns:converters="clr-namespace:HypertensionControlUI.Views.Converters"
              mc:Ignorable="d"
-             d:DesignHeight="150" d:DesignWidth="300" x:Name="Container">
-    <Grid>
-        <Border Margin="5,26,5,16">
+             d:DesignHeight="150" d:DesignWidth="300" x:Name="Container" ClipToBounds="False">
+    <Grid ClipToBounds="False">
+        <Border Margin="0,26,0,16">
             <Border.Background>
                 <LinearGradientBrush>
                     <GradientStop Color="#00FF00" Offset="0" />
@@ -17,7 +19,7 @@
         </Border>
 
         <Track Minimum="0" Maximum="1" Value="{Binding CutOffValue, ElementName=Container}" x:Name="LineTrack"
-               Margin="5,26,5,16">
+               Margin="0,26,0,16">
             <Track.Thumb>
                 <Thumb>
                     <Thumb.Template>
@@ -37,16 +39,21 @@
         </Track>
         <Track Minimum="0" Maximum="1" Value="{Binding ThumbValue, ElementName=Container}">
             <Track.Thumb>
-                <Thumb>
+                <Thumb ClipToBounds="False">
                     <Thumb.Template>
                         <ControlTemplate>
-                            <StackPanel>
-                                <TextBlock Foreground="Black"
-                                           Text="{Binding Value, RelativeSource={RelativeSource FindAncestor, AncestorType=Track}, StringFormat={}{0:f3}}"
-                                           Height="16" HorizontalAlignment="Center" />
-                                <Path Stroke="Black" Fill="White" Data="M0,0 L5,10 L10,0 Z"
-                                      HorizontalAlignment="Center" />
-                            </StackPanel>
+                            <Canvas ClipToBounds="False" Width="1">
+                                <StackPanel x:Name="ThumbContainer" ClipToBounds="False" HorizontalAlignment="Center">
+                                    <FrameworkElement.RenderTransform>
+                                        <TranslateTransform X="{Binding ElementName=ThumbContainer, Path=ActualWidth, Converter={x:Static converters:IllnessProbabilityThumbConverter.Instance}}"/>
+                                    </FrameworkElement.RenderTransform>
+                                    <TextBlock Foreground="Black"
+                                               Text="{Binding Value, RelativeSource={RelativeSource FindAncestor, AncestorType=Track}, StringFormat={}{0:f3}}"
+                                               Height="16" HorizontalAlignment="Center" ClipToBounds="False" />
+                                    <Path Stroke="Black" Fill="White" Data="M1,0 L6,10 L11,0 Z" HorizontalAlignment="Center" />
+                                </StackPanel>
+                            </Canvas>
+
                         </ControlTemplate>
                     </Thumb.Template>
                 </Thumb>
