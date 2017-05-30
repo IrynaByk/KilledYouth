@@ -97,6 +97,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Sources\Views\Converters\IllnessProbabilityThumbConverter.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Sources\Collections\IdentityScaler.cs" />
     <Compile Include="Sources\Collections\IScaler.cs" />
@@ -334,12 +335,6 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\hypertensiondb.mdf" />
-    <Content Include="Resources\hypertensiondb_log.ldf">
-      <DependentUpon>hypertensiondb.mdf</DependentUpon>
-    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\System.Data.SQLite.Core.1.0.105.0\build\net45\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.105.0\build\net45\System.Data.SQLite.Core.targets')" />
