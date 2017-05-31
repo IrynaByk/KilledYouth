@@ -7,19 +7,12 @@ namespace HypertensionControlUI.Services
 {
     public class OptimalCutOffCalculator
     {
-        private readonly PatientPropertyProvider _propertyProvider;
-
-        public OptimalCutOffCalculator(PatientPropertyProvider propertyProvider)
-        {
-            _propertyProvider = propertyProvider;
-        }
-
         public double CalculateOptimalCutOff(ClassificationModel model, List<Patient> patients)
         {
             //ToDo: filter patients which could be used for current model 
             var applicablePatients = patients.Where(
                                                  patient => model.Properties.All(p =>
-                                                     _propertyProvider.GetPropertyValue(
+                                                     PatientPropertyProvider.GetPropertyValue(
                                                          p.Name, patient, patient.PatientVisitDataHistory.OrderByDescending(d => d.VisitDate).First()) != null))
                                              .ToList();
 
@@ -28,7 +21,7 @@ namespace HypertensionControlUI.Services
                 var temp = p.PatientVisitDataHistory.OrderByDescending(d => d.VisitDate).First();
                 Console.Write(p.Surname + " bmi "  + temp.ObesityBMI + " waist " +temp.ObesityWaistCircumference + " gene " + p.AGT_AGTR2 + " " + " gender " + p.Gender + " phiz " + temp.PhysicalActivity +  " maleHered "+ p.MaleHeredity + "; \n");
             }
-            var classificator = new PatientClassificator(model, _propertyProvider);
+            var classificator = new PatientClassificator(model);
 
             var healthyCorrect = 0;
             var illCorrect = applicablePatients.Count(p => p.Stage != HypertensionStage.Healthy);

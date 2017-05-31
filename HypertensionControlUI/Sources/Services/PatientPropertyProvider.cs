@@ -3,45 +3,67 @@ using HypertensionControlUI.Models;
 
 namespace HypertensionControlUI.Services
 {
-    public class PatientPropertyProvider
+    public static class PatientPropertyProvider
     {
+        #region Constants
+
         private const string PatientVisitDataPrefix = "{PatientVisitData}.";
 
-        public double? GetPropertyValue(string propertyName, Patient patient, PatientVisitData visitData)
-        {
-            object currentObject = CurrentObject(ref propertyName, patient, visitData);
+        #endregion
 
-            foreach(var propertyNamePart in propertyName.Split( '.' ))
+
+        #region Public methods
+
+        public static object GetPropertyValue( string propertyName, Patient patient, PatientVisitData visitData )
+        {
+            var currentObject = CurrentObject( ref propertyName, patient, visitData );
+
+            foreach ( var propertyNamePart in propertyName.Split( '.' ) )
             {
                 var type = currentObject.GetType();
                 var propertyInfo = type.GetProperty( propertyNamePart );
                 if ( propertyInfo == null )
-                    throw new InvalidOperationException( string.Format( "Property '{0}' not found", propertyNamePart ) );
+                    throw new InvalidOperationException( $"Property '{propertyNamePart}' not found" );
 
                 currentObject = propertyInfo.GetValue( currentObject );
             }
 
-            if ( currentObject == null )
-                return null;
-
-            try
-            {
-                return Convert.ToDouble( currentObject );
-            }
-            catch (FormatException)
-            {
-                throw new InvalidOperationException( string.Format( "Property '{0}' has value '{1}' which cannot be converted to double",
-                                                                    propertyName, currentObject ) );
-            }
+            return currentObject;
         }
 
-        private object CurrentObject(ref string propertyName, Patient patient, PatientVisitData visitData)
+        public static void UpdatePatientByProperty( string propertyName, Patient patient, PatientVisitData visitData, object value )
+        {
+            var currentObject = CurrentObject( ref propertyName, patient, visitData );
+            var pathStrings = propertyName.Split( '.' );
+            for ( var i = 0; i < pathStrings.Length - 1; i++ )
+            {
+                var propertyNamePart = pathStrings[i];
+                var type = currentObject.GetType();
+                var propertyInfo = type.GetProperty( propertyNamePart );
+                if ( propertyInfo == null )
+                    throw new InvalidOperationException( $"Property '{propertyNamePart}' not found" );
+
+                currentObject = propertyInfo.GetValue( currentObject );
+            }
+
+            var propertyInfoLast = currentObject.GetType().GetProperty( pathStrings[pathStrings.Length - 1] );
+            if ( propertyInfoLast == null )
+                throw new InvalidOperationException( $"Property '{propertyName}' not found" );
+            propertyInfoLast.SetValue( currentObject, Convert.ChangeType( value, propertyInfoLast.PropertyType ) );
+        }
+
+        #endregion
+
+
+        #region Non-public methods
+
+        private static object CurrentObject( ref string propertyName, Patient patient, PatientVisitData visitData )
         {
             object currentObject;
-            if (propertyName.StartsWith(PatientVisitDataPrefix))
+            if ( propertyName.StartsWith( PatientVisitDataPrefix ) )
             {
                 currentObject = visitData;
-                propertyName = propertyName.Substring(PatientVisitDataPrefix.Length);
+                propertyName = propertyName.Substring( PatientVisitDataPrefix.Length );
             }
             else
             {
@@ -50,25 +72,6 @@ namespace HypertensionControlUI.Services
             return currentObject;
         }
 
-        public void UpdatePatientByProperty(string propertyName, Patient patient, PatientVisitData visitData, object value)
-        {
-            object currentObject = CurrentObject(ref propertyName, patient, visitData);
-            var pathStrings = propertyName.Split('.');
-            for (int i = 0; i < pathStrings.Length - 1; i++)
-            {
-                var propertyNamePart = pathStrings[i];
-                var type = currentObject.GetType();
-                var propertyInfo = type.GetProperty(propertyNamePart);
-                if (propertyInfo == null)
-                    throw new InvalidOperationException(string.Format("Property '{0}' not found", propertyNamePart));
-
-                currentObject = propertyInfo.GetValue(currentObject);
-            }
-           
-            var propertyInfoLast = currentObject.GetType().GetProperty(pathStrings[pathStrings.Length - 1]);
-            if (propertyInfoLast == null)
-                throw new InvalidOperationException(string.Format("Property '{0}' not found", propertyInfoLast));
-            propertyInfoLast.SetValue(currentObject.GetType(), value);
-        }
+        #endregion
     }
 }

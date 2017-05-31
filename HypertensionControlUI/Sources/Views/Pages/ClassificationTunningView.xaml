@@ -41,6 +41,8 @@
                     </ObjectDataProvider.MethodParameters>
                 </ObjectDataProvider>
                 <converters:PhysicalActivityConverter x:Key="PhysicalActivityConverter" />
+                <converters:FactorsConverter x:Key="FactorsConverter"/>
+                                    
             </Grid.Resources>
 
 
@@ -83,23 +85,15 @@
                       ItemsSource="{Binding PossibleData}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalContentAlignment="Stretch">
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Header="Фактор" Width="120" DisplayMemberBinding="{Binding Key}" />
+                        <GridViewColumn Header="Фактор" Width="120" DisplayMemberBinding="{Binding Path=Key, Converter={StaticResource FactorsConverter}}" />
                         <GridViewColumn Header="Текущее значение" Width="180" >
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate DataType="viewModels:PossibleData">
                                     <ContentControl Content="{Binding Value1, Mode=OneTime}" HorizontalAlignment="Stretch">
                                         <ContentControl.Resources>
                                             <DataTemplate DataType="{x:Type models:PhysicalActivity}">
-                                                <ComboBox  ItemsSource="{Binding Source={StaticResource PhysicalActivityProvider}}"
-                                                           SelectedItem="{Binding Path=.}">
-                                                    <ComboBox.ItemTemplate>
-                                                        <DataTemplate>
-                                                            <TextBlock Text="{Binding Path=., Converter={StaticResource PhysicalActivityConverter}}" />
-                                                        </DataTemplate>
-                                                    </ComboBox.ItemTemplate>
-                                                </ComboBox>
+                                                <TextBlock Text="{Binding Path=., Converter={StaticResource PhysicalActivityConverter}}" />
                                             </DataTemplate>
-
                                         </ContentControl.Resources>
                                     </ContentControl>
                                 </DataTemplate>
@@ -108,18 +102,20 @@
                         <GridViewColumn Header="Новое значение" Width="180">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate DataType="viewModels:PossibleData">
-                                    <ContentControl Content="{Binding Value2}" HorizontalAlignment="Stretch">
+                                    <ContentControl Content="{Binding Value2, Mode=TwoWay}" HorizontalAlignment="Stretch">
                                         <ContentControl.Resources>
-                                            
+                                            <DataTemplate DataType="{x:Type system:String}">
+                                                <TextBox Text="{Binding RelativeSource={RelativeSource AncestorType=ContentControl}, Path=Content, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Cursor="Hand" HorizontalAlignment="Stretch" Background="Aqua"/>
+                                            </DataTemplate>
                                             <DataTemplate DataType="{x:Type system:Double}">
-                                                <TextBox Text="{Binding Path=.}" Cursor="Hand" HorizontalAlignment="Stretch"/>
+                                                <TextBox Text="{Binding RelativeSource={RelativeSource AncestorType=ContentControl}, Path=Content, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Cursor="Hand" HorizontalAlignment="Stretch"/>
                                             </DataTemplate>
                                             <DataTemplate DataType="{x:Type system:Int32}">
-                                                <TextBox Text="{Binding Path=.}" Cursor="Hand" HorizontalAlignment="Stretch"/>
+                                                <TextBox Text="{Binding RelativeSource={RelativeSource AncestorType=ContentControl}, Path=Content, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Cursor="Hand" HorizontalAlignment="Stretch"/>
                                             </DataTemplate>
                                             <DataTemplate DataType="{x:Type models:PhysicalActivity}">
                                                 <ComboBox  ItemsSource="{Binding Source={StaticResource PhysicalActivityProvider}}"
-                                                          SelectedItem="{Binding Path=.}">
+                                                          SelectedItem="{Binding RelativeSource={RelativeSource AncestorType=ContentControl}, Path=Content, Mode=TwoWay}">
                                                     <ComboBox.ItemTemplate>
                                                         <DataTemplate>
                                                             <TextBlock Text="{Binding Path=., Converter={StaticResource PhysicalActivityConverter}}" />

@@ -2,37 +2,19 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
-using System.Windows.Media.Animation;
 
 namespace HypertensionControlUI.Models
 {
     public class Patient
     {
-        #region Initialization
-
-        public Patient()
-        {
-            PatientVisitDataHistory = new List<PatientVisitData>();
-            Genes = new List<Gene>();
-            Medicine = new List<Medicine>();
-        }
-
-        #endregion
-
         #region Auto-properties
 
         //        [DatabaseGenerated( DatabaseGeneratedOption.Identity )]
         public int Id { get; set; }
+
         public string Name { get; set; }
         public string MiddleName { get; set; }
         public string Surname { get; set; }
-
-        [NotMapped]
-        public DateTime BirthDate
-        {
-            get { return new DateTime(BirthDateTicks); }
-            set { BirthDateTicks = value.Ticks; }
-        }
 
         public long BirthDateTicks { get; set; }
         public string BirthPlace { get; set; }
@@ -57,12 +39,21 @@ namespace HypertensionControlUI.Models
 
         #endregion
 
+
         #region Properties
+
+        [NotMapped]
+        public DateTime BirthDate
+        {
+            get => new DateTime( BirthDateTicks );
+            set => BirthDateTicks = value.Ticks;
+        }
 
         [NotMapped]
         public int Age
         {
-            get { return (DateTime.Now - BirthDate).Days/365; /* TODO: review  */ }
+            get => (DateTime.Now - BirthDate).Days / 365;
+            set => BirthDate = DateTime.Now - TimeSpan.FromDays( Age * 365 );
         }
 
         [NotMapped]
@@ -72,16 +63,16 @@ namespace HypertensionControlUI.Models
             {
                 int? agt = null;
                 int? agtr2 = null;
-                foreach (var gene in Genes)
+                foreach ( var gene in Genes )
                 {
-                    if (gene.Name.Equals("AGT"))
+                    if ( gene.Name.Equals( "AGT" ) )
                         agt = gene.Value;
-                    if (gene.Name.Equals("AGTR2"))
+                    if ( gene.Name.Equals( "AGTR2" ) )
                         agtr2 = gene.Value;
                 }
-                if (agt == null || agtr2 == null)
+                if ( agt == null || agtr2 == null )
                     return null;
-                if (agtr2 == 3 && agt >= 2)
+                if ( agtr2 == 3 && agt >= 2 )
                     return 1;
                 return 0;
             }
@@ -90,7 +81,19 @@ namespace HypertensionControlUI.Models
         [NotMapped]
         public HypertensionStage Stage
         {
-            get { return PatientVisitDataHistory.OrderByDescending(d => d.VisitDate).First().HypertensionStage; }
+            get { return PatientVisitDataHistory.OrderByDescending( d => d.VisitDate ).First().HypertensionStage; }
+        }
+
+        #endregion
+
+
+        #region Initialization
+
+        public Patient()
+        {
+            PatientVisitDataHistory = new List<PatientVisitData>();
+            Genes = new List<Gene>();
+            Medicine = new List<Medicine>();
         }
 
         #endregion
@@ -112,22 +115,9 @@ namespace HypertensionControlUI.Models
 
     public class PatientVisitData
     {
-        public PatientVisitData()
-        {
-            VisitDate = DateTime.Today;
-            Smoking = new Smoking();
-            DietaryHabits = new DietaryHabits {TesDate = DateTime.Today};
-            BloodPressure = new BloodPressure();
-            SaltSensitivity = new SaltSensitivityTest {TestDate = DateTime.Today};
-        }
+        #region Auto-properties
 
         public int Id { get; set; }
-        [NotMapped]
-        public DateTime VisitDate 
-        {
-            get { return new DateTime(VisitDateTicks); }
-            set { VisitDateTicks = value.Ticks; }
-        }
         public long VisitDateTicks { get; set; }
         public AlcoholСonsumption AlcoholСonsumption { get; set; }
         public int StressPointsPSM_25 { get; set; }
@@ -144,33 +134,42 @@ namespace HypertensionControlUI.Models
         public HypertensionStage HypertensionStage { get; set; }
         public virtual Patient Patient { get; set; }
 
+        #endregion
+
+
+        #region Properties
+
+        [NotMapped]
+        public DateTime VisitDate
+        {
+            get => new DateTime( VisitDateTicks );
+            set => VisitDateTicks = value.Ticks;
+        }
+
         [NotMapped]
         public double? BMI
         {
             get
             {
-               if (Weight != 0 && Height != 0)
-                    return Weight/Height/Height*10000;
-               if (TemporaryBMI > 0)
-                return TemporaryBMI;
+                if ( Weight != 0 && Height != 0 )
+                    return Weight / Height / Height * 10000;
+                if ( TemporaryBMI > 0 )
+                    return TemporaryBMI;
                 return null;
             }
         }
 
         [NotMapped]
-        public bool? ObesityBMI
-        {
-            get { return (BMI != null) ? (bool?)(BMI >= 30) : null; }
-        }
+        public bool? ObesityBMI => BMI != null ? (bool?) (BMI >= 30) : null;
 
         [NotMapped]
         public bool? ObesityWaistCircumference
         {
             get
             {
-                if (WaistCircumference > 0)
+                if ( WaistCircumference > 0 )
                 {
-                    if (Patient.Gender == 0)
+                    if ( Patient.Gender == 0 )
                         return WaistCircumference > 88;
 
                     return WaistCircumference > 102;
@@ -178,5 +177,21 @@ namespace HypertensionControlUI.Models
                 return null;
             }
         }
+
+        #endregion
+
+
+        #region Initialization
+
+        public PatientVisitData()
+        {
+            VisitDate = DateTime.Today;
+            Smoking = new Smoking();
+            DietaryHabits = new DietaryHabits { TesDate = DateTime.Today };
+            BloodPressure = new BloodPressure();
+            SaltSensitivity = new SaltSensitivityTest { TestDate = DateTime.Today };
+        }
+
+        #endregion
     }
 }

@@ -10,7 +10,6 @@ namespace HypertensionControlUI.Services
     {
         #region Auto-properties
 
-        public PatientPropertyProvider PatientPropertyProvider { get; set; }
         public RuntimeClassificationModel RuntimeClassificationModel { get; set; }
 
         #endregion
@@ -18,10 +17,9 @@ namespace HypertensionControlUI.Services
 
         #region Initialization
 
-        public PatientClassificator( ClassificationModel classificationModel, PatientPropertyProvider patientPropertyProvider )
+        public PatientClassificator(ClassificationModel classificationModel)
         {
             RuntimeClassificationModel = new RuntimeClassificationModel( classificationModel );
-            PatientPropertyProvider = patientPropertyProvider;
         }
 
         #endregion
@@ -33,7 +31,7 @@ namespace HypertensionControlUI.Services
         {
             var enumerable = RuntimeClassificationModel
                 .Properties
-                .Select( p => p.Scaler[(double) PatientPropertyProvider.GetPropertyValue( p.Name, patient, visitData )]*p.ModelCoefficient )
+                .Select(p => p.Scaler[Convert.ToDouble(PatientPropertyProvider.GetPropertyValue(p.Name, patient, visitData))] * p.ModelCoefficient)
                 .ToList();
 
             var intermediateResult = enumerable.Sum() + RuntimeClassificationModel.FreeCoefficient;

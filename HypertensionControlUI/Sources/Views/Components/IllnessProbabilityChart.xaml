@@ -19,19 +19,29 @@
         </Border>
 
         <Track Minimum="0" Maximum="1" Value="{Binding CutOffValue, ElementName=Container}" x:Name="LineTrack"
-               Margin="0,26,0,16">
+               Margin="0,26,0,0">
             <Track.Thumb>
                 <Thumb>
                     <Thumb.Template>
                         <ControlTemplate>
-                            <StackPanel ClipToBounds="False">
-                                <Line Y2="{Binding ActualHeight, RelativeSource={RelativeSource FindAncestor, AncestorType=Track} }"
+                            <Grid ClipToBounds="False" Width="1">
+                                <Grid.RowDefinitions>
+                                <RowDefinition Height="*"></RowDefinition>
+                                <RowDefinition Height="16"></RowDefinition>
+                                </Grid.RowDefinitions>
+                                <Line Grid.Row="0" Y2="{Binding ActualHeight, RelativeSource={RelativeSource FindAncestor, AncestorType=Track} }"
                                       Stroke="Black" StrokeThickness="1" StrokeDashArray="5,5"
-                                      HorizontalAlignment="Center" />
-                                <TextBlock Foreground="Black"
+                                      HorizontalAlignment="Center"/>
+                                <Canvas Grid.Row="1">
+                                    <TextBlock x:Name="CutOffValueText"  Foreground="Black" 
                                            Text="{Binding Value, RelativeSource={RelativeSource FindAncestor, AncestorType=Track}, StringFormat={}{0:f3}}"
-                                           Height="16" HorizontalAlignment="Center" />
-                            </StackPanel>
+                                           Height="16" HorizontalAlignment="Center">
+                                        <TextBlock.RenderTransform>
+                                            <TranslateTransform X="{Binding ElementName=CutOffValueText, Path=ActualWidth, Converter={x:Static converters:IllnessProbabilityThumbConverter.Instance}}"></TranslateTransform>
+                                        </TextBlock.RenderTransform>
+                                    </TextBlock>
+                                </Canvas>
+                            </Grid>
                         </ControlTemplate>
                     </Thumb.Template>
                 </Thumb>

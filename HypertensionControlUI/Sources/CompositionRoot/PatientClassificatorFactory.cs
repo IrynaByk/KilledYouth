@@ -15,7 +15,7 @@ namespace HypertensionControlUI.CompositionRoot
 
         public PatientClassificator GetClassificator(ClassificationModel classificationModel)
         {
-            return new PatientClassificator(classificationModel, _container.GetInstance<PatientPropertyProvider>());
+            return new PatientClassificator(classificationModel);
         }
     }
 }
