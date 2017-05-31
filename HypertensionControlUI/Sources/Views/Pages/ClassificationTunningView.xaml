@@ -81,44 +81,63 @@
                                                 ThumbValue="{Binding Result}" 
                                                 CutOffValue="{Binding SelectedClassificationModel.OptimalCutOff}"></components:IllnessProbabilityChart>
             <TextBlock Grid.Row="4" Grid.ColumnSpan="2" Margin="5" TextAlignment="Center">Возможные изменения</TextBlock>
-            <ListView Grid.Row="5" Grid.ColumnSpan="2" Width="480" 
+            <ListView Grid.Row="5" Grid.ColumnSpan="2" Width="561" Margin="5,5,5,5"
                       ItemsSource="{Binding PossibleData}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalContentAlignment="Stretch">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"  />
+                    </Style>
+                </ListView.ItemContainerStyle>
                 <ListView.View>
                     <GridView>
+                        <GridView.ColumnHeaderContainerStyle>
+                            <Style TargetType="{x:Type GridViewColumnHeader}">
+                                <Setter Property="IsEnabled" Value="False"/>
+                                <Style.Triggers>
+                                    <Trigger Property="IsEnabled" Value="False">
+                                        <Setter Property="TextElement.Foreground" Value="Black"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </GridView.ColumnHeaderContainerStyle>
                         <GridViewColumn Header="Фактор" Width="120" DisplayMemberBinding="{Binding Path=Key, Converter={StaticResource FactorsConverter}}" />
-                        <GridViewColumn Header="Текущее значение" Width="180" >
+                        <GridViewColumn Header="Текущее значение" Width="185">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate DataType="viewModels:PossibleData">
                                     <ContentControl Content="{Binding Value1, Mode=OneTime}" HorizontalAlignment="Stretch">
                                         <ContentControl.Resources>
+                                            <DataTemplate DataType="{x:Type system:Double}">
+                                                <TextBlock Text="{Binding Path=.}" TextAlignment="Right"/>
+                                            </DataTemplate>
+                                            <DataTemplate DataType="{x:Type system:Int32}">
+                                                <TextBlock Text="{Binding Path=.}" TextAlignment="Right"/>
+                                            </DataTemplate>
                                             <DataTemplate DataType="{x:Type models:PhysicalActivity}">
-                                                <TextBlock Text="{Binding Path=., Converter={StaticResource PhysicalActivityConverter}}" />
+                                                <TextBlock Text="{Binding Path=., Converter={StaticResource PhysicalActivityConverter}}" TextAlignment="Right"/>
                                             </DataTemplate>
                                         </ContentControl.Resources>
                                     </ContentControl>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
-                        <GridViewColumn Header="Новое значение" Width="180">
+                        <GridViewColumn Header="Новое значение" Width="250" >
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate DataType="viewModels:PossibleData">
                                     <ContentControl Content="{Binding Value2, Mode=TwoWay}" HorizontalAlignment="Stretch">
                                         <ContentControl.Resources>
-                                            <DataTemplate DataType="{x:Type system:String}">
-                                                <TextBox Text="{Binding RelativeSource={RelativeSource AncestorType=ContentControl}, Path=Content, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Cursor="Hand" HorizontalAlignment="Stretch" Background="Aqua"/>
-                                            </DataTemplate>
                                             <DataTemplate DataType="{x:Type system:Double}">
-                                                <TextBox Text="{Binding RelativeSource={RelativeSource AncestorType=ContentControl}, Path=Content, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Cursor="Hand" HorizontalAlignment="Stretch"/>
+                                                <TextBox Text="{Binding RelativeSource={RelativeSource AncestorType=ContentControl}, Path=Content, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Cursor="Hand" HorizontalAlignment="Stretch" TextAlignment="Right"/>
                                             </DataTemplate>
                                             <DataTemplate DataType="{x:Type system:Int32}">
-                                                <TextBox Text="{Binding RelativeSource={RelativeSource AncestorType=ContentControl}, Path=Content, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Cursor="Hand" HorizontalAlignment="Stretch"/>
+                                                <TextBox Text="{Binding RelativeSource={RelativeSource AncestorType=ContentControl}, Path=Content, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Cursor="Hand" HorizontalAlignment="Stretch" TextAlignment="Right"/>
                                             </DataTemplate>
                                             <DataTemplate DataType="{x:Type models:PhysicalActivity}">
                                                 <ComboBox  ItemsSource="{Binding Source={StaticResource PhysicalActivityProvider}}"
-                                                          SelectedItem="{Binding RelativeSource={RelativeSource AncestorType=ContentControl}, Path=Content, Mode=TwoWay}">
+                                                          SelectedItem="{Binding RelativeSource={RelativeSource AncestorType=ContentControl}, Path=Content, Mode=TwoWay}" 
+                                                           HorizontalAlignment="Stretch" HorizontalContentAlignment="Right">
                                                     <ComboBox.ItemTemplate>
                                                         <DataTemplate>
-                                                            <TextBlock Text="{Binding Path=., Converter={StaticResource PhysicalActivityConverter}}" />
+                                                            <TextBlock Text="{Binding Path=., Converter={StaticResource PhysicalActivityConverter}}" TextAlignment="Right" />
                                                         </DataTemplate>
                                                     </ComboBox.ItemTemplate>
                                                 </ComboBox>

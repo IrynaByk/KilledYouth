@@ -49,13 +49,26 @@ namespace HypertensionControlUI.Services
             var propertyInfoLast = currentObject.GetType().GetProperty( pathStrings[pathStrings.Length - 1] );
             if ( propertyInfoLast == null )
                 throw new InvalidOperationException( $"Property '{propertyName}' not found" );
-            propertyInfoLast.SetValue( currentObject, Convert.ChangeType( value, propertyInfoLast.PropertyType ) );
+            propertyInfoLast.SetValue( currentObject, Convert( value, propertyInfoLast.PropertyType ) );
         }
 
         #endregion
 
 
         #region Non-public methods
+
+        private static object Convert( object value, Type targetType )
+        {
+            //  Check for Enum or Enum? type
+
+            if ( targetType.IsEnum )
+                return Enum.Parse( targetType, value.ToString() );
+
+            if ( (Nullable.GetUnderlyingType( targetType ) is Type underlyingType) && underlyingType.IsEnum )
+                return Enum.Parse( underlyingType, value.ToString() );
+
+            return System.Convert.ChangeType( value, targetType );
+        }
 
         private static object CurrentObject( ref string propertyName, Patient patient, PatientVisitData visitData )
         {

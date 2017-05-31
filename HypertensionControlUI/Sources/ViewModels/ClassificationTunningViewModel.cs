@@ -184,7 +184,6 @@ namespace HypertensionControlUI.ViewModels
 
         private readonly Patient _patient;
         private readonly PatientVisitData _patientVisitData;
-        private object _value2;
 
         #endregion
 
@@ -201,12 +200,8 @@ namespace HypertensionControlUI.ViewModels
 
         public object Value2
         {
-            get => _value2;
-            set
-            {
-                _value2 = value;
-                PatientPropertyProvider.UpdatePatientByProperty( Key, _patient, _patientVisitData, value );
-            }
+            get => PatientPropertyProvider.GetPropertyValue( Key, _patient, _patientVisitData );
+            set => PatientPropertyProvider.UpdatePatientByProperty( Key, _patient, _patientVisitData, value );
         }
 
         #endregion
@@ -220,7 +215,6 @@ namespace HypertensionControlUI.ViewModels
             _patient = patient;
             _patientVisitData = patientVisitData;
             Value1 = PatientPropertyProvider.GetPropertyValue( key, patient, patientVisitData );
-            _value2 = value2 ?? Value1;
         }
 
         #endregion
