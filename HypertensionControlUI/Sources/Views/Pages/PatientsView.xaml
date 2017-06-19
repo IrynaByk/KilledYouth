@@ -7,8 +7,9 @@
                     xmlns:views="clr-namespace:HypertensionControlUI.Views"
                     xmlns:viewModels="clr-namespace:HypertensionControlUI.ViewModels"
                     xmlns:converters="clr-namespace:HypertensionControlUI.Views.Converters"
+                    xmlns:models="clr-namespace:HypertensionControlUI.Models"
                     Title="HipertensialControl"
-                    d:DesignHeight="350"
+                    d:DesignHeight="300"
                     d:DesignWidth="525"
                     mc:Ignorable="d"
                     d:DataContext="{d:DesignInstance Type=viewModels:PatientsViewModel, IsDesignTimeCreatable=False}">
@@ -24,10 +25,11 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Button Grid.Column="1"
-                Grid.Row="1"
+                Grid.Row="0"
                 Margin="3"
                 HorizontalAlignment="Right"
                 Height="30"
@@ -35,14 +37,19 @@
                 Command="{Binding AddPatientCommand}">
             Добавить нового пациента
         </Button>
+        <DockPanel Grid.Column="0"
+                   Grid.Row="1" Margin="0,3">
+            <TextBlock DockPanel.Dock="Left" Margin="3, 0, 6, 0" Text="Фильтр:" VerticalAlignment="Center"/>
+            <TextBox Text="{Binding PatientFilter, UpdateSourceTrigger=PropertyChanged}" VerticalContentAlignment="Center"/>
+        </DockPanel>
         <ListBox x:Name="PatientsList"
                  Grid.Column="0"
-                 Grid.Row="2"
-                 MaxHeight="300"
-                 ItemsSource="{Binding Patients}"
+                 Grid.Row="3"
+                 MaxHeight="450"
+                 ItemsSource="{Binding PatientsView}"
                  SelectedItem="{Binding SelectedPatient, Mode=TwoWay}">
             <ListBox.ItemTemplate>
-                <DataTemplate>
+                <DataTemplate DataType="{x:Type models:Patient}">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="{Binding Surname}" Margin="0, 0, 3, 0" />
                         <TextBlock Text="{Binding Name}" Margin="0, 0, 3, 0" />
@@ -51,7 +58,7 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <StackPanel Grid.Row="2" Grid.Column="1" DataContext="{Binding SelectedPatient}" >
+        <StackPanel Grid.Row="3" Grid.Column="1" DataContext="{Binding SelectedPatient}">
             <StackPanel Orientation="Horizontal">
                 <TextBlock Margin="5, 5, 5, 0">ФИО: </TextBlock>
                 <TextBlock Margin="0, 5, 3, 0" Text="{Binding Surname}" />
@@ -68,18 +75,18 @@
             </StackPanel>
         </StackPanel>
         <StackPanel Grid.Column="0"
-                Grid.Row="3" Orientation="Horizontal">
-            <Button 
-            Margin="3"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Top"
-            Height="30"
-            Width="100"
-            IsEnabled="{Binding SelectedPatient, Converter={StaticResource NotNullEqualityConverter}, ConverterParameter={x:Null}, Mode=OneWay}"
-            Command="{Binding EditPatientCommand}">
+                    Grid.Row="4" Orientation="Horizontal">
+            <Button
+                Margin="3"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Height="30"
+                Width="100"
+                IsEnabled="{Binding SelectedPatient, Converter={StaticResource NotNullEqualityConverter}, ConverterParameter={x:Null}, Mode=OneWay}"
+                Command="{Binding EditPatientCommand}">
                 Изменить
             </Button>
-            <Button 
+            <Button
                 Margin="3"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
@@ -90,5 +97,14 @@
                 Просмотреть
             </Button>
         </StackPanel>
+        <Button Grid.Column="1"
+                Grid.Row="4"
+                Margin="3"
+                HorizontalAlignment="Right"
+                Height="30"
+                Width="200"
+                Command="{Binding ShowPatientStatistics}">
+            Общая статистика по пациентам
+        </Button>
     </Grid>
 </views:PageViewBase>

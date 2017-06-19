@@ -26,6 +26,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
@@ -45,11 +46,22 @@
                                     
             </Grid.Resources>
 
-
-            <TextBlock Grid.ColumnSpan="2" Margin="5">Модели, доступные для классификации данного пациента:</TextBlock>
+            <StackPanel Grid.Row="0" Grid.ColumnSpan="2" Orientation="Horizontal">
+                <StackPanel.Resources>
+                    <Style TargetType="Button">
+                        <Setter Property="Margin" Value="5, 3, 5, 3" />
+                        <Setter Property="Width" Value="250" />
+                    </Style>
+                </StackPanel.Resources>
+                <Button Command="{Binding ShowPatientCommand}"
+                        Content="Перейти к индивидуальной карте" />
+                <Button Command="{Binding PatientsCommand}"
+                        Content="Перейти к списку пациентов" />
+            </StackPanel>
+            <TextBlock Grid.ColumnSpan="2" Grid.Row="1" Margin="5">Модели, доступные для классификации данного пациента:</TextBlock>
             <ListBox x:Name="ClassificationModelList"
                      Grid.Column="0"
-                     Grid.Row="1"
+                     Grid.Row="2"
                      ItemsSource="{Binding AvailableClassificationModels}"
                      SelectedItem="{Binding SelectedClassificationModel, Mode=TwoWay}">
                 <ListBox.ItemTemplate>
@@ -60,7 +72,7 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
-            <StackPanel Grid.Row="1" Grid.Column="1" Margin="3,3,3,3">
+            <StackPanel Grid.Row="2" Grid.Column="1" Margin="3,3,3,3">
                 <TextBlock Margin="0, 5, 3, 0" TextWrapping="Wrap" Text="{Binding SelectedClassificationModel.Description}" />
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Margin="0, 5, 3, 0" Text="Оптимальный порог отсечения:"/>
@@ -71,17 +83,17 @@
                     <TextBlock Margin="0, 5, 3, 0" Text="{Binding Result}" />
                 </StackPanel>
             </StackPanel>
-            <Button Grid.Row="2" Grid.ColumnSpan="2"
+            <Button Grid.Row="3" Grid.ColumnSpan="2"
                     Command="{Binding ClassifyPatientCommand}"
                     IsEnabled="{Binding SelectedClassificationModel, 
                 Converter={StaticResource NotNullEqualityConverter}, ConverterParameter={x:Null}, Mode=OneWay}">
                 Спрогнозировать вероятность болезни
             </Button>
-            <components:IllnessProbabilityChart Height="70" Grid.Row="3" Grid.ColumnSpan="2" Margin="4" 
+            <components:IllnessProbabilityChart Height="70" Grid.Row="4" Grid.ColumnSpan="2" Margin="4" 
                                                 ThumbValue="{Binding Result}" 
                                                 CutOffValue="{Binding SelectedClassificationModel.OptimalCutOff}"></components:IllnessProbabilityChart>
-            <TextBlock Grid.Row="4" Grid.ColumnSpan="2" Margin="5" TextAlignment="Center">Возможные изменения</TextBlock>
-            <ListView Grid.Row="5" Grid.ColumnSpan="2" Width="561" Margin="5,5,5,5"
+            <TextBlock Grid.Row="5" Grid.ColumnSpan="2" Margin="5" TextAlignment="Center">Возможные изменения</TextBlock>
+            <ListView Grid.Row="6" Grid.ColumnSpan="2" Width="561" Margin="5,5,5,5"
                       ItemsSource="{Binding PossibleData}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalContentAlignment="Stretch">
                 <ListView.ItemContainerStyle>
                     <Style TargetType="ListViewItem">
@@ -151,13 +163,13 @@
                     </GridView>
                 </ListView.View>
             </ListView>
-            <Button Grid.Row="6" Grid.ColumnSpan="2"
+            <Button Grid.Row="7" Grid.ColumnSpan="2"
                     Command="{Binding ClassifyPossiblePatientCommand}"
                     IsEnabled="{Binding SelectedClassificationModel, 
                 Converter={StaticResource NotNullEqualityConverter}, ConverterParameter={x:Null}, Mode=OneWay}">
                 Спрогнозировать вероятность болезни после коррекции
             </Button>
-            <components:IllnessProbabilityChart Height="70" Grid.Row="7" Grid.ColumnSpan="2" Margin="4" 
+            <components:IllnessProbabilityChart Height="70" Grid.Row="8" Grid.ColumnSpan="2" Margin="4" 
                                                 ThumbValue="{Binding PossibleResult}"
                                                 CutOffValue="{Binding SelectedClassificationModel.OptimalCutOff}"></components:IllnessProbabilityChart>
 

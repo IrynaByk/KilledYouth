@@ -34,6 +34,7 @@ namespace HypertensionControlUI.Utils
             {
                 patient.TreatmentDuration = 0;
             }
+           
             if (!String.IsNullOrEmpty(patientProperties["Hheredity"]))
             {
                 var hHeredity = Convert.ToInt32(patientProperties["Hheredity"]);
@@ -97,8 +98,23 @@ namespace HypertensionControlUI.Utils
             {
                 patientVisitData.Smoking.Type = SmokingType.Now;
             }
+            if (patientProperties["HStage"].Contains( "1" ))
+            {
+                patientVisitData.HypertensionStage = HypertensionStage.Stage1;
+            }
+            if (patientProperties["HStage"].Contains("2"))
+            {
+                patientVisitData.HypertensionStage = HypertensionStage.Stage2;
+            }
+            if (patientProperties["HStage"].Contains("3"))
+            {
+                patientVisitData.HypertensionStage = HypertensionStage.Stage3;
+            }
+            if (patientProperties["HStage"].Contains("зд"))
+            {
+                patientVisitData.HypertensionStage = HypertensionStage.Healthy;
+            }
 
-            
 
             if (!String.IsNullOrEmpty(patientProperties["WaistCircumference"]))
             {

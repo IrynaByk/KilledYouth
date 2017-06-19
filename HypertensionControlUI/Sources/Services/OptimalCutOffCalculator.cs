@@ -78,10 +78,10 @@ namespace HypertensionControlUI.Services
                     );
             }
             var cutoff = cutoffs.OrderByDescending(c => c.SumPercent).ThenBy(c => c.PercentDifference);
-            foreach (var coutoffTest in cutoffs)
-            {
-                Console.Write(coutoffTest.SumPercent + " " + coutoffTest.HealthPercent + " " + coutoffTest.IllPercent + "; \n");
-            }
+//            foreach (var coutoffTest in cutoffs)
+//            {
+//                Console.Write(coutoffTest.SumPercent + " " + coutoffTest.HealthPercent + " " + coutoffTest.IllPercent + "; \n");
+//            }
             var cutoff2 = cutoffs.OrderBy(c => c.PercentDifference).ThenByDescending(c => c.SumPercent);
 
             return cutoff.FirstOrDefault().Score;

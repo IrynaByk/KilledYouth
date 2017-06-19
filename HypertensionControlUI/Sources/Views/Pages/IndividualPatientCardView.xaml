@@ -170,6 +170,8 @@
                 <Button 
                         Click="Print_Click"
                         Content="Печать" />
+                <Button Command="{Binding PatientsCommand}"
+                        Content="Перейти к списку пациентов" />
             </StackPanel>
         </Grid>
     </Border>

@@ -9,6 +9,7 @@ namespace HypertensionControlUI.ViewModels
     {
         #region Fields
         private readonly IViewProvider _viewProvider;
+        private readonly MainWindowViewModel _mainWindowViewModel;
         private readonly DbContextFactory _dbContextFactory;
         private Patient _patient;
         private PatientVisitData _patientVisitData;
@@ -85,11 +86,17 @@ namespace HypertensionControlUI.ViewModels
 
         #region Initialization
 
-        public IndividualPatientCardViewModel( DbContextFactory dbContextFactory, IViewProvider viewProvider)
+        public IndividualPatientCardViewModel( DbContextFactory dbContextFactory, IViewProvider viewProvider, MainWindowViewModel mainWindowViewModel )
         {
             _dbContextFactory = dbContextFactory;
             _viewProvider = viewProvider;
+            _mainWindowViewModel = mainWindowViewModel;
             ClassifyPatientTunningCommand = new AsyncDelegateCommand( ClassifyPatientTunningCommandHandler );
+            PatientsCommand = new AsyncDelegateCommand(o => _viewProvider.NavigateToPage<PatientsViewModel>(m =>
+                                                                         {
+                                                                             _mainWindowViewModel.Patient = null;
+                                                                         }
+                                                                     ));
         }
 
         private void ClassifyPatientTunningCommandHandler( object obj )
@@ -100,8 +107,10 @@ namespace HypertensionControlUI.ViewModels
                 model.PatientVisitData = PatientVisitData;
             });
         }
+        
 
         public AsyncDelegateCommand ClassifyPatientTunningCommand { get; set; }
+        public AsyncDelegateCommand PatientsCommand { get; set; }
 
         #endregion
 

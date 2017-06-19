@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Security.Authentication;
 using System.Windows.Input;
 using HypertensionControlUI.Annotations;
 using HypertensionControlUI.Services;
@@ -11,10 +12,11 @@ namespace HypertensionControlUI.ViewModels
     {
         #region Fields
 
+        private readonly IdentityService _identityService;
+
         private readonly MainWindowViewModel _mainWindowViewModel;
-        private readonly LoginService _loginService;
         private bool _loginFailed;
-        private IViewProvider _viewProvider;
+        private readonly IViewProvider _viewProvider;
 
         #endregion
 
@@ -23,7 +25,7 @@ namespace HypertensionControlUI.ViewModels
 
         public string Login { get; set; }
         public string Password { get; set; }
-        public ICommand LoginCommand { get; private set; }
+        public ICommand LoginCommand { get; }
 
         #endregion
 
@@ -32,13 +34,33 @@ namespace HypertensionControlUI.ViewModels
 
         public bool LoginFailed
         {
-            get { return _loginFailed; }
+            get => _loginFailed;
             set
             {
                 if ( value == _loginFailed )
                     return;
                 _loginFailed = value;
                 OnPropertyChanged();
+            }
+        }
+
+        #endregion
+
+
+        #region Commands
+
+        private void LoginCommandHandler( object o )
+        {
+            try
+            {
+                LoginFailed = false;
+                _identityService.Login( Login, Password );
+                _mainWindowViewModel.User = _identityService.CurrentUser;
+                _viewProvider.NavigateToPage<PatientsViewModel>();
+            }
+            catch ( AuthenticationException )
+            {
+                LoginFailed = true;
             }
         }
 
@@ -52,8 +74,7 @@ namespace HypertensionControlUI.ViewModels
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged( [CallerMemberName] string propertyName = null )
         {
-            if ( PropertyChanged != null )
-                PropertyChanged( this, new PropertyChangedEventArgs( propertyName ) );
+            PropertyChanged?.Invoke( this, new PropertyChangedEventArgs( propertyName ) );
         }
 
         #endregion
@@ -61,10 +82,10 @@ namespace HypertensionControlUI.ViewModels
 
         #region Initialization
 
-        public LoginViewModel(MainWindowViewModel mainWindowViewModel,LoginService loginService, IViewProvider viewProvider)
+        public LoginViewModel( MainWindowViewModel mainWindowViewModel, IdentityService identityService, IViewProvider viewProvider )
         {
             _mainWindowViewModel = mainWindowViewModel;
-            _loginService = loginService;
+            _identityService = identityService;
             _viewProvider = viewProvider;
             LoginCommand = new AsyncDelegateCommand( LoginCommandHandler, LoginCommandCanExecute );
         }
@@ -77,17 +98,6 @@ namespace HypertensionControlUI.ViewModels
         private bool LoginCommandCanExecute( object o )
         {
             return !string.IsNullOrEmpty( Login ) && !string.IsNullOrEmpty( Password );
-        }
-
-        private void LoginCommandHandler( object o )
-        {
-            var user = _loginService.Login( Login, Password );
-            LoginFailed = user == null;
-            if ( !LoginFailed )
-            {
-                _mainWindowViewModel.User = user;
-                _viewProvider.NavigateToPage<PatientsViewModel>( );
-            }
         }
 
         #endregion

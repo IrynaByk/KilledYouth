@@ -15,7 +15,7 @@ namespace HypertensionControlUI.Models
         public string Name { get; set; }
         public string MiddleName { get; set; }
         public string Surname { get; set; }
-
+        public string CreatedBy { get; set; }
         public long BirthDateTicks { get; set; }
         public string BirthPlace { get; set; }
         public GenderType Gender { get; set; }
@@ -79,7 +79,7 @@ namespace HypertensionControlUI.Models
         }
 
         [NotMapped]
-        public HypertensionStage Stage
+        public HypertensionStage? Stage
         {
             get { return PatientVisitDataHistory.OrderByDescending( d => d.VisitDate ).First().HypertensionStage; }
         }
@@ -120,8 +120,8 @@ namespace HypertensionControlUI.Models
         public int Id { get; set; }
         public long VisitDateTicks { get; set; }
         public AlcoholСonsumption AlcoholСonsumption { get; set; }
-        public int StressPointsPSM_25 { get; set; }
-        public int DepressionPointsCES_D { get; set; }
+        public int? StressPointsPSM_25 { get; set; }
+        public int? DepressionPointsCES_D { get; set; }
         public SaltSensitivityTest SaltSensitivity { get; set; }
         public double Height { get; set; }
         public double Weight { get; set; }
@@ -131,7 +131,7 @@ namespace HypertensionControlUI.Models
         public DietaryHabits DietaryHabits { get; set; }
         public BloodPressure BloodPressure { get; set; }
         public PhysicalActivity? PhysicalActivity { get; set; }
-        public HypertensionStage HypertensionStage { get; set; }
+        public HypertensionStage? HypertensionStage { get; set; }
         public virtual Patient Patient { get; set; }
 
         #endregion

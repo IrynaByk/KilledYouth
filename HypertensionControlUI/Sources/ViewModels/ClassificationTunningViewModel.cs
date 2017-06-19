@@ -15,6 +15,8 @@ namespace HypertensionControlUI.ViewModels
         #region Fields
 
         private readonly DbContextFactory _dbContextFactory;
+        private readonly IViewProvider _viewProvider;
+        private readonly MainWindowViewModel _mainWindowViewModel;
         private Patient _patient;
         private PatientVisitData _patientVisitData;
         private List<PossibleData> _possibleData;
@@ -33,6 +35,8 @@ namespace HypertensionControlUI.ViewModels
 
         //   public PatientClassificator PatientClassificator { get; set; }
         public ICommand ClassifyPatientCommand { get; }
+        public ICommand PatientsCommand { get; private set; }
+        public ICommand ShowPatientCommand { get; set; }
 
         public ICommand ClassifyPossiblePatientCommand { get; }
         public Patient PossiblePatient { get; set; }
@@ -154,13 +158,27 @@ namespace HypertensionControlUI.ViewModels
         #region Initialization
 
         public ClassificationTunningViewModel( DbContextFactory dbContextFactory,
-                                               PatientClassificatorFactory patientClassificatorFactory )
+                                               PatientClassificatorFactory patientClassificatorFactory,
+                                               MainWindowViewModel mainWindowViewModel,
+                                               IViewProvider viewProvider )
         {
             PatientClassificatorFactory = patientClassificatorFactory;
+            _mainWindowViewModel = mainWindowViewModel;
+            _viewProvider = viewProvider;
             _dbContextFactory = dbContextFactory;
             PossibleData = new List<PossibleData>();
             ClassifyPatientCommand = new AsyncDelegateCommand( ClassifyPatientCommandHandler );
             ClassifyPossiblePatientCommand = new AsyncDelegateCommand( ClassifyPossiblePatientCommandHandler );
+            PatientsCommand = new AsyncDelegateCommand(o => _viewProvider.NavigateToPage<PatientsViewModel>(m => _mainWindowViewModel.Patient = null ));
+            ShowPatientCommand = new AsyncDelegateCommand(o => _viewProvider.NavigateToPage<IndividualPatientCardViewModel>(m =>
+            {
+                m.Patient = Patient;
+                m.PatientVisitData =
+                    Patient
+                        .PatientVisitDataHistory
+                        .OrderByDescending(pvd => pvd.VisitDate)
+                        .First();
+            }));
         }
 
         #endregion

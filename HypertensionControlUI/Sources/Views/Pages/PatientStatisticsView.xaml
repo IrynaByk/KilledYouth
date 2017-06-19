@@ -1,0 +1,74 @@
+﻿<views:PageViewBase x:TypeArguments="viewModels:PatientStatisticsViewModel"
+                    x:Class="HypertensionControlUI.Views.Pages.PatientStatisticsView"
+                    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                    xmlns:views="clr-namespace:HypertensionControlUI.Views"
+                    xmlns:viewModels="clr-namespace:HypertensionControlUI.ViewModels"
+                    xmlns:converters="clr-namespace:HypertensionControlUI.Views.Converters"
+                    xmlns:components="clr-namespace:HypertensionControlUI.Sources.Views.Components"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib"
+                    xmlns:models="clr-namespace:HypertensionControlUI.Models"
+                    mc:Ignorable="d"
+                    d:DataContext="{d:DesignInstance Type=viewModels:PatientStatisticsViewModel, IsDesignTimeCreatable=False}"
+                    d:DesignHeight="500" d:DesignWidth="500"
+                    Title="ClassificationTunning">
+
+    <Border>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.Resources>
+                <converters:EqualityConverter x:Key="NotNullEqualityConverter" True="false" False="true" />
+                <ObjectDataProvider x:Key="HStageProvider"
+                                    MethodName="GetValues"
+                                    ObjectType="{x:Type system:Enum}">
+                    <ObjectDataProvider.MethodParameters>
+                        <x:Type TypeName="models:HypertensionStage" />
+                    </ObjectDataProvider.MethodParameters>
+                </ObjectDataProvider>
+                <converters:HStageConverter x:Key="HStageConverter" />
+              
+                                    
+            </Grid.Resources>
+
+
+            
+           <Button Grid.Row="0"  Width="180" Margin="5, 3, 5, 3" Command="{Binding PatientsCommand}"
+                        Content="Перейти к списку пациентов" HorizontalAlignment="Left" />
+           
+           <ListView Grid.Row="1" Grid.ColumnSpan="2" Width="455" MaxHeight="550" Margin="5,5,5,5"
+                      ItemsSource="{Binding PatientStatisticsData}" HorizontalContentAlignment="Stretch" 
+                     ScrollViewer.VerticalScrollBarVisibility="Visible"
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"  />
+                    </Style>
+                </ListView.ItemContainerStyle>
+                <ListView.View>
+                    <GridView>
+                        <GridView.ColumnHeaderContainerStyle>
+                            <Style TargetType="{x:Type GridViewColumnHeader}">
+                                <Setter Property="IsEnabled" Value="False"/>
+                                <Style.Triggers>
+                                    <Trigger Property="IsEnabled" Value="False">
+                                        <Setter Property="TextElement.Foreground" Value="Black"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </GridView.ColumnHeaderContainerStyle>
+                        <GridViewColumn Header="Пациент" Width="100" DisplayMemberBinding="{Binding Path=Name}" />
+                        <GridViewColumn Header="Степень АГ" Width="100" DisplayMemberBinding="{Binding Path=LastStage, Converter={StaticResource HStageConverter}}"/>
+                        <GridViewColumn Header="Модель с генами"  Width="120" DisplayMemberBinding="{Binding Path=ModelWithGeneLastResult, StringFormat={}{0:f4}}"/>
+                        <GridViewColumn Header="Модель без генов" Width="120" DisplayMemberBinding="{Binding Path=ModelWithoutGeneLastResult, StringFormat={}{0:f4}}" />
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </Grid>
+    </Border>
+
+</views:PageViewBase>

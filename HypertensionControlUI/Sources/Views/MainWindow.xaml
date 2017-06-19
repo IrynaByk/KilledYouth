@@ -30,7 +30,7 @@
             Пациент: <Run Text="{Binding Patient.Surname}" /> <Run Text="{Binding Patient.Name}" />
             <Run Text="{Binding Patient.MiddleName}" />
         </TextBlock>
-        <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="5"
+        <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="5"
                     Visibility="{Binding User, Converter={StaticResource NotNullToVisibilityConverter}, Mode=OneWay}">
             <Menu >
                 <MenuItem MinWidth="180">
@@ -41,7 +41,7 @@
                             <TextBlock VerticalAlignment="Center" Text="{Binding User.Name}" />
                         </StackPanel>
                     </MenuItem.Header>
-                    <MenuItem MinWidth="180" Header="Настройки" Command="{Binding ShowSettingsCommand}"></MenuItem>
+<!--                    <MenuItem MinWidth="180" Header="Настройки" Command="{Binding ShowSettingsCommand}"></MenuItem>-->
                     <MenuItem MinWidth="180" Header="Выход" Command="{Binding LogOutCommand}"></MenuItem>
                 </MenuItem>
             </Menu>

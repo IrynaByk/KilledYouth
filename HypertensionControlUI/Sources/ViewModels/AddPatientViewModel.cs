@@ -325,7 +325,11 @@ namespace HypertensionControlUI.ViewModels
             AddPatientCommand = new AsyncDelegateCommand( AddPatientCommandHandler );
             DeleteMedicineCommand = new AsyncDelegateCommand( DeleteMedicineCommandHandler );
             AddMedicineCommand = new AsyncDelegateCommand( AddMedicineCommandHandler );
-            PatientsCommand = new AsyncDelegateCommand( o => _viewProvider.NavigateToPage<PatientsViewModel>() );
+            PatientsCommand = new AsyncDelegateCommand( o => _viewProvider.NavigateToPage<PatientsViewModel>( m =>
+                                                            {
+                                                                _mainWindowViewModel.Patient = null;
+                                                            }
+                                                        ) );
         }
 
         #endregion

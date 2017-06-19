@@ -50,7 +50,7 @@ namespace HypertensionControlUI
 
             //new SqlDbContext( container.GetInstance<ISettingsProvider>().ConnectionString ) );
             container.RegisterSingleton<DbContextFactory>();
-            container.RegisterSingleton<LoginService>();
+            container.RegisterSingleton<IdentityService>();
 
             container.RegisterSingleton<IViewProvider, ViewProvider>();
 
