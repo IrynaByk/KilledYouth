@@ -30,11 +30,11 @@ namespace HypertensionControlUI.ViewModels
         public List<Clinic> Clinics { get; set; }
         public PatientVisitData ActualPatientVisitData { get; set; }
         public string SelectedClinicName { get; set; }
-        public ICommand PatientsCommand { get; private set; }
-        public ICommand AddPatientCommand { get; private set; }
-        public ICommand DeleteMedicineCommand { get; private set; }
+        public ICommand PatientsCommand { get; }
+        public ICommand AddPatientCommand { get; }
+        public ICommand DeleteMedicineCommand { get; }
         public ObservableCollection<Medicine> Medicines { get; set; }
-        public bool IsQuestionnaireVisible { get; private set; }
+        public bool IsQuestionnaireVisible { get; }
         public ICommand AddMedicineCommand { get; set; }
 
         #endregion
@@ -44,7 +44,7 @@ namespace HypertensionControlUI.ViewModels
 
         public Patient Patient
         {
-            get { return _patient; }
+            get => _patient;
             set
             {
                 _patient = value;
@@ -55,7 +55,7 @@ namespace HypertensionControlUI.ViewModels
 
         public double? TreatmentDuration
         {
-            get { return Patient.TreatmentDuration; }
+            get => Patient.TreatmentDuration;
             set
             {
                 if ( value == TreatmentDuration )
@@ -68,7 +68,7 @@ namespace HypertensionControlUI.ViewModels
 
         public double Weight
         {
-            get { return ActualPatientVisitData.Weight; }
+            get => ActualPatientVisitData.Weight;
             set
             {
                 if (value == Weight)
@@ -82,7 +82,7 @@ namespace HypertensionControlUI.ViewModels
         }
         public double Height
         {
-            get { return ActualPatientVisitData.Height; }
+            get => ActualPatientVisitData.Height;
             set
             {
                 if (value == Height)
@@ -96,7 +96,7 @@ namespace HypertensionControlUI.ViewModels
         }
         public double WaistCircumference
         {
-            get { return ActualPatientVisitData.WaistCircumference; }
+            get => ActualPatientVisitData.WaistCircumference;
             set
             {
                 if (value == WaistCircumference)
@@ -137,7 +137,7 @@ namespace HypertensionControlUI.ViewModels
 
         public SmokingType SmokingType
         {
-            get { return ActualPatientVisitData.Smoking.Type; }
+            get => ActualPatientVisitData.Smoking.Type;
             set
             {
                 if (value == SmokingType)
@@ -152,7 +152,7 @@ namespace HypertensionControlUI.ViewModels
 
         public string SelectedClinicAddress
         {
-            get { return _selectedClinicAddress; }
+            get => _selectedClinicAddress;
             set
             {
                 if ( value == _selectedClinicAddress )
@@ -164,7 +164,7 @@ namespace HypertensionControlUI.ViewModels
 
         public Clinic SelectedClinic
         {
-            get { return _selectedClinic; }
+            get => _selectedClinic;
             set
             {
                 if ( _selectedClinic == value )
@@ -183,7 +183,7 @@ namespace HypertensionControlUI.ViewModels
 
         public bool HasTreatment
         {
-            get { return Patient.TreatmentDuration.HasValue; }
+            get => Patient.TreatmentDuration.HasValue;
             set
             {
                 if ( HasTreatment == value )
@@ -195,7 +195,7 @@ namespace HypertensionControlUI.ViewModels
 
         public bool NeverSmoke
         {
-            get { return SmokingType == SmokingType.Never; }
+            get => SmokingType == SmokingType.Never;
             set
             {
                 if ( !value )
@@ -206,7 +206,7 @@ namespace HypertensionControlUI.ViewModels
 
         public bool SmokingNow
         {
-            get { return SmokingType == SmokingType.Now; }
+            get => SmokingType == SmokingType.Now;
             set
             {
                 if ( !value )
@@ -217,7 +217,7 @@ namespace HypertensionControlUI.ViewModels
 
         public bool SmokingBefore
         {
-            get { return SmokingType == SmokingType.InPast; }
+            get => SmokingType == SmokingType.InPast;
             set
             {
                 if ( !value )
@@ -228,7 +228,7 @@ namespace HypertensionControlUI.ViewModels
 
         public string PatientName
         {
-            get { return Patient.Name; }
+            get => Patient.Name;
             set
             {
                 if ( value == Patient.Name )
@@ -240,7 +240,7 @@ namespace HypertensionControlUI.ViewModels
         }
         public GenderType PatientGender
         {
-            get { return Patient.Gender; }
+            get => Patient.Gender;
             set
             {
                 if (value == Patient.Gender)
@@ -252,7 +252,7 @@ namespace HypertensionControlUI.ViewModels
 
         public string PatientMiddleName
         {
-            get { return Patient.MiddleName; }
+            get => Patient.MiddleName;
             set
             {
                 if ( value == Patient.MiddleName )
@@ -265,7 +265,7 @@ namespace HypertensionControlUI.ViewModels
 
         public string PatientSurname
         {
-            get { return Patient.Surname; }
+            get => Patient.Surname;
             set
             {
                 if ( value == Patient.Surname )
@@ -278,7 +278,7 @@ namespace HypertensionControlUI.ViewModels
 
         public DateTime PatientBirthDate
         {
-            get { return Patient.BirthDate; }
+            get => Patient.BirthDate;
             set
             {
                 if ( value.Equals( Patient.BirthDate ) )
@@ -289,24 +289,13 @@ namespace HypertensionControlUI.ViewModels
             }
         }
 
-        public bool HaveNameAndAge
-        {
-            get
-            {
-                return !string.IsNullOrEmpty( Patient.Name ) &&
-                       !string.IsNullOrEmpty( Patient.Surname ) &&
-                       Patient.Age > 0 && Patient.Age < 120;
-            }
-        }
+        public bool HaveNameAndAge => !string.IsNullOrEmpty( Patient.Name ) &&
+                                      !string.IsNullOrEmpty( Patient.Surname ) &&
+                                      Patient.Age > 0 && Patient.Age < 120;
 
-        public bool HaveHeightWidthWaist
-        {
-            get {
-                return (ActualPatientVisitData.Weight > 0) &&
-                       (ActualPatientVisitData.Height > 0) &&
-                       (ActualPatientVisitData.WaistCircumference > 0);
-            }
-        }
+        public bool HaveHeightWidthWaist => (ActualPatientVisitData.Weight > 0) &&
+                                            (ActualPatientVisitData.Height > 0) &&
+                                            (ActualPatientVisitData.WaistCircumference > 0);
 
         #endregion
 

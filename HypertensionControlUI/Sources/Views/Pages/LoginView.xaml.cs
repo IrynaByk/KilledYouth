@@ -1,4 +1,5 @@
-﻿using HypertensionControlUI.ViewModels;
+﻿using System.Windows;
+using HypertensionControlUI.ViewModels;
 
 namespace HypertensionControlUI.Views.Pages
 {
@@ -10,6 +11,13 @@ namespace HypertensionControlUI.Views.Pages
         public LoginView()
         {
             InitializeComponent();
+        }
+
+        private void DEBUG_LoginAdmin_Click( object sender, RoutedEventArgs e )
+        {
+            ViewModel.Login = "admin";
+            ViewModel.Password = "admin";
+            ViewModel.LoginCommand?.Execute( null );
         }
     }
 }

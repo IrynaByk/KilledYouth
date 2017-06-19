@@ -30,8 +30,8 @@ namespace HypertensionControlUI.Views.Components
 
         public Uri NavigateUri
         {
-            get { return (Uri) GetValue( NavigateUriProperty ); }
-            set { SetValue( NavigateUriProperty, value ); }
+            get => (Uri) GetValue( NavigateUriProperty );
+            set => SetValue( NavigateUriProperty, value );
         }
 
         #endregion

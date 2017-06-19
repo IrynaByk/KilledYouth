@@ -35,7 +35,7 @@ namespace HypertensionControlUI.ViewModels
 
         //   public PatientClassificator PatientClassificator { get; set; }
         public ICommand ClassifyPatientCommand { get; }
-        public ICommand PatientsCommand { get; private set; }
+        public ICommand PatientsCommand { get; }
         public ICommand ShowPatientCommand { get; set; }
 
         public ICommand ClassifyPossiblePatientCommand { get; }

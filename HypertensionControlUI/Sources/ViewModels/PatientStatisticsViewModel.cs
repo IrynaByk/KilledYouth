@@ -20,7 +20,7 @@ namespace HypertensionControlUI.ViewModels
         private readonly MainWindowViewModel _mainWindowViewModel;
         private List<Patient> _patients;
         private List<PatientStatisticsRowViewModel> _patientStatisticsData;
-        public ICommand PatientsCommand { get; private set; }
+        public ICommand PatientsCommand { get; }
         #endregion
 
 

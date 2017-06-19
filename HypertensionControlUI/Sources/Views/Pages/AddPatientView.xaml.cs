@@ -13,7 +13,7 @@ namespace HypertensionControlUI.Views.Pages
 
         public override AddPatientViewModel ViewModel
         {
-            get { return DataContext as AddPatientViewModel; }
+            get => DataContext as AddPatientViewModel;
             set
             {
                 DataContext = value;

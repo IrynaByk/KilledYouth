@@ -30,8 +30,8 @@ namespace HypertensionControlUI.Models
         [NotMapped]
         public DateTime TesDate
         {
-            get { return  new DateTime( TestDateTicks); }
-            set { TestDateTicks = value.Ticks; }
+            get => new DateTime( TestDateTicks);
+            set => TestDateTicks = value.Ticks;
         }
 
         public long TestDateTicks { get; set; }

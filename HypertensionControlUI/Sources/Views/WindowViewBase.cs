@@ -7,10 +7,7 @@ namespace HypertensionControlUI.Views
     {
         #region Properties
 
-        public TViewModel ViewModel
-        {
-            get { return DataContext as TViewModel; }
-        }
+        public TViewModel ViewModel => DataContext as TViewModel;
 
         #endregion
 
