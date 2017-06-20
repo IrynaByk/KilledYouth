@@ -228,14 +228,20 @@ namespace HypertensionControlUI.ViewModels
 
         private void SetGene( string geneName, GeneValue value )
         {
-            if (value == GeneValue.None)
+            if ( value == GeneValue.None )
             {
-                Patient.Genes.Remove(Patient.Genes.FirstOrDefault(g => g.Name == geneName));
+                Patient.Genes.Remove( Patient.Genes.FirstOrDefault( g => g.Name == geneName ) );
                 return;
             }
-            var agt = Patient.Genes.FirstOrDefault(g => g.Name == geneName) ??
-                      new Gene { Name = geneName };
-            agt.Value = Convert.ToInt32(value);
+            var gene = Patient.Genes.FirstOrDefault( g => g.Name == geneName );
+            if ( gene == null )
+            {
+                gene = new Gene { Name = geneName, Value = Convert.ToInt32( value ) };
+                Patient.Genes.Add( gene );
+            }
+            else
+                gene.Value = Convert.ToInt32(value);
+
         }
 
         
@@ -410,14 +416,18 @@ namespace HypertensionControlUI.ViewModels
                 }
                 else
                     Patient.Clinic = new Clinic { Address = SelectedClinicAddress, Name = SelectedClinicName };
+
+                if ( Patient.Id != 0 )
+
+                    //                    db.Attach( Patient );
+                    ;else
+                    db.Patients.Add( Patient );
+
                 if ( ActualPatientVisitData.Id != 0 )
                     db.Attach( ActualPatientVisitData );
                 else
                     Patient.PatientVisitDataHistory.Add( ActualPatientVisitData );
-                if ( Patient.Id != 0 )
-                    db.Attach( Patient );
-                else
-                    db.Patients.Add( Patient );
+
                 db.SaveChanges();
             }
             _mainWindowViewModel.Patient = Patient;

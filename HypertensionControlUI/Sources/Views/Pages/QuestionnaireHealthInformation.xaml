@@ -24,6 +24,13 @@
                     <x:Type TypeName="models:HypertensionAncestralAnamnesis" />
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
+            <ObjectDataProvider x:Key="GeneValueProvider"
+                                MethodName="GetValues"
+                                ObjectType="{x:Type System:Enum}">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="viewModels:GeneValue" />
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
             
             <converters:MapConverter x:Key="GeneValuesConverter">
                 <converters:MapConverter.Values>
@@ -103,15 +110,25 @@
             <TextBlock Grid.Row="0" Grid.ColumnSpan="2" HorizontalAlignment="Center">Гены, влияющие на склонность к гипертензии:</TextBlock>
             <TextBlock Grid.Row="1" Grid.Column="0" Style="{StaticResource LabelStyle}">AGT</TextBlock>
             <ComboBox Grid.Row="1" Grid.Column="1"
-                      ItemsSource="{Binding Source={StaticResource GeneValuesConverter}}"
+                      ItemsSource="{Binding Source={StaticResource GeneValueProvider}}"
                       SelectedItem="{Binding AGT}"
                       Style="{StaticResource InputStyle}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding ., Converter={StaticResource GeneValuesConverter}}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
             </ComboBox>
             <TextBlock Grid.Row="2" Grid.Column="0" Style="{StaticResource LabelStyle}">AGTR2</TextBlock>
             <ComboBox Grid.Row="2" Grid.Column="1"
-                      ItemsSource="{Binding Source={StaticResource GeneValuesConverter}}"
+                      ItemsSource="{Binding Source={StaticResource GeneValueProvider}}"
                       SelectedItem="{Binding AGTR2}"
                       Style="{StaticResource InputStyle}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding ., Converter={StaticResource GeneValuesConverter}}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
             </ComboBox>
 
         </Grid>
