@@ -7,7 +7,6 @@
                     xmlns:views="clr-namespace:HypertensionControlUI.Views"
                     xmlns:viewModels="clr-namespace:HypertensionControlUI.ViewModels"
                     xmlns:converters="clr-namespace:HypertensionControlUI.Views.Converters"
-                    xmlns:components="clr-namespace:HypertensionControlUI.Sources.Views.Components"
                     xmlns:system="clr-namespace:System;assembly=mscorlib"
                     xmlns:models="clr-namespace:HypertensionControlUI.Models"
                     mc:Ignorable="d"
@@ -16,12 +15,10 @@
                     Title="ClassificationTunning">
 
     <Border>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <Grid.Resources>
+
+        <DockPanel VerticalAlignment="Stretch">
+
+            <FrameworkElement.Resources>
                 <converters:EqualityConverter x:Key="NotNullEqualityConverter" True="false" False="true" />
                 <ObjectDataProvider x:Key="HStageProvider"
                                     MethodName="GetValues"
@@ -31,44 +28,70 @@
                     </ObjectDataProvider.MethodParameters>
                 </ObjectDataProvider>
                 <converters:HStageConverter x:Key="HStageConverter" />
-              
-                                    
-            </Grid.Resources>
+            </FrameworkElement.Resources>
 
 
-            
-           <Button Grid.Row="0"  Width="180" Margin="5, 3, 5, 3" Command="{Binding PatientsCommand}"
-                        Content="Перейти к списку пациентов" HorizontalAlignment="Left" />
-           
-           <ListView Grid.Row="1" Grid.ColumnSpan="2" Width="455" MaxHeight="550" Margin="5,5,5,5"
-                      ItemsSource="{Binding PatientStatisticsData}" HorizontalContentAlignment="Stretch" 
-                     ScrollViewer.VerticalScrollBarVisibility="Visible"
-                     ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                <Button Margin="3" Padding="8,4" Command="{Binding PatientsCommand}"
+                        HorizontalAlignment="Left">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/Resources/Markup/Icons/back.png" Width="16" Height="16" Margin="0,0,8,0" />
+                        <TextBlock Text="Назад к списку пациентов" />
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+
+            <ListView Margin="3"
+                      ItemsSource="{Binding PatientStatisticsData}"
+                      HorizontalContentAlignment="Stretch" VerticalAlignment="Stretch"
+                      ScrollViewer.VerticalScrollBarVisibility="Visible"
+                      ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                 <ListView.ItemContainerStyle>
                     <Style TargetType="ListViewItem">
-                        <Setter Property="HorizontalContentAlignment" Value="Stretch"  />
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                     </Style>
                 </ListView.ItemContainerStyle>
                 <ListView.View>
                     <GridView>
                         <GridView.ColumnHeaderContainerStyle>
                             <Style TargetType="{x:Type GridViewColumnHeader}">
-                                <Setter Property="IsEnabled" Value="False"/>
+                                <Setter Property="IsEnabled" Value="False" />
                                 <Style.Triggers>
                                     <Trigger Property="IsEnabled" Value="False">
-                                        <Setter Property="TextElement.Foreground" Value="Black"/>
+                                        <Setter Property="TextElement.Foreground" Value="Black" />
                                     </Trigger>
                                 </Style.Triggers>
                             </Style>
                         </GridView.ColumnHeaderContainerStyle>
-                        <GridViewColumn Header="Пациент" Width="100" DisplayMemberBinding="{Binding Path=Name}" />
-                        <GridViewColumn Header="Степень АГ" Width="100" DisplayMemberBinding="{Binding Path=LastStage, Converter={StaticResource HStageConverter}}"/>
-                        <GridViewColumn Header="Модель с генами"  Width="120" DisplayMemberBinding="{Binding Path=ModelWithGeneLastResult, StringFormat={}{0:f4}}"/>
-                        <GridViewColumn Header="Модель без генов" Width="120" DisplayMemberBinding="{Binding Path=ModelWithoutGeneLastResult, StringFormat={}{0:f4}}" />
+                        <GridViewColumn Header="Пациент" Width="240" DisplayMemberBinding="{Binding Path=Name}" />
+                        <GridViewColumn Header="Степень АГ" Width="100">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Path=LastStage, Converter={StaticResource HStageConverter}}" HorizontalAlignment="Right"  Margin="0,0,6,0"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Header="Модель с генами" Width="120">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Path=ModelWithGeneLastResult, StringFormat={}{0:f4}}" HorizontalAlignment="Right" Margin="0,0,6,0"/>
+
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Header="Модель без генов" Width="120">
+                            <GridViewColumn.CellTemplate>
+
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Path=ModelWithoutGeneLastResult, StringFormat={}{0:f4}}" HorizontalAlignment="Right"  Margin="0,0,6,0"/>
+
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
                     </GridView>
                 </ListView.View>
             </ListView>
-        </Grid>
+        </DockPanel>
     </Border>
 
 </views:PageViewBase>

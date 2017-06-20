@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Windows.Controls;
 using HypertensionControlUI.ViewModels;
 using HypertensionControlUI.Views;
 using SimpleInjector;

@@ -1,39 +1,37 @@
 ﻿<views:PageViewBase x:Class="HypertensionControlUI.Views.Pages.MainView"
-                xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-                xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                xmlns:viewModels="clr-namespace:HypertensionControlUI.ViewModels"
-                xmlns:views="clr-namespace:HypertensionControlUI.Views"
-                Title="HipertensialControl"
-                Height="350"
-                Width="525"
-                x:TypeArguments="viewModels:MainViewModel"
-                mc:Ignorable="d"
-                d:DataContext="{d:DesignInstance Type=viewModels:MainViewModel, IsDesignTimeCreatable=False}">
+                    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                    xmlns:viewModels="clr-namespace:HypertensionControlUI.ViewModels"
+                    xmlns:views="clr-namespace:HypertensionControlUI.Views"
+                    Title="HipertensialControl"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    x:TypeArguments="viewModels:MainViewModel"
+                    mc:Ignorable="d"
+                    d:DataContext="{d:DesignInstance Type=viewModels:MainViewModel, IsDesignTimeCreatable=False}">
 
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition />
-            <ColumnDefinition />
-            <ColumnDefinition />
-            <ColumnDefinition />
-        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition />
             <RowDefinition />
-            <RowDefinition />
-            <RowDefinition />
         </Grid.RowDefinitions>
-        <Label Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="4"
-               HorizontalAlignment="Stretch"
+        <Label Grid.Column="0" Grid.Row="0"
+               HorizontalAlignment="Center"
                VerticalAlignment="Center"
                HorizontalContentAlignment="Center"
-               FontSize="16">
-            Добро пожаловать в программу HipertensialControl
+               FontSize="26">
+            <TextBlock TextAlignment="Center">
+                <Run Text="Добро пожаловать в программу" />
+                <LineBreak />
+                <Run FontWeight="bold" Text="Hypertension Control" />
+            </TextBlock>
         </Label>
-        <Button Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="2" Margin="3" Height="30" Command="{Binding ShowLoginCommand}">Войти</Button>
-       
+        <Button Grid.Row="1" Margin="96" Height="30" 
+                HorizontalAlignment="Center" MinWidth="360" VerticalAlignment="Top"
+                FontWeight="SemiBold" FontSize="16"
+                Command="{Binding ShowLoginCommand}" Content="Войти" />
     </Grid>
 
 </views:PageViewBase>

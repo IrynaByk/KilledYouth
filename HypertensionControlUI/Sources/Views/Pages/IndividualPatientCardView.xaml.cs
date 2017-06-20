@@ -1,12 +1,8 @@
-﻿using System;
-using System.IO;
-using System.IO.Packaging;
+﻿using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Markup;
-using System.Windows.Xps.Packaging;
-using System.Windows.Xps.Serialization;
 using System.Xml;
 using HypertensionControlUI.ViewModels;
 using HypertensionControlUI.Views.Components;
@@ -30,32 +26,48 @@ namespace HypertensionControlUI.Views.Pages
 
         #region Public methods
 
-        public int SaveAsXps( string fileName )
-
+        public void SendToPrinter()
         {
+            //  Clone the patient card
+            var documentClone = CloneXamlControl( IndividualCardDocumentViewer.Document );
 
-            using ( var container = Package.Open( fileName + ".xps",
-                                                  FileMode.Create ) )
-
-            using ( var xpsDoc = new XpsDocument( container, CompressionOption.Maximum ) )
-
+            //  Get the document paginator
+            //  Display the print dialog and print if confirmed
+            var dialog = new PrintDialog();
+            if ( dialog.ShowDialog() == true )
             {
-                var rsm = new XpsSerializationManager( new XpsPackagingPolicy( xpsDoc ), false );
+                documentClone.PageHeight = dialog.PrintableAreaHeight;
+                documentClone.PageWidth = dialog.PrintableAreaWidth;
+                documentClone.PagePadding = new Thickness( 0 );
 
-                var documentClone = CloneXamlControl( IndividualCard );
+                documentClone.ColumnGap = 0;
+                documentClone.ColumnWidth = dialog.PrintableAreaWidth;
 
-                var paginator = ((IDocumentPaginatorSource)documentClone).DocumentPaginator;
+                var paginator = ((IDocumentPaginatorSource) documentClone).DocumentPaginator;
 
-                // 8 inch x 6 inch, with half inch margin
+                // Wrap with fixed page size paginator: 8 inch x 6 inch, with half inch margin
+                paginator = new DocumentPaginatorWrapper( paginator, new Size( dialog.PrintableAreaWidth, dialog.PrintableAreaHeight ), new Size( 48, 48 ) );
 
-                paginator = new DocumentPaginatorWrapper( paginator, new Size( 768, 676 ), new Size( 48, 48 ) );
-
-                rsm.SaveAsXaml( paginator );
+                dialog.PrintDocument( paginator, "Patient card" );
             }
-            return 0;
         }
 
-        private T CloneXamlControl<T>( T source ) where  T : DependencyObject
+        #endregion
+
+
+        #region Event handlers
+
+        private void Print_Click( object sender, RoutedEventArgs e )
+        {
+            SendToPrinter();
+        }
+
+        #endregion
+
+
+        #region Non-public methods
+
+        private T CloneXamlControl<T>( T source ) where T : DependencyObject
         {
             var gridXaml = XamlWriter.Save( source );
             using ( var stringReader = new StringReader( gridXaml ) )
@@ -64,11 +76,5 @@ namespace HypertensionControlUI.Views.Pages
         }
 
         #endregion
-
-
-        private void Print_Click( object sender, RoutedEventArgs e )
-        {
-            SaveAsXps( "printCard" );
-        }
     }
 }

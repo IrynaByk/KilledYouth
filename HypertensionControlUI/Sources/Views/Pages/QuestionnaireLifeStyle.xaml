@@ -16,14 +16,7 @@
     <Grid>
         <Grid.Resources>
             <converters:EqualityConverter x:Key="NotSmokeEqualityConverter" True="false" False="true" />
-            <ObjectDataProvider x:Key="PhysicalActivityProvider"
-                                MethodName="GetValues"
-                                ObjectType="{x:Type System:Enum}">
-                <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="models:PhysicalActivity" />
-                </ObjectDataProvider.MethodParameters>
-            </ObjectDataProvider>
-            <converters:PhysicalActivityConverter x:Key="PhysicalActivityConverter" />
+
             <ObjectDataProvider x:Key="AlcoholConsumptionProvider"
                                 MethodName="GetValues"
                                 ObjectType="{x:Type System:Enum}">
@@ -31,7 +24,6 @@
                     <x:Type TypeName="models:AlcoholСonsumption" />
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
-            <converters:AlcoholConsumptionConverter x:Key="AlcoholConsumptionConverter" />
 
             <Style x:Key="LabelStyle" TargetType="TextBlock">
                 <Setter Property="Margin" Value="5" />
