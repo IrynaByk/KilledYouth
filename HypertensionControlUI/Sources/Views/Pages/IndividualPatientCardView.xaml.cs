@@ -29,7 +29,9 @@ namespace HypertensionControlUI.Views.Pages
         public void SendToPrinter()
         {
             //  Clone the patient card
-            var documentClone = CloneXamlControl( IndividualCardDocumentViewer.Document );
+            var flowDocumentScrollViewer = IndividualPatientCardContainer.FindChild<FlowDocumentScrollViewer>();
+            var flowDocument = flowDocumentScrollViewer.Document;
+            var documentClone = CloneXamlControl( flowDocument );
 
             //  Get the document paginator
             //  Display the print dialog and print if confirmed

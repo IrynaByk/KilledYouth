@@ -5,136 +5,145 @@
                     xmlns:viewModels="clr-namespace:HypertensionControlUI.ViewModels"
                     mc:Ignorable="d">
 
-    <FlowDocument x:Key="IndividualCardDocument" PageWidth="1074" d:DataContext="{d:DesignInstance Type=viewModels:IndividualPatientCardViewModel, IsDesignTimeCreatable=False}">
-        <FlowDocument.Resources>
-            <Style TargetType="TextBlock">
-                <Setter Property="Margin" Value="3, 0, 10, 0" />
-                <Setter Property="TextDecorations" Value="Underline" />
-            </Style>
-        </FlowDocument.Resources>
-        <Paragraph>
-            <Bold>Индивидуальная карта</Bold>
-        </Paragraph>
-        <Paragraph>
-            <Run Text="Ф.И.О.   " />
-            <TextBlock>
-                <Run Text="{Binding Patient.Surname, Converter={StaticResource NonNullConverter}}" />
-                <Run Text="{Binding Patient.Name, Converter={StaticResource NonNullConverter}}" />
-                <Run Text="{Binding Patient.MiddleName, Converter={StaticResource NonNullConverter}}" />
-            </TextBlock>
-        </Paragraph>
-        <Paragraph>
-            <Run Text="Место рождения   " />
-            <TextBlock>
-                <Run Text="{Binding Patient.BirthPlace, Converter={StaticResource NonNullConverter}}" />
-            </TextBlock>
-            <LineBreak />
-            <Run FontSize="11" Text="(страна, область)" />
-        </Paragraph>
-        <Paragraph>
-            <Run Text="Адрес/тел." />
-            <TextBlock>
-                <Run Text="{Binding Patient.Address, Converter={StaticResource NonNullConverter}}" />
-                <Run Text="{Binding Patient.Phone, Converter={StaticResource NonNullConverter}}" />
-            </TextBlock>
-        </Paragraph>
-        <Paragraph>
-            <Run Text="Дата рождения (число/месяц/год; полных лет)" />
-            <TextBlock>
-                <Run Text="{Binding Patient.BirthDate, Converter={StaticResource NonNullConverter}, StringFormat=dd/MM/yyy}" />
-                <Run Text="; " />
-                <Run Text="{Binding Patient.Age, Converter={StaticResource NonNullConverter}, Mode=OneWay}" />
-            </TextBlock>
-            <Run Text="Национальность" />
-            <TextBlock>
-                <Run Text="{Binding Patient.Nationality, Converter={StaticResource NonNullConverter}}" />
-            </TextBlock>
-        </Paragraph>
-        <Paragraph>
-            <Run Text="Диагноз" />
-            <TextBlock>
-                <Run Text="{Binding Patient.Diagnosis, Converter={StaticResource NonNullConverter}}" />
-            </TextBlock>
-        </Paragraph>
-        <Paragraph>
-            <Run Text="Сопутствующие заболевания" />
-            <TextBlock>
-                <Run Text="{Binding Patient.AccompanyingIllnesses, Converter={StaticResource NonNullConverter}}" />
-            </TextBlock>
-        </Paragraph>
-        <Paragraph>
-            <Run Text="Длительность АГ, гг." />
-            <TextBlock>
-                <Run Text="{Binding Patient.HypertensionDuration, Converter={StaticResource NonNullConverter}}" />
-            </TextBlock>
-            <Run Text="АД, мм рт.ст.:  правое плечо " />
-            <TextBlock>
-                <Run Text="{Binding PatientVisitData.BloodPressure.RightShoulderSBP, Converter={StaticResource NonNullConverter}}" />
-            </TextBlock>
-            <Run Text="левое плечо " />
-            <TextBlock>
-                <Run Text="{Binding PatientVisitData.BloodPressure.LeftShoulderSBP, Converter={StaticResource NonNullConverter}}" />
-            </TextBlock>
-            <Run Text="; ЧСС, уд/мин " />
-            <TextBlock>
-                <Run Text="{Binding PatientVisitData.BloodPressure.HeartRate, Converter={StaticResource NonNullConverter}}" />
-            </TextBlock>
-        </Paragraph>
-        <Paragraph>
-            <Run Text="Регулярное АГ лечение: да, срок, лек.средства, доза в сут; нет " />
-            <TextBlock>
-                <Run Text="{Binding TreatmentDescription, Converter={StaticResource NonNullConverter}, Mode=OneWay}" />
-            </TextBlock>
-        </Paragraph>
-        <Paragraph>
-            <Run Text="Рост, см " />
-            <TextBlock>
-                <Run Text="{Binding PatientVisitData.Height, Converter={StaticResource NonNullConverter}}" />
-            </TextBlock>
-            <Run Text=", Вес, кг " />
-            <TextBlock>
-                <Run Text="{Binding PatientVisitData.Weight, Converter={StaticResource NonNullConverter}}" />
-            </TextBlock>
-            <Run Text="ИМТ, кг/м&#178; " />
-            <TextBlock>
-                <Run Text="{Binding PatientVisitData.BMI, Converter={StaticResource NonNullConverter}, StringFormat={}{0:f2}, Mode=OneWay}" />
-            </TextBlock>
-            <Run Text="ОТ, см " />
-            <TextBlock>
-                <Run Text="{Binding PatientVisitData.WaistCircumference, Converter={StaticResource NonNullConverter}}" />
-            </TextBlock>
-        </Paragraph>
-        <Paragraph>
-            <Run Text="Физическая активность: " />
-            <TextBlock>
-                <Run
-                    Text="{Binding PatientVisitData.PhysicalActivity, Converter={StaticResource PhysicalActivityConverter}}" />
-            </TextBlock>
-        </Paragraph>
-        <Paragraph>
-            <Run Text="Курение:" />
-            <TextBlock>
-                <Run Text="{Binding SmokingDescription, Converter={StaticResource NonNullConverter}, Mode=OneWay}" />
-            </TextBlock>
-        </Paragraph>
-        <Paragraph>
-            <Run Text="Употребление алкоголя : " />
-            <TextBlock>
-                <Run
-                    Text="{Binding PatientVisitData.AlcoholСonsumption, Converter={StaticResource AlcoholConsumptionConverter}, Mode=OneWay}" />
-            </TextBlock>
-            <LineBreak />
-            <Run
-                Text="(максимальное разовое потребление: 1 станд. доза — 150 мл вина, 45 мл крепких напитков или 330 мл пива )" />
-        </Paragraph>
-        <Paragraph>
-            <Run Text="Наследственный анамнез — " />
-            <TextBlock>
-                <Run
-                    Text="{Binding Patient.HypertensionAncestralAnamnesis, Converter={StaticResource HAAConverter}}" />
-            </TextBlock>
-        </Paragraph>
-    </FlowDocument>
+    <ControlTemplate x:Key="IndividualPatientCardTemplate" d:DataContext="{d:DesignInstance Type=viewModels:IndividualPatientCardViewModel, IsDesignTimeCreatable=False}">
+        <Border SnapsToDevicePixels="True" UseLayoutRounding="True" BorderThickness="1" BorderBrush="Black" Margin="16">
+            <FlowDocumentScrollViewer x:Name="IndividualCardDocumentViewer"
+                                      HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalScrollBarVisibility="Auto">
+
+                <FlowDocument PageWidth="1074">
+                    <FlowDocument.Resources>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Margin" Value="3, 0, 10, 0" />
+                            <Setter Property="TextDecorations" Value="Underline" />
+                        </Style>
+                    </FlowDocument.Resources>
+                    <Paragraph>
+                        <Bold>Индивидуальная карта</Bold>
+                    </Paragraph>
+                    <Paragraph>
+                        <Run Text="Ф.И.О.   " />
+                        <TextBlock>
+                            <Run Text="{Binding Patient.Surname, Converter={StaticResource NonNullConverter}}" />
+                            <Run Text="{Binding Patient.Name, Converter={StaticResource NonNullConverter}}" />
+                            <Run Text="{Binding Patient.MiddleName, Converter={StaticResource NonNullConverter}}" />
+                        </TextBlock>
+                    </Paragraph>
+                    <Paragraph>
+                        <Run Text="Место рождения   " />
+                        <TextBlock>
+                            <Run Text="{Binding Patient.BirthPlace, Converter={StaticResource NonNullConverter}}" />
+                        </TextBlock>
+                        <LineBreak />
+                        <Run FontSize="11" Text="(страна, область)" />
+                    </Paragraph>
+                    <Paragraph>
+                        <Run Text="Адрес/тел." />
+                        <TextBlock>
+                            <Run Text="{Binding Patient.Address, Converter={StaticResource NonNullConverter}}" />
+                            <Run Text="{Binding Patient.Phone, Converter={StaticResource NonNullConverter}}" />
+                        </TextBlock>
+                    </Paragraph>
+                    <Paragraph>
+                        <Run Text="Дата рождения (число/месяц/год; полных лет)" />
+                        <TextBlock>
+                            <Run Text="{Binding Patient.BirthDate, Converter={StaticResource NonNullConverter}, StringFormat=dd/MM/yyy}" />
+                            <Run Text="; " />
+                            <Run Text="{Binding Patient.Age, Converter={StaticResource NonNullConverter}, Mode=OneWay}" />
+                        </TextBlock>
+                        <Run Text="Национальность" />
+                        <TextBlock>
+                            <Run Text="{Binding Patient.Nationality, Converter={StaticResource NonNullConverter}}" />
+                        </TextBlock>
+                    </Paragraph>
+                    <Paragraph>
+                        <Run Text="Диагноз" />
+                        <TextBlock>
+                            <Run Text="{Binding Patient.Diagnosis, Converter={StaticResource NonNullConverter}}" />
+                        </TextBlock>
+                    </Paragraph>
+                    <Paragraph>
+                        <Run Text="Сопутствующие заболевания" />
+                        <TextBlock>
+                            <Run Text="{Binding Patient.AccompanyingIllnesses, Converter={StaticResource NonNullConverter}}" />
+                        </TextBlock>
+                    </Paragraph>
+                    <Paragraph>
+                        <Run Text="Длительность АГ, гг." />
+                        <TextBlock>
+                            <Run Text="{Binding Patient.HypertensionDuration, Converter={StaticResource NonNullConverter}}" />
+                        </TextBlock>
+                        <Run Text="АД, мм рт.ст.:  правое плечо " />
+                        <TextBlock>
+                            <Run Text="{Binding PatientVisitData.BloodPressure.RightShoulderSBP, Converter={StaticResource NonNullConverter}}" />
+                        </TextBlock>
+                        <Run Text="левое плечо " />
+                        <TextBlock>
+                            <Run Text="{Binding PatientVisitData.BloodPressure.LeftShoulderSBP, Converter={StaticResource NonNullConverter}}" />
+                        </TextBlock>
+                        <Run Text="; ЧСС, уд/мин " />
+                        <TextBlock>
+                            <Run Text="{Binding PatientVisitData.BloodPressure.HeartRate, Converter={StaticResource NonNullConverter}}" />
+                        </TextBlock>
+                    </Paragraph>
+                    <Paragraph>
+                        <Run Text="Регулярное АГ лечение: да, срок, лек.средства, доза в сут; нет " />
+                        <TextBlock>
+                            <Run Text="{Binding TreatmentDescription, Converter={StaticResource NonNullConverter}, Mode=OneWay}" />
+                        </TextBlock>
+                    </Paragraph>
+                    <Paragraph>
+                        <Run Text="Рост, см " />
+                        <TextBlock>
+                            <Run Text="{Binding PatientVisitData.Height, Converter={StaticResource NonNullConverter}}" />
+                        </TextBlock>
+                        <Run Text=", Вес, кг " />
+                        <TextBlock>
+                            <Run Text="{Binding PatientVisitData.Weight, Converter={StaticResource NonNullConverter}}" />
+                        </TextBlock>
+                        <Run Text="ИМТ, кг/м&#178; " />
+                        <TextBlock>
+                            <Run Text="{Binding PatientVisitData.BMI, Converter={StaticResource NonNullConverter}, StringFormat={}{0:f2}, Mode=OneWay}" />
+                        </TextBlock>
+                        <Run Text="ОТ, см " />
+                        <TextBlock>
+                            <Run Text="{Binding PatientVisitData.WaistCircumference, Converter={StaticResource NonNullConverter}}" />
+                        </TextBlock>
+                    </Paragraph>
+                    <Paragraph>
+                        <Run Text="Физическая активность: " />
+                        <TextBlock>
+                            <Run
+                                Text="{Binding PatientVisitData.PhysicalActivity, Converter={StaticResource PhysicalActivityConverter}}" />
+                        </TextBlock>
+                    </Paragraph>
+                    <Paragraph>
+                        <Run Text="Курение:" />
+                        <TextBlock>
+                            <Run Text="{Binding SmokingDescription, Converter={StaticResource NonNullConverter}, Mode=OneWay}" />
+                        </TextBlock>
+                    </Paragraph>
+                    <Paragraph>
+                        <Run Text="Употребление алкоголя : " />
+                        <TextBlock>
+                            <Run
+                                Text="{Binding PatientVisitData.AlcoholСonsumption, Converter={StaticResource AlcoholConsumptionConverter}, Mode=OneWay}" />
+                        </TextBlock>
+                        <LineBreak />
+                        <Run
+                            Text="(максимальное разовое потребление: 1 станд. доза — 150 мл вина, 45 мл крепких напитков или 330 мл пива )" />
+                    </Paragraph>
+                    <Paragraph>
+                        <Run Text="Наследственный анамнез — " />
+                        <TextBlock>
+                            <Run
+                                Text="{Binding Patient.HypertensionAncestralAnamnesis, Converter={StaticResource HAAConverter}}" />
+                        </TextBlock>
+                    </Paragraph>
+                </FlowDocument>
+
+            </FlowDocumentScrollViewer>
+        </Border>
+    </ControlTemplate>
 
 
 </ResourceDictionary>

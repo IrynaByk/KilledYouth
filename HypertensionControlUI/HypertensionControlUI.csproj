@@ -222,6 +222,7 @@
     <Compile Include="Sources\Views\Pages\PatientsView.xaml.cs">
       <DependentUpon>PatientsView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Sources\Views\VisualTreeExtensions.cs" />
     <Compile Include="Sources\Views\WindowViewBase.cs" />
     <Page Include="Resources\PatientCardDocument.xaml">
       <SubType>Designer</SubType>
