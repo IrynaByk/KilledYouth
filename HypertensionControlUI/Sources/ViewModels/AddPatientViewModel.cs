@@ -193,6 +193,52 @@ namespace HypertensionControlUI.ViewModels
             }
         }
 
+        public GeneValue AGT
+        {
+            get { return GetGene("AGT"); }
+            set
+            {
+                if (AGT == value)
+                    return;
+                SetGene( "AGT", value );
+            }
+        }
+        public GeneValue AGTR2
+        {
+            get { return GetGene("AGTR2"); }
+            set
+            {
+                if (AGTR2 == value)
+                    return;
+                SetGene("AGTR2", value);
+            }
+        }
+
+        private GeneValue GetGene(string geneName)
+        {
+            var value = Patient.Genes.FirstOrDefault( g => g.Name == geneName )?.Value;
+            switch (value)
+            {
+                case null:
+                    return GeneValue.None;
+               default:
+                    return (GeneValue)value;
+            }
+        }
+
+        private void SetGene( string geneName, GeneValue value )
+        {
+            if (value == GeneValue.None)
+            {
+                Patient.Genes.Remove(Patient.Genes.FirstOrDefault(g => g.Name == geneName));
+                return;
+            }
+            var agt = Patient.Genes.FirstOrDefault(g => g.Name == geneName) ??
+                      new Gene { Name = geneName };
+            agt.Value = Convert.ToInt32(value);
+        }
+
+        
         public bool NeverSmoke
         {
             get { return SmokingType == SmokingType.Never; }
@@ -383,5 +429,14 @@ namespace HypertensionControlUI.ViewModels
         }
 
         #endregion
+    }
+
+    public enum GeneValue
+    {
+        None,
+        One,
+        Two,
+        Three
+
     }
 }

@@ -24,10 +24,20 @@
                     <x:Type TypeName="models:HypertensionAncestralAnamnesis" />
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
+            
+            <converters:MapConverter x:Key="GeneValuesConverter">
+                <converters:MapConverter.Values>
+                    <System:String x:Key="{x:Static viewModels:GeneValue.None}">Нет данных</System:String>
+                    <System:String x:Key="{x:Static viewModels:GeneValue.One}">Нет мутаций</System:String>
+                    <System:String x:Key="{x:Static viewModels:GeneValue.Two}">Мутация в одном аллеле</System:String>
+                    <System:String x:Key="{x:Static viewModels:GeneValue.Three}">Мутация в обоих аллелях</System:String>
+                </converters:MapConverter.Values>
+            </converters:MapConverter>
             <converters:HypertensionAncestralAnamnesisConverter x:Key="HAAConverter" />
             <converters:EqualityConverter x:Key="TreatmentEqualityConverter" True="false" False="true" />
         </Grid.Resources>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -78,8 +88,35 @@
                 у женщин младше 65 лет
             </CheckBox>
         </StackPanel>
-        <TextBlock Grid.Row="6" Grid.Column="0" Style="{StaticResource LabelStyle}">Регулярное лечение АГ:</TextBlock>
-        <StackPanel Grid.Row="6" Grid.Column="1" Orientation="Horizontal">
+
+        <Grid Grid.Row="6" ColumnSpan="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition  Width="*" />
+                <ColumnDefinition Width="2*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Row="0" Grid.ColumnSpan="2" HorizontalAlignment="Center">Гены, влияющие на склонность к гипертензии:</TextBlock>
+            <TextBlock Grid.Row="1" Grid.Column="0" Style="{StaticResource LabelStyle}">AGT</TextBlock>
+            <ComboBox Grid.Row="1" Grid.Column="1"
+                      ItemsSource="{Binding Source={StaticResource GeneValuesConverter}}"
+                      SelectedItem="{Binding AGT}"
+                      Style="{StaticResource InputStyle}">
+            </ComboBox>
+            <TextBlock Grid.Row="2" Grid.Column="0" Style="{StaticResource LabelStyle}">AGTR2</TextBlock>
+            <ComboBox Grid.Row="2" Grid.Column="1"
+                      ItemsSource="{Binding Source={StaticResource GeneValuesConverter}}"
+                      SelectedItem="{Binding AGTR2}"
+                      Style="{StaticResource InputStyle}">
+            </ComboBox>
+
+        </Grid>
+        <TextBlock Grid.Row="7" Grid.Column="0" Style="{StaticResource LabelStyle}">Регулярное лечение АГ:</TextBlock>
+        <StackPanel Grid.Row="7" Grid.Column="1" Orientation="Horizontal">
             <RadioButton IsChecked="{Binding HasTreatment}" Style="{StaticResource InputStyle}">
                 Да
             </RadioButton>
@@ -88,14 +125,14 @@
                 Нет
             </RadioButton>
         </StackPanel>
-        <TextBlock Grid.Row="7" Grid.Column="0" Style="{StaticResource LabelStyle}"
+        <TextBlock Grid.Row="8" Grid.Column="0" Style="{StaticResource LabelStyle}"
                    Visibility="{Binding HasTreatment, Converter={x:Static converters:BoolConverters.BoolToVisibility}}">
             Длительность лечения, гг.:
         </TextBlock>
-        <TextBox Grid.Row="7" Grid.Column="1" Style="{StaticResource InputStyle}"
+        <TextBox Grid.Row="8" Grid.Column="1" Style="{StaticResource InputStyle}"
                    Visibility="{Binding HasTreatment, Converter={x:Static converters:BoolConverters.BoolToVisibility}}"
                    Text="{Binding TreatmentDuration}" />
-        <StackPanel Grid.Row="8" Grid.ColumnSpan="2">
+        <StackPanel Grid.Row="9" Grid.ColumnSpan="2">
                         <FrameworkElement.Visibility>
                             <Binding Path="HasTreatment" Converter="{x:Static converters:BoolConverters.BoolToVisibility}" />
                         </FrameworkElement.Visibility>
@@ -135,7 +172,7 @@
         <!--        <TextBlock Grid.Row="8" Grid.Column="0" Style="{StaticResource LabelStyle}" >Дозировка:</TextBlock>-->
         <!--        <TextBlock Grid.Row="8" Grid.Column="1" Style="{StaticResource LabelStyle}" Text="{Binding Patient.HypertensionDuration}"></TextBlock>-->
         <!--        ~1~ Navigation buttons @1@-->
-        <Grid Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="2">
+        <Grid Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition />
