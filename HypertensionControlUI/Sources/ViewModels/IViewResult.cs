@@ -14,8 +14,8 @@
     {
         #region Auto-properties
 
-        public bool? Result { get; private set; }
-        public TViewModel ViewModel { get; private set; }
+        public bool? Result { get; }
+        public TViewModel ViewModel { get; }
 
         #endregion
 

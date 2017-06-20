@@ -31,7 +31,7 @@ namespace HypertensionControlUI.ViewModels
 
         public User User
         {
-            get { return _user; }
+            get => _user;
             set
             {
                 _user = value;
@@ -41,7 +41,7 @@ namespace HypertensionControlUI.ViewModels
 
         public string SelectedClinicAddress
         {
-            get { return _selectedClinicAddress; }
+            get => _selectedClinicAddress;
             set
             {
                 if ( value == _selectedClinicAddress )
@@ -53,7 +53,7 @@ namespace HypertensionControlUI.ViewModels
 
         public Clinic SelectedClinic
         {
-            get { return _selectedClinic; }
+            get => _selectedClinic;
             set
             {
                 if ( _selectedClinic == value )
@@ -70,19 +70,13 @@ namespace HypertensionControlUI.ViewModels
             }
         }
 
-        public bool HaveNameAndAge
-        {
-            get
-            {
-                return !string.IsNullOrEmpty( User.Name ) &&
-                       !string.IsNullOrEmpty( User.Surname ) &&
-                       !string.IsNullOrEmpty( User.Position ) &&
-                       User.Job != null &&
-                       !string.IsNullOrEmpty( User.Job.Name ) &&
-                       !string.IsNullOrEmpty( User.Job.Address ) &&
-                       !string.IsNullOrEmpty( User.PasswordHash );
-            }
-        }
+        public bool HaveNameAndAge => !string.IsNullOrEmpty( User.Name ) &&
+                                      !string.IsNullOrEmpty( User.Surname ) &&
+                                      !string.IsNullOrEmpty( User.Position ) &&
+                                      User.Job != null &&
+                                      !string.IsNullOrEmpty( User.Job.Name ) &&
+                                      !string.IsNullOrEmpty( User.Job.Address ) &&
+                                      !string.IsNullOrEmpty( User.PasswordHash );
 
         #endregion
 

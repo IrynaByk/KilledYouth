@@ -21,31 +21,19 @@ namespace HypertensionControlUI.Views.Components
 
         #region Properties
 
-        public override bool IsPageCountValid
+        public override bool IsPageCountValid => m_Paginator.IsPageCountValid;
 
-        {
-            get { return m_Paginator.IsPageCountValid; }
-        }
-
-        public override int PageCount
-
-        {
-            get { return m_Paginator.PageCount; }
-        }
+        public override int PageCount => m_Paginator.PageCount;
 
         public override Size PageSize
 
         {
-            get { return m_Paginator.PageSize; }
+            get => m_Paginator.PageSize;
 
-            set { m_Paginator.PageSize = value; }
+            set => m_Paginator.PageSize = value;
         }
 
-        public override IDocumentPaginatorSource Source
-
-        {
-            get { return m_Paginator.Source; }
-        }
+        public override IDocumentPaginatorSource Source => m_Paginator.Source;
 
         #endregion
 

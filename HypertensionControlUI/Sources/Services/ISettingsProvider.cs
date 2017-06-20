@@ -12,8 +12,8 @@ namespace HypertensionControlUI.Services
     {
         public string ConnectionString
         {
-            get { return Settings.Default.ConnectionString; }
-            set { Settings.Default.ConnectionString = value; }
+            get => Settings.Default.ConnectionString;
+            set => Settings.Default.ConnectionString = value;
         }
     }
 }

@@ -32,8 +32,7 @@ namespace HypertensionControlUI.CompositionRoot
         {
             var view = CreatePage<TViewModel>();
 
-            if ( initializer != null )
-                initializer( view.ViewModel );
+            initializer?.Invoke(view.ViewModel);
 
             _container.GetInstance<MainWindow>().MainWindowFrame.Navigate(view);
         }
@@ -43,8 +42,7 @@ namespace HypertensionControlUI.CompositionRoot
         {
             var view = CreateWindow<TViewModel>();
 
-            if ( initializer != null )
-                initializer( view.ViewModel );
+            initializer?.Invoke(view.ViewModel);
 
             view.Owner = _container.GetInstance<MainWindow>();
 

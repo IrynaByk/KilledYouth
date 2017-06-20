@@ -11,8 +11,8 @@ namespace HypertensionControlUI.Models
         [NotMapped]
         public DateTime? TestDate
         {
-            get { return  TestDateTicks != null ? new DateTime((long) TestDateTicks) : (DateTime?)null; }
-            set { TestDateTicks = value?.Ticks; }
+            get => TestDateTicks != null ? new DateTime((long) TestDateTicks) : (DateTime?)null;
+            set => TestDateTicks = value?.Ticks;
         }
 
         public long? TestDateTicks { get; set; }

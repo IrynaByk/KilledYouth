@@ -17,29 +17,17 @@ namespace HypertensionControlUI.ViewModels
 
         #region Auto-properties
 
-        public ICommand LogOutCommand { get; private set; }
-        public ICommand ShowSettingsCommand { get; private set; }
+        public ICommand LogOutCommand { get; }
+        public ICommand ShowSettingsCommand { get; }
 
         #endregion
 
 
         #region Properties
 
-        public User User
-        {
-            get { return _user; }
-            set
-            {
-                if ( Equals( value, _user ) )
-                    return;
-                _user = value;
-                OnPropertyChanged();
-            }
-        }
-
         public Patient Patient
         {
-            get { return _patient; }
+            get => _patient;
             set
             {
                 if ( Equals( value, _patient ) )
@@ -49,16 +37,28 @@ namespace HypertensionControlUI.ViewModels
             }
         }
 
+        public User User
+        {
+            get => _user;
+            set
+            {
+                if ( Equals( value, _user ) )
+                    return;
+                _user = value;
+                OnPropertyChanged();
+            }
+        }
+
         #endregion
 
 
         #region Initialization
 
-        public MainWindowViewModel(IViewProvider viewProvider)
+        public MainWindowViewModel( IViewProvider viewProvider )
         {
             _viewProvider = viewProvider;
             LogOutCommand = new AsyncDelegateCommand( LogOutView );
-            ShowSettingsCommand = new AsyncDelegateCommand(ShowUserView);
+            ShowSettingsCommand = new AsyncDelegateCommand( ShowUserView );
         }
 
         #endregion
@@ -70,12 +70,15 @@ namespace HypertensionControlUI.ViewModels
         {
             User = null;
             Patient = null;
+
             _viewProvider.NavigateToPage<MainViewModel>();
         }
-        private void ShowUserView(object o)
+
+        private void ShowUserView( object o )
         {
-            _viewProvider.NavigateToPage<UserViewModel>( m => m.User = User);
+            _viewProvider.NavigateToPage<UserViewModel>( m => m.User = User );
         }
+
         #endregion
     }
 }

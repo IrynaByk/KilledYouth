@@ -46,7 +46,11 @@ namespace HypertensionControlUI
             var container = new Container();
 
             // container.Register<IDbContext, FakeDbContext>();
-            container.Register<IDbContext>(() => new SqlDbContext("SQLiteDB"));
+
+            var resourceProvider = new ResourceProvider();
+            container.RegisterSingleton( resourceProvider );
+
+            container.Register<IDbContext>(() => new SqlDbContext("SQLiteDB", resourceProvider));
 
             //new SqlDbContext( container.GetInstance<ISettingsProvider>().ConnectionString ) );
             container.RegisterSingleton<DbContextFactory>();
@@ -58,7 +62,6 @@ namespace HypertensionControlUI
             container.RegisterSingleton<MainWindow>();
             container.RegisterSingleton(() => container.GetInstance<MainWindow>().MainWindowFrame);
 
-            //            container.Register( typeof (WindowViewBase<>), new[] { typeof (App).Assembly } );
             container.Register(typeof(PageViewBase<>), new[] {typeof(App).Assembly});
             container.RegisterSingleton<ISettingsProvider, SettingsProvider>();
             container.Register<LoginViewModel>();

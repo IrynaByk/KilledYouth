@@ -28,7 +28,7 @@ namespace HypertensionControlUI.ViewModels
 
         public PatientVisitData PatientVisitData
         {
-            get { return _patientVisitData; }
+            get => _patientVisitData;
             set
             {
                 if ( Equals( value, _patientVisitData ) )
@@ -40,7 +40,7 @@ namespace HypertensionControlUI.ViewModels
 
         public Patient Patient
         {
-            get { return _patient; }
+            get => _patient;
             set
             {
                 if ( Equals( value, _patient ) )
