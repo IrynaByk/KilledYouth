@@ -16,8 +16,8 @@ namespace HypertensionControlUI.Utils
         #region Events and invocation
 
         public event EventHandler CanExecuteChanged {
-            add { CommandManager.RequerySuggested += value; }
-            remove { CommandManager.RequerySuggested -= value; }
+            add => CommandManager.RequerySuggested += value;
+            remove => CommandManager.RequerySuggested -= value;
         }
     
 
@@ -46,10 +46,7 @@ namespace HypertensionControlUI.Utils
 
         public void Execute( object parameter )
         {
-            if ( execute != null )
-            {
-                execute( parameter );
-            }
+            execute?.Invoke(parameter);
         }
 
         #endregion
@@ -68,8 +65,8 @@ namespace HypertensionControlUI.Utils
         #region Events and invocation
 
         public event EventHandler CanExecuteChanged {
-            add { CommandManager.RequerySuggested += value; }
-            remove { CommandManager.RequerySuggested -= value; }
+            add => CommandManager.RequerySuggested += value;
+            remove => CommandManager.RequerySuggested -= value;
         }
     
 

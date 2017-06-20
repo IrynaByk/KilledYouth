@@ -9,8 +9,8 @@ namespace HypertensionControlUI.Views
 
         public virtual TViewModel ViewModel
         {
-            get { return DataContext as TViewModel; }
-            set { DataContext = value; }
+            get => DataContext as TViewModel;
+            set => DataContext = value;
         }
 
         #endregion

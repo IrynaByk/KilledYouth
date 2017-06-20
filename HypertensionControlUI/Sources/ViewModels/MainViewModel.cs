@@ -14,8 +14,7 @@ namespace HypertensionControlUI.ViewModels
 
         #region Auto-properties
 
-        public ICommand ShowLoginCommand { get; private set; }
-        
+        public ICommand ShowLoginCommand { get; }
 
         #endregion
 
@@ -27,7 +26,6 @@ namespace HypertensionControlUI.ViewModels
             _viewProvider = viewProvider;
 
             ShowLoginCommand = new AsyncDelegateCommand( ShowLoginView );
-            
         }
 
         #endregion
@@ -39,7 +37,6 @@ namespace HypertensionControlUI.ViewModels
         {
             _viewProvider.NavigateToPage<LoginViewModel>();
         }
-        
 
         #endregion
     }

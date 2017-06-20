@@ -13,7 +13,7 @@
       d:DataContext="{d:DesignInstance d:Type=viewModels:AddPatientViewModel, 
         IsDesignTimeCreatable=False }"
       Title="QuestionnaireHealthInformation"
-      Background="White">
+      Background="{StaticResource AppBackgroundBrush}">
 
     <Grid>
         <Grid.Resources>

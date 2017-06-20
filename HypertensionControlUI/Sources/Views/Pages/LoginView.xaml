@@ -8,17 +8,15 @@
                     xmlns:views="clr-namespace:HypertensionControlUI.Views"
                     Title="HipertensialControl"
                     mc:Ignorable="d"
-                    Height="350"
-                    Width="525"
+                    SnapsToDevicePixels="True"
+                    UseLayoutRounding="True"
+                    FontSize="14"
                     d:DataContext="{d:DesignInstance d:Type=viewModels:LoginViewModel, IsDesignTimeCreatable=False }">
-    <Page.Resources>
-        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-    </Page.Resources>
     <Grid>
         <Border
-            BorderBrush="Black"
+            Style="{StaticResource BlockStyle}"
+            Padding="12"
             BorderThickness="1"
-            Width="300"
             HorizontalAlignment="Center"
             VerticalAlignment="Center">
             <Grid>
@@ -31,53 +29,35 @@
                     <RowDefinition />
                     <RowDefinition />
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height="30" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                <Label Grid.ColumnSpan="2"
-                       HorizontalAlignment="Stretch"
-                       VerticalAlignment="Center"
-                       HorizontalContentAlignment="Center">
-                    Введите ваш логин и пароль
-                </Label>
-                <Label Grid.Column="0"
-                       Grid.Row="1"
-                       HorizontalAlignment="Left"
-                       VerticalAlignment="Center">
-                    Логин:
-                </Label>
-                <Label Grid.Column="0"
-                       Grid.Row="2"
-                       HorizontalAlignment="Left"
-                       VerticalAlignment="Center">
-                    Пароль:
-                </Label>
-                <TextBox Grid.Column="1"
-                         Grid.Row="1"
-                         HorizontalAlignment="Stretch"
-                         VerticalAlignment="Center"
-                         Margin="3"
+
+                <Label Grid.ColumnSpan="2" Margin="4" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Введите ваш логин и пароль" FontWeight="SemiBold" />
+
+                <Label Grid.Column="0" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Логин:" />
+                <Label Grid.Column="0" Grid.Row="2" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Пароль:" />
+
+                <TextBox Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                         Margin="3,5,3,3" MinWidth="160"
                          Text="{Binding Login, UpdateSourceTrigger=PropertyChanged }" />
-                <TextBox Grid.Column="1"
-                         Grid.Row="2"
-                         HorizontalAlignment="Stretch"
-                         VerticalAlignment="Center"
-                         Margin="3"
+
+                <TextBox Grid.Column="1" Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                         Margin="3" MinWidth="160"
                          Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}" />
-                <TextBlock Foreground="Red" Grid.Column="0"
-                           Grid.Row="3" Grid.ColumnSpan="2" HorizontalAlignment="Center"
-                           Visibility="{Binding LoginFailed, Converter={StaticResource BooleanToVisibilityConverter}}">
-                    Проверьте введенный логин и пароль!
-                </TextBlock>
-                <Button
-                    Grid.Column="1"
-                    Grid.Row="4"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Center"
-                    Margin="3"
-                    MinWidth="60"
-                    Command="{Binding LoginCommand}">
-                    OK
-                </Button>
+
+                <TextBlock Foreground="Red" FontWeight="SemiBold" 
+                           Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" HorizontalAlignment="Center"
+                           Margin="8"
+                           Visibility="{Binding LoginFailed, Converter={StaticResource BooleanToVisibilityConverter}}" 
+                           Text="Проверьте введенный логин и пароль!" />
+
+                <Button Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="4" HorizontalAlignment="Center" VerticalAlignment="Center"
+                        Margin="8" MinWidth="96"
+                        Command="{Binding LoginCommand}" Content="OK" />
+
+                <Button Grid.Column="0"
+                        Grid.Row="4"
+                        x:Name="DEBUG_LoginAdmin" Content="Admin" Click="DEBUG_LoginAdmin_Click" />
             </Grid>
         </Border>
     </Grid>

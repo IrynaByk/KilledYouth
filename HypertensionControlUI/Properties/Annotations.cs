@@ -81,7 +81,7 @@ namespace HypertensionControlUI.Annotations
       FormatParameterName = formatParameterName;
     }
 
-    public string FormatParameterName { get; private set; }
+    public string FormatParameterName { get; }
   }
 
   /// <summary>
@@ -96,7 +96,7 @@ namespace HypertensionControlUI.Annotations
       Name = name;
     }
 
-    [NotNull] public string Name { get; private set; }
+    [NotNull] public string Name { get; }
   }
 
   /// <summary>
@@ -158,7 +158,7 @@ namespace HypertensionControlUI.Annotations
       ParameterName = parameterName;
     }
 
-    public string ParameterName { get; private set; }
+    public string ParameterName { get; }
   }
 
   /// <summary>
@@ -216,8 +216,8 @@ namespace HypertensionControlUI.Annotations
       ForceFullStates = forceFullStates;
     }
 
-    public string Contract { get; private set; }
-    public bool ForceFullStates { get; private set; }
+    public string Contract { get; }
+    public bool ForceFullStates { get; }
   }
 
   /// <summary>
@@ -238,7 +238,7 @@ namespace HypertensionControlUI.Annotations
       Required = required;
     }
 
-    public bool Required { get; private set; }
+    public bool Required { get; }
   }
 
   /// <summary>
@@ -282,7 +282,7 @@ namespace HypertensionControlUI.Annotations
       BaseType = baseType;
     }
 
-    [NotNull] public Type BaseType { get; private set; }
+    [NotNull] public Type BaseType { get; }
   }
 
   /// <summary>
@@ -307,8 +307,8 @@ namespace HypertensionControlUI.Annotations
       TargetFlags = targetFlags;
     }
 
-    public ImplicitUseKindFlags UseKindFlags { get; private set; }
-    public ImplicitUseTargetFlags TargetFlags { get; private set; }
+    public ImplicitUseKindFlags UseKindFlags { get; }
+    public ImplicitUseTargetFlags TargetFlags { get; }
   }
 
   /// <summary>
@@ -382,7 +382,7 @@ namespace HypertensionControlUI.Annotations
       Comment = comment;
     }
 
-    public string Comment { get; private set; }
+    public string Comment { get; }
   }
 
   /// <summary>
@@ -420,7 +420,7 @@ namespace HypertensionControlUI.Annotations
       BasePath = basePath;
     }
 
-    public string BasePath { get; private set; }
+    public string BasePath { get; }
   }
 
   /// <summary>
@@ -511,7 +511,7 @@ namespace HypertensionControlUI.Annotations
       Format = format;
     }
 
-    public string Format { get; private set; }
+    public string Format { get; }
   }
 
   [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
@@ -522,7 +522,7 @@ namespace HypertensionControlUI.Annotations
       Format = format;
     }
 
-    public string Format { get; private set; }
+    public string Format { get; }
   }
 
   [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
@@ -533,7 +533,7 @@ namespace HypertensionControlUI.Annotations
       Format = format;
     }
 
-    public string Format { get; private set; }
+    public string Format { get; }
   }
 
   [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
@@ -544,7 +544,7 @@ namespace HypertensionControlUI.Annotations
       Format = format;
     }
 
-    public string Format { get; private set; }
+    public string Format { get; }
   }
 
   [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
@@ -555,7 +555,7 @@ namespace HypertensionControlUI.Annotations
       Format = format;
     }
 
-    public string Format { get; private set; }
+    public string Format { get; }
   }
 
   [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
@@ -566,7 +566,7 @@ namespace HypertensionControlUI.Annotations
       Format = format;
     }
 
-    public string Format { get; private set; }
+    public string Format { get; }
   }
 
   /// <summary>
@@ -584,7 +584,7 @@ namespace HypertensionControlUI.Annotations
       AnonymousProperty = anonymousProperty;
     }
 
-    public string AnonymousProperty { get; private set; }
+    public string AnonymousProperty { get; }
   }
 
   /// <summary>
@@ -601,7 +601,7 @@ namespace HypertensionControlUI.Annotations
       AnonymousProperty = anonymousProperty;
     }
 
-    public string AnonymousProperty { get; private set; }
+    public string AnonymousProperty { get; }
   }
 
   /// <summary>
@@ -619,7 +619,7 @@ namespace HypertensionControlUI.Annotations
       AnonymousProperty = anonymousProperty;
     }
 
-    public string AnonymousProperty { get; private set; }
+    public string AnonymousProperty { get; }
   }
 
   /// <summary>
@@ -707,7 +707,7 @@ namespace HypertensionControlUI.Annotations
       Name = name;
     }
 
-    public string Name { get; private set; }
+    public string Name { get; }
   }
 
   [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Field | AttributeTargets.Property)]
@@ -718,7 +718,7 @@ namespace HypertensionControlUI.Annotations
       Name = name;
     }
 
-    [NotNull] public string Name { get; private set; }
+    [NotNull] public string Name { get; }
   }
 
   /// <summary>
@@ -740,7 +740,7 @@ namespace HypertensionControlUI.Annotations
       CollectionAccessType = collectionAccessType;
     }
 
-    public CollectionAccessType CollectionAccessType { get; private set; }
+    public CollectionAccessType CollectionAccessType { get; }
   }
 
   [Flags]
@@ -777,7 +777,7 @@ namespace HypertensionControlUI.Annotations
       ConditionType = conditionType;
     }
 
-    public AssertionConditionType ConditionType { get; private set; }
+    public AssertionConditionType ConditionType { get; }
   }
 
   /// <summary>
@@ -852,8 +852,8 @@ namespace HypertensionControlUI.Annotations
       ControlType = controlType;
     }
 
-    public string TagName { get; private set; }
-    public Type ControlType { get; private set; }
+    public string TagName { get; }
+    public Type ControlType { get; }
   }
 
   [AttributeUsage(AttributeTargets.Property | AttributeTargets.Method)]
@@ -873,13 +873,13 @@ namespace HypertensionControlUI.Annotations
       Attribute = attribute;
     }
 
-    public string Attribute { get; private set; }
+    public string Attribute { get; }
   }
 
   [AttributeUsage(AttributeTargets.Property)]
   public sealed class AspTypePropertyAttribute : Attribute
   {
-    public bool CreateConstructorReferences { get; private set; }
+    public bool CreateConstructorReferences { get; }
 
     public AspTypePropertyAttribute(bool createConstructorReferences)
     {
@@ -895,7 +895,7 @@ namespace HypertensionControlUI.Annotations
       Name = name;
     }
 
-    public string Name { get; private set; }
+    public string Name { get; }
   }
 
   [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
@@ -907,8 +907,8 @@ namespace HypertensionControlUI.Annotations
       FieldName = fieldName;
     }
 
-    public string Type { get; private set; }
-    public string FieldName { get; private set; }
+    public string Type { get; }
+    public string FieldName { get; }
   }
 
   [AttributeUsage(AttributeTargets.Method)]
