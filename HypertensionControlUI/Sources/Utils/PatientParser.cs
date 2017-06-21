@@ -55,6 +55,7 @@ namespace HypertensionControlUI.Utils
             patient.BirthDate = DateTime.Today - TimeSpan.FromDays( Convert.ToInt32( patientProperties["age"] ) * 365 );
 
             patient.Gender = patientProperties["gender"].Contains( "ж" ) ? GenderType.Female : GenderType.Male;
+            patient.Genes = new List<Gene>();
             if ( !string.IsNullOrEmpty( patientProperties["AGT"] ) )
                 patient.Genes.Add( new Gene
                 {

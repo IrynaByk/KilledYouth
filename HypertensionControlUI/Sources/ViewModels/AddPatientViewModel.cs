@@ -236,7 +236,7 @@ namespace HypertensionControlUI.ViewModels
             var gene = Patient.Genes.FirstOrDefault( g => g.Name == geneName );
             if ( gene == null )
             {
-                gene = new Gene { Name = geneName, Value = Convert.ToInt32( value ) };
+                gene = new Gene { Name = geneName, Value = Convert.ToInt32( value ), PatientId = Patient.Id };
                 Patient.Genes.Add( gene );
             }
             else
@@ -407,10 +407,11 @@ namespace HypertensionControlUI.ViewModels
                     Patient.Clinic = new Clinic { Address = SelectedClinicAddress, Name = SelectedClinicName };
 
                 if ( Patient.Id != 0 )
-
-                    //                    db.Attach( Patient );
-                    ;else
+                    db.Attach( Patient );
+                else
                     db.Patients.Add( Patient );
+
+                var name = ((HypertensionControlUI.Services.SqlDbContext) db).Entry( Patient.Genes.First() ).OriginalValues["Value"];
 
                 if ( ActualPatientVisitData.Id != 0 )
                     db.Attach( ActualPatientVisitData );

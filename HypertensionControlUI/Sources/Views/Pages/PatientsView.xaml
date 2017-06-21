@@ -88,9 +88,15 @@
                             <StackPanel x:Name="PatientControls" Orientation="Horizontal" DockPanel.Dock="Right" Visibility="Collapsed">
                                 <Button Margin="2" Command="{Binding ElementName=PatientsList, Path=DataContext.EditPatientCommand}" CommandParameter="{Binding}">
                                     <Image Source="/Resources/Markup/Icons/edit.png" Stretch="UniformToFill" Width="16" Height="16" />
+                                    <Button.ToolTip>Изменить последнее посещение</Button.ToolTip>
+                                </Button>
+                                <Button Margin="2" Command="{Binding ElementName=PatientsList, Path=DataContext.AddPatientVisitCommand}" CommandParameter="{Binding}">
+                                    <Image Source="/Resources/Markup/Icons/plus.png" Stretch="UniformToFill" Width="16" Height="16" />
+                                    <Button.ToolTip>Добавить новое посещение</Button.ToolTip>
                                 </Button>
                                 <Button Margin="2" Command="{Binding ElementName=PatientsList, Path=DataContext.ShowPatientCommand}" CommandParameter="{Binding}">
                                     <Image Source="/Resources/Markup/Icons/attibutes.png" Width="16" Height="16" />
+                                    <Button.ToolTip>Просмотреть индивидуальную карту</Button.ToolTip>
                                 </Button>
                             </StackPanel>
 
