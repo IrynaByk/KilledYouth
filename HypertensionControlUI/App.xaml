@@ -19,7 +19,14 @@
 
                     <converters:NonNullConverter x:Key="NonNullConverter" />
                     <converters:PhysicalActivityConverter x:Key="PhysicalActivityConverter" />
-                    <converters:FactorsConverter x:Key="FactorsConverter" />
+                    <converters:MapConverter x:Key="FactorsConverter">
+                        <converters:MapConverter.Values>
+                            <system:String x:Key="Patient.Age">Возраст</system:String>
+                            <system:String x:Key="PatientVisitData.WaistCircumference">Объем талии</system:String>
+                            <system:String x:Key="PatientVisitData.Weight">Вес</system:String>
+                            <system:String x:Key="PatientVisitData.PatientVisitData">PhysicalActivity</system:String>
+                        </converters:MapConverter.Values>
+                    </converters:MapConverter>
                     <converters:AlcoholConsumptionConverter x:Key="AlcoholConsumptionConverter" />
                     <converters:HypertensionAncestralAnamnesisConverter x:Key="HAAConverter" />
                     <converters:EqualityConverter x:Key="NotNullEqualityConverter" True="false" False="true" />
@@ -45,6 +52,8 @@
                         <Setter Property="BorderThickness" Value="1" />
                         <Setter Property="BorderBrush" Value="DarkGray" />
                         <Setter Property="CornerRadius" Value="3" />
+                        <Setter Property="SnapsToDevicePixels" Value="True" />
+                        <Setter Property="UseLayoutRounding" Value="True" />
                     </Style>
 
 
@@ -72,10 +81,10 @@
                 </ResourceDictionary>
 
                 <ResourceDictionary Source="/Resources/PatientCardDocument.xaml" />
-                
+
             </ResourceDictionary.MergedDictionaries>
-            
+
         </ResourceDictionary>
-        
+
     </Application.Resources>
 </Application>

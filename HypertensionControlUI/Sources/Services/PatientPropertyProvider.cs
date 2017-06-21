@@ -14,9 +14,9 @@ namespace HypertensionControlUI.Services
 
         #region Public methods
 
-        public static object GetPropertyValue( string propertyName, Patient patient, PatientVisitData visitData )
+        public static object GetPropertyValue( string propertyName, object source )
         {
-            var currentObject = CurrentObject( ref propertyName, patient, visitData );
+            var currentObject = source; //CurrentObject( ref propertyName, patient, visitData );
 
             foreach ( var propertyNamePart in propertyName.Split( '.' ) )
             {
@@ -31,9 +31,9 @@ namespace HypertensionControlUI.Services
             return currentObject;
         }
 
-        public static void UpdatePatientByProperty( string propertyName, Patient patient, PatientVisitData visitData, object value )
+        public static void UpdatePatientByProperty( string propertyName, object source, object value )
         {
-            var currentObject = CurrentObject( ref propertyName, patient, visitData );
+            var currentObject = source; //CurrentObject( ref propertyName, patient, visitData );
             var pathStrings = propertyName.Split( '.' );
             for ( var i = 0; i < pathStrings.Length - 1; i++ )
             {
@@ -64,7 +64,7 @@ namespace HypertensionControlUI.Services
             if ( targetType.IsEnum )
                 return Enum.Parse( targetType, value.ToString() );
 
-            if ( (Nullable.GetUnderlyingType( targetType ) is Type underlyingType) && underlyingType.IsEnum )
+            if ( Nullable.GetUnderlyingType( targetType ) is Type underlyingType && underlyingType.IsEnum )
                 return Enum.Parse( underlyingType, value.ToString() );
 
             return System.Convert.ChangeType( value, targetType );

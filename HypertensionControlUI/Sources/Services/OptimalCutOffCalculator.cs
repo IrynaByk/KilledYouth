@@ -10,17 +10,19 @@ namespace HypertensionControlUI.Services
         public double CalculateOptimalCutOff(ClassificationModel model, List<Patient> patients)
         {
             //ToDo: filter patients which could be used for current model 
-            var applicablePatients = patients.Where(
-                                                 patient => model.Properties.All(p =>
-                                                     PatientPropertyProvider.GetPropertyValue(
-                                                         p.Name, patient, patient.PatientVisitDataHistory.OrderByDescending(d => d.VisitDate).First()) != null))
+            var applicablePatients = patients.Where( patient =>
+                                             {
+                                                 var dataSource = new { Patient = patient, PatientVisitData = patient.LastVisitData };
+                                                 return model.Properties.All( p => PatientPropertyProvider.GetPropertyValue( p.Name, dataSource ) != null );
+                                             } )
                                              .ToList();
 
             foreach (var p in applicablePatients)
             {
-                var temp = p.PatientVisitDataHistory.OrderByDescending(d => d.VisitDate).First();
-                Console.Write(p.Surname + " bmi "  + temp.ObesityBMI + " waist " +temp.ObesityWaistCircumference + " gene " + p.AGT_AGTR2 + " " + " gender " + p.Gender + " phiz " + temp.PhysicalActivity +  " maleHered "+ p.MaleHeredity + "; \n");
+                var lastVisitData = p.LastVisitData;
+                Console.Write( $@"{p.Surname} bmi {lastVisitData.ObesityBMI} waist {lastVisitData.ObesityWaistCircumference} gene {p.AGT_AGTR2}  gender {p.Gender} phiz {lastVisitData.PhysicalActivity} maleHered {p.MaleHeredity}; \n" );
             }
+
             var classificator = new PatientClassificator(model);
 
             var healthyCorrect = 0;
@@ -32,7 +34,7 @@ namespace HypertensionControlUI.Services
                 applicablePatients.Select(patient => new
                                            {
                                                Patient = patient,
-                                               Score = classificator.Classify(patient, patient.PatientVisitDataHistory.OrderByDescending(d => d.VisitDate).First())
+                                               Score = classificator.Classify( new { Patient = patient, PatientVisitData = patient.LastVisitData})
                                            })
                         .GroupBy(patientScore => patientScore.Score)
                         .OrderBy(scoreGroup => scoreGroup.Key)

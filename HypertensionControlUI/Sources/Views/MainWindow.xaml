@@ -15,39 +15,42 @@
         <FrameworkElement.Resources>
             <converters:NotNullToVisibilityConverter x:Key="NotNullToVisibilityConverter" />
         </FrameworkElement.Resources>
+
         <Border DockPanel.Dock="Top" Style="{StaticResource BlockStyle}" BorderThickness="0" CornerRadius="0">
-        <Grid >
-            <TextBlock HorizontalAlignment="Left"
-                       VerticalAlignment="Center"
-                       FontSize="16"
-                       Margin="5"
-                       Visibility="{Binding Patient, Converter={StaticResource NotNullToVisibilityConverter}, Mode=OneWay}">
-                <Run Text="Пациент: " /><Run Text="{Binding Patient.Surname}" /> <Run Text="{Binding Patient.Name}" /> <Run Text="{Binding Patient.MiddleName}" />
-            </TextBlock>
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="5"
-                        Visibility="{Binding User, Converter={StaticResource NotNullToVisibilityConverter}, Mode=OneWay}">
-                <Menu>
-                    <MenuItem MinWidth="180">
-                        <MenuItem.Header>
-                            <StackPanel Orientation="Horizontal">
-                                <Image Source="/Resources/user_man_kid.png" Stretch="None" />
-                                <TextBlock VerticalAlignment="Center">Здравствуйте,</TextBlock>
-                                <TextBlock VerticalAlignment="Center" Text="{Binding User.Name}" />
-                            </StackPanel>
-                        </MenuItem.Header>
-                        <!--                    <MenuItem MinWidth="180" Header="Настройки" Command="{Binding ShowSettingsCommand}"></MenuItem>-->
-                        <MenuItem MinWidth="180" Header="Выход" Command="{Binding LogOutCommand}" />
-                    </MenuItem>
-                </Menu>
-            </StackPanel>
+            <Grid>
+
+                <TextBlock Margin="16,5" FontSize="16"
+                           HorizontalAlignment="Left" VerticalAlignment="Center"
+                           Visibility="{Binding Patient, Converter={StaticResource NotNullToVisibilityConverter}, Mode=OneWay}">
+                    <Run Text="Пациент: " /><Run Text="{Binding Patient.Surname}" /> <Run Text="{Binding Patient.Name}" /> <Run Text="{Binding Patient.MiddleName}" />
+                </TextBlock>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="5"
+                            Visibility="{Binding User, Converter={StaticResource NotNullToVisibilityConverter}, Mode=OneWay}">
+                    <Menu>
+                        <MenuItem MinWidth="180">
+                            <MenuItem.Header>
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Source="/Resources/user_man_kid.png" Stretch="None" />
+                                    <TextBlock VerticalAlignment="Center">Здравствуйте,</TextBlock>
+                                    <TextBlock VerticalAlignment="Center" Text="{Binding User.Name}" />
+                                </StackPanel>
+                            </MenuItem.Header>
+                            <!--                    <MenuItem MinWidth="180" Header="Настройки" Command="{Binding ShowSettingsCommand}"></MenuItem>-->
+                            <MenuItem MinWidth="180" Header="Выход" Command="{Binding LogOutCommand}" />
+                        </MenuItem>
+                    </Menu>
+                </StackPanel>
+
             </Grid>
         </Border>
+
         <Frame x:Name="MainWindowFrame"
                Margin="5,8"
                SnapsToDevicePixels="True"
                UseLayoutRounding="True"
                HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
                HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-               NavigationUIVisibility="Hidden" />
+               NavigationUIVisibility="Hidden" IsTabStop="False"/>
     </DockPanel>
 </views:WindowViewBase>

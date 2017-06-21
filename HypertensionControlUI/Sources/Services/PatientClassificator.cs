@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using HypertensionControlUI.Models;
 using HypertensionControlUI.Models.Runtime;
@@ -17,7 +16,7 @@ namespace HypertensionControlUI.Services
 
         #region Initialization
 
-        public PatientClassificator(ClassificationModel classificationModel)
+        public PatientClassificator( ClassificationModel classificationModel )
         {
             RuntimeClassificationModel = new RuntimeClassificationModel( classificationModel );
         }
@@ -27,19 +26,18 @@ namespace HypertensionControlUI.Services
 
         #region Public methods
 
-        public double Classify( Patient patient, PatientVisitData visitData )
+        public double Classify( object dataSource )
         {
             var enumerable = RuntimeClassificationModel
                 .Properties
-                .Select(p => p.Scaler[Convert.ToDouble(PatientPropertyProvider.GetPropertyValue(p.Name, patient, visitData))] * p.ModelCoefficient)
+                .Select( p => p.Scaler[Convert.ToDouble( PatientPropertyProvider.GetPropertyValue( p.Name, dataSource ) )] * p.ModelCoefficient )
                 .ToList();
 
             var intermediateResult = enumerable.Sum() + RuntimeClassificationModel.FreeCoefficient;
 
-            return Math.Exp( intermediateResult )/(1 + Math.Exp( intermediateResult ));
+            return Math.Exp( intermediateResult ) / (1 + Math.Exp( intermediateResult ));
         }
 
-        
         #endregion
-    }
+    }   
 }

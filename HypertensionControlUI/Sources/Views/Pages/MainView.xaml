@@ -31,7 +31,8 @@
         <Button Grid.Row="1" Margin="96" Height="30" 
                 HorizontalAlignment="Center" MinWidth="360" VerticalAlignment="Top"
                 FontWeight="SemiBold" FontSize="16"
-                Command="{Binding ShowLoginCommand}" Content="Войти" />
+                Command="{Binding ShowLoginCommand}" 
+                Content="Войти" IsDefault="True"/>
     </Grid>
 
 </views:PageViewBase>

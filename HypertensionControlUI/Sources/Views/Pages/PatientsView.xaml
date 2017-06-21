@@ -14,130 +14,107 @@
                     mc:Ignorable="d"
                     Background="{StaticResource AppBackgroundBrush}"
                     d:DataContext="{d:DesignInstance Type=viewModels:PatientsViewModel, IsDesignTimeCreatable=False}">
-    <Grid>
-        <Grid.Resources>
-            <converters:EqualityConverter x:Key="NotNullEqualityConverter" True="false" False="true" />
-        </Grid.Resources>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="2*" />
-        </Grid.ColumnDefinitions>
+    <DockPanel Grid.Column="0">
 
-        <DockPanel Grid.Column="0">
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
 
-            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
-
-                <Button Margin="3"
-                        HorizontalAlignment="Right"
-                        Command="{Binding AddPatientCommand}"
-                        Padding="8,4">
-                    <StackPanel Orientation="Horizontal">
-                        <Image Source="/Resources/Markup/Icons/plus.png" Width="16" Height="16" VerticalAlignment="Center" Margin="0,0,8,0" />
-                        <TextBlock Text="Добавить пациента" VerticalAlignment="Center" />
-                    </StackPanel>
-                </Button>
-
-                <Button
-                    Margin="3"
+            <Button Margin="3"
                     HorizontalAlignment="Right"
-                    Command="{Binding ShowPatientStatistics}" Padding="8,4">
-                    <StackPanel Orientation="Horizontal">
-                        <Image Source="/Resources/Markup/Icons/attibutes.png" Width="16" Height="16" Margin="0,0,8,0" />
-                        <TextBlock Text="Общая статистика" />
-                    </StackPanel>
-                </Button>
-            </StackPanel>
-            
-            <DockPanel DockPanel.Dock="Top" Margin="3">
-                <TextBlock DockPanel.Dock="Left" Margin="3, 0, 6, 0" Text="Фильтр:" VerticalAlignment="Center" />
-                <TextBox Text="{Binding PatientFilter, UpdateSourceTrigger=PropertyChanged}" VerticalContentAlignment="Center" />
-            </DockPanel>
+                    Command="{Binding AddPatientCommand}"
+                    Padding="8,4">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="/Resources/Markup/Icons/plus.png" Width="16" Height="16" VerticalAlignment="Center" Margin="0,0,8,0" />
+                    <TextBlock Text="Добавить пациента" VerticalAlignment="Center" />
+                </StackPanel>
+            </Button>
 
-            <DockPanel DockPanel.Dock="Bottom" Visibility="Collapsed">
-                <Button
-                    Margin="3"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Top"
-                    Height="30"
-                    Width="100"
-                    IsEnabled="{Binding SelectedPatient, Converter={StaticResource NotNullEqualityConverter}, ConverterParameter={x:Null}, Mode=OneWay}"
-                    Command="{Binding EditPatientCommand}">
-                    Изменить
-                </Button>
-                <Button
-                    Margin="3"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Top"
-                    Height="30"
-                    Width="100"
-                    IsEnabled="{Binding SelectedPatient, Converter={StaticResource NotNullEqualityConverter}, ConverterParameter={x:Null}, Mode=OneWay}"
-                    Command="{Binding ShowPatientCommand}">
-                    Просмотреть
-                </Button>
-            </DockPanel>
+            <Button
+                Margin="3"
+                HorizontalAlignment="Right"
+                Command="{Binding ShowPatientStatistics}" Padding="8,4">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="/Resources/Markup/Icons/attibutes.png" Width="16" Height="16" Margin="0,0,8,0" />
+                    <TextBlock Text="Общая статистика" />
+                </StackPanel>
+            </Button>
+        </StackPanel>
+        <Grid>
+            <Grid.Resources>
+                <converters:EqualityConverter x:Key="NotNullEqualityConverter" True="false" False="true" />
+            </Grid.Resources>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="2*" />
+            </Grid.ColumnDefinitions>
 
+            <DockPanel>
+                <DockPanel DockPanel.Dock="Top" Margin="3">
+                    <TextBlock DockPanel.Dock="Left" Margin="3, 0, 6, 0" Text="Фильтр:" VerticalAlignment="Center" />
+                    <TextBox Text="{Binding PatientFilter, UpdateSourceTrigger=PropertyChanged}" VerticalContentAlignment="Center" />
+                </DockPanel>
 
-            <ListBox x:Name="PatientsList"
+                <ListBox x:Name="PatientsList"
                      Margin="3"
                      ItemsSource="{Binding PatientsView}" SelectedItem="{Binding SelectedPatient, Mode=TwoWay}"
                      HorizontalContentAlignment="Stretch">
-                <ListBox.ItemTemplate>
-                    <DataTemplate DataType="{x:Type models:Patient}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate DataType="{x:Type models:Patient}">
 
-                        <DockPanel x:Name="ItemContainer" Background="Transparent" Height="24">
-                            <StackPanel x:Name="PatientControls" Orientation="Horizontal" DockPanel.Dock="Right" Visibility="Collapsed">
-                                <Button Margin="2" Command="{Binding ElementName=PatientsList, Path=DataContext.EditPatientCommand}" CommandParameter="{Binding}">
-                                    <Image Source="/Resources/Markup/Icons/edit.png" Stretch="UniformToFill" Width="16" Height="16" />
-                                </Button>
-                                <Button Margin="2" Command="{Binding ElementName=PatientsList, Path=DataContext.ShowPatientCommand}" CommandParameter="{Binding}">
-                                    <Image Source="/Resources/Markup/Icons/attibutes.png" Width="16" Height="16" />
-                                </Button>
-                            </StackPanel>
+                            <DockPanel x:Name="ItemContainer" Background="Transparent" Height="24">
+                                <StackPanel x:Name="PatientControls" Orientation="Horizontal" DockPanel.Dock="Right" Visibility="Collapsed">
+                                    <Button Margin="1" Command="{Binding ElementName=PatientsList, Path=DataContext.EditPatientCommand}" CommandParameter="{Binding}">
+                                        <Image Source="/Resources/Markup/Icons/edit.png" Stretch="UniformToFill" Width="16" Height="16" />
+                                    </Button>
+                                    <Button Margin="1" Command="{Binding ElementName=PatientsList, Path=DataContext.ShowPatientCommand}" CommandParameter="{Binding}">
+                                        <Image Source="/Resources/Markup/Icons/attibutes.png" Width="16" Height="16" />
+                                    </Button>
+                                </StackPanel>
 
-                            <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch">
-                                <TextBlock VerticalAlignment="Center">
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch">
+                                    <TextBlock VerticalAlignment="Center">
                                     <TextBlock Text="{Binding Surname}" Margin="0, 0, 3, 0" />
                                     <TextBlock Text="{Binding Name}" Margin="0, 0, 3, 0" />
                                     <TextBlock Text="{Binding MiddleName}" />
                                 </TextBlock>
-                            </StackPanel>
-                        </DockPanel>
+                                </StackPanel>
+                            </DockPanel>
 
-                        <DataTemplate.Triggers>
-                            <Trigger Property="FrameworkElement.IsMouseOver" Value="True">
-                                <Setter TargetName="PatientControls" Property="Visibility" Value="Visible" />
-                            </Trigger>
-                        </DataTemplate.Triggers>
+                            <DataTemplate.Triggers>
+                                <Trigger Property="FrameworkElement.IsMouseOver" Value="True">
+                                    <Setter TargetName="PatientControls" Property="Visibility" Value="Visible" />
+                                </Trigger>
+                            </DataTemplate.Triggers>
 
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-
-        </DockPanel>
-
-        <Border Grid.Column="1" Style="{StaticResource BlockStyle}" Margin="8" Padding="24">
-            <DockPanel>
-                <StackPanel DataContext="{Binding SelectedPatient}" TextElement.FontSize="16">
-                    <StackPanel Orientation="Horizontal" Margin="5">
-                        <TextBlock Style="{StaticResource GrayedLabelStyle}" Margin="0,0,10,0">Пациент: </TextBlock>
-                        <TextBlock>
-                            <Run Text="{Binding Surname}" />
-                            <Run Text="{Binding Name}" />
-                            <Run Text="{Binding MiddleName}" />
-                        </TextBlock>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal" Margin="5">
-                        <TextBlock Style="{StaticResource GrayedLabelStyle}" Margin="0,0,10,0">Возраст:</TextBlock>
-                        <TextBlock Text="{Binding Age}" />
-                    </StackPanel>
-                    <StackPanel Orientation="Vertical" Margin="5">
-                        <TextBlock Style="{StaticResource GrayedLabelStyle}" HorizontalAlignment="Left" Margin="0,0,10,0">Адрес проживания:</TextBlock>
-                        <TextBlock Text="{Binding Address}" />
-                    </StackPanel>
-                </StackPanel>
-
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
             </DockPanel>
-        </Border>
+            <Border Grid.Column="1" Style="{StaticResource BlockStyle}" Margin="8,0" Padding="24">
+                <DockPanel>
+                    <StackPanel DataContext="{Binding SelectedPatient}" TextElement.FontSize="16">
+                        <StackPanel Orientation="Horizontal" Margin="5">
+                            <TextBlock Style="{StaticResource GrayedLabelStyle}" Margin="0,0,10,0">Пациент: </TextBlock>
+                            <TextBlock>
+                                <Run Text="{Binding Surname}" />
+                                <Run Text="{Binding Name}" />
+                                <Run Text="{Binding MiddleName}" />
+                            </TextBlock>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="5">
+                            <TextBlock Style="{StaticResource GrayedLabelStyle}" Margin="0,0,10,0">Возраст:</TextBlock>
+                            <TextBlock Text="{Binding Age}" />
+                        </StackPanel>
+                        <StackPanel Orientation="Vertical" Margin="5">
+                            <TextBlock Style="{StaticResource GrayedLabelStyle}" HorizontalAlignment="Left" Margin="0,0,10,0">Адрес проживания:</TextBlock>
+                            <TextBlock Text="{Binding Address}" />
+                        </StackPanel>
+                    </StackPanel>
 
-    </Grid>
+                </DockPanel>
+            </Border>
+
+        </Grid>
+    </DockPanel>
+
+
 </views:PageViewBase>

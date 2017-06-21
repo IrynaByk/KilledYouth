@@ -181,7 +181,7 @@ namespace HypertensionControlUI.ViewModels
         private double Score( PatientVisitData patientVisitData, ClassificationModel model )
         {
             var classificator = new PatientClassificator( model );
-            var score = classificator.Classify( _patient, patientVisitData );
+            var score = classificator.Classify( new {Patient =  _patient, PatientVisitData = patientVisitData });
             return score;
         }
 
@@ -189,7 +189,7 @@ namespace HypertensionControlUI.ViewModels
         {
             return classificationModel
                 .Properties
-                .All(p => PatientPropertyProvider.GetPropertyValue(p.Name, patient, visitData) != null);
+                .All(p => PatientPropertyProvider.GetPropertyValue(p.Name, new { Patient= patient, PatientVisistData = visitData}) != null);
         }
     }
 

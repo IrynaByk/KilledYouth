@@ -9,45 +9,40 @@ namespace HypertensionControlUI.Models
     {
         #region Auto-properties
 
+        public string AccompanyingIllnesses { get; set; }
+        public string Address { get; set; }
+        public long BirthDateTicks { get; set; }
+        public string BirthPlace { get; set; }
+        public virtual Clinic Clinic { get; set; }
+        public string CreatedBy { get; set; }
+        public string Diagnosis { get; set; }
+        public bool FemaleHeredity { get; set; }
+        public GenderType Gender { get; set; }
+
+        public virtual ICollection<Gene> Genes { get; set; }
+
+        public HypertensionAncestralAnamnesis HypertensionAncestralAnamnesis { get; set; }
+        public double HypertensionDuration { get; set; }
+
         //        [DatabaseGenerated( DatabaseGeneratedOption.Identity )]
         public int Id { get; set; }
 
-        public string Name { get; set; }
-        public string MiddleName { get; set; }
-        public string Surname { get; set; }
-        public string CreatedBy { get; set; }
-        public long BirthDateTicks { get; set; }
-        public string BirthPlace { get; set; }
-        public GenderType Gender { get; set; }
-        public string Nationality { get; set; }
-        public string Address { get; set; }
-        public string Phone { get; set; }
-        public string Diagnosis { get; set; }
-        public string AccompanyingIllnesses { get; set; }
-        public virtual Clinic Clinic { get; set; }
-        public double HypertensionDuration { get; set; }
-        public double? TreatmentDuration { get; set; }
         public bool MaleHeredity { get; set; }
-        public bool FemaleHeredity { get; set; }
 
         public virtual ICollection<Medicine> Medicine { get; set; }
+        public string MiddleName { get; set; }
 
-        public HypertensionAncestralAnamnesis HypertensionAncestralAnamnesis { get; set; }
-
-        public virtual ICollection<Gene> Genes { get; set; }
+        public string Name { get; set; }
+        public string Nationality { get; set; }
         public virtual ICollection<PatientVisitData> PatientVisitDataHistory { get; set; }
+        public string Phone { get; set; }
+        public string Surname { get; set; }
+        public double? TreatmentDuration { get; set; }
 
         #endregion
 
 
         #region Properties
-
-        [NotMapped]
-        public DateTime BirthDate
-        {
-            get => new DateTime( BirthDateTicks );
-            set => BirthDateTicks = value.Ticks;
-        }
 
         [NotMapped]
         public int Age
@@ -77,6 +72,16 @@ namespace HypertensionControlUI.Models
                 return 0;
             }
         }
+
+        [NotMapped]
+        public DateTime BirthDate
+        {
+            get => new DateTime( BirthDateTicks );
+            set => BirthDateTicks = value.Ticks;
+        }
+
+        [NotMapped]
+        public PatientVisitData LastVisitData => PatientVisitDataHistory.OrderByDescending( pvd => pvd.VisitDate ).First();
 
         [NotMapped]
         public HypertensionStage? Stage
@@ -117,34 +122,28 @@ namespace HypertensionControlUI.Models
     {
         #region Auto-properties
 
-        public int Id { get; set; }
-        public long VisitDateTicks { get; set; }
         public AlcoholСonsumption AlcoholСonsumption { get; set; }
-        public int? StressPointsPSM_25 { get; set; }
-        public int? DepressionPointsCES_D { get; set; }
-        public SaltSensitivityTest SaltSensitivity { get; set; }
-        public double Height { get; set; }
-        public double Weight { get; set; }
-        public double TemporaryBMI { get; set; }
-        public double WaistCircumference { get; set; }
-        public Smoking Smoking { get; set; }
-        public DietaryHabits DietaryHabits { get; set; }
         public BloodPressure BloodPressure { get; set; }
-        public PhysicalActivity? PhysicalActivity { get; set; }
+        public int? DepressionPointsCES_D { get; set; }
+        public DietaryHabits DietaryHabits { get; set; }
+        public double Height { get; set; }
         public HypertensionStage? HypertensionStage { get; set; }
+
+        public int Id { get; set; }
         public virtual Patient Patient { get; set; }
+        public PhysicalActivity? PhysicalActivity { get; set; }
+        public SaltSensitivityTest SaltSensitivity { get; set; }
+        public Smoking Smoking { get; set; }
+        public int? StressPointsPSM_25 { get; set; }
+        public double TemporaryBMI { get; set; }
+        public long VisitDateTicks { get; set; }
+        public double WaistCircumference { get; set; }
+        public double Weight { get; set; }
 
         #endregion
 
 
         #region Properties
-
-        [NotMapped]
-        public DateTime VisitDate
-        {
-            get => new DateTime( VisitDateTicks );
-            set => VisitDateTicks = value.Ticks;
-        }
 
         [NotMapped]
         public double? BMI
@@ -176,6 +175,13 @@ namespace HypertensionControlUI.Models
                 }
                 return null;
             }
+        }
+
+        [NotMapped]
+        public DateTime VisitDate
+        {
+            get => new DateTime( VisitDateTicks );
+            set => VisitDateTicks = value.Ticks;
         }
 
         #endregion

@@ -155,7 +155,7 @@ namespace HypertensionControlUI.Services
                     {
                         new ModelProperty
                         {
-                            Name = "Age",
+                            Name = "Patient.Age",
                             Entries = new List<ModelScaleEntry>
                             {
                                 new ModelScaleEntry { LowerBound = 45, Value = 1 }
@@ -164,37 +164,37 @@ namespace HypertensionControlUI.Services
                         },
                         new ModelProperty
                         {
-                            Name = "{PatientVisitData}.ObesityWaistCircumference",
+                            Name = "PatientVisitData.ObesityWaistCircumference",
                             Entries = new List<ModelScaleEntry>(),
                             ModelCoefficient = 0.694710
                         },
                         new ModelProperty
                         {
-                            Name = "{PatientVisitData}.ObesityBMI",
+                            Name = "PatientVisitData.ObesityBMI",
                             Entries = new List<ModelScaleEntry>(),
                             ModelCoefficient = 1.430112
                         },
                         new ModelProperty
                         {
-                            Name = "Gender",
+                            Name = "Patient.Gender",
                             Entries = new List<ModelScaleEntry>(),
                             ModelCoefficient = 0.705012
                         },
                         new ModelProperty
                         {
-                            Name = "{PatientVisitData}.PhysicalActivity",
+                            Name = "PatientVisitData.PhysicalActivity",
                             Entries = new List<ModelScaleEntry>(),
                             ModelCoefficient = 0.339633
                         },
                         new ModelProperty
                         {
-                            Name = "AGT_AGTR2",
+                            Name = "Patient.AGT_AGTR2",
                             Entries = new List<ModelScaleEntry>(),
                             ModelCoefficient = 0.468786
                         },
                         new ModelProperty
                         {
-                            Name = "MaleHeredity",
+                            Name = "Patient.MaleHeredity",
                             Entries = new List<ModelScaleEntry>(),
                             ModelCoefficient = 1.119191
                         }
@@ -213,7 +213,7 @@ namespace HypertensionControlUI.Services
                     {
                         new ModelProperty
                         {
-                            Name = "Age",
+                            Name = "Patient.Age",
                             Entries = new List<ModelScaleEntry>
                             {
                                 new ModelScaleEntry { LowerBound = 45, Value = 1 }
@@ -222,31 +222,31 @@ namespace HypertensionControlUI.Services
                         },
                         new ModelProperty
                         {
-                            Name = "{PatientVisitData}.ObesityWaistCircumference",
+                            Name = "PatientVisitData.ObesityWaistCircumference",
                             Entries = new List<ModelScaleEntry>(),
                             ModelCoefficient = 0.742955
                         },
                         new ModelProperty
                         {
-                            Name = "{PatientVisitData}.ObesityBMI",
+                            Name = "PatientVisitData.ObesityBMI",
                             Entries = new List<ModelScaleEntry>(),
                             ModelCoefficient = 1.433926
                         },
                         new ModelProperty
                         {
-                            Name = "{PatientVisitData}.PhysicalActivity",
+                            Name = "PatientVisitData.PhysicalActivity",
                             Entries = new List<ModelScaleEntry>(),
                             ModelCoefficient = 0.358464
                         },
                         new ModelProperty
                         {
-                            Name = "MaleHeredity",
+                            Name = "Patient.MaleHeredity",
                             Entries = new List<ModelScaleEntry>(),
                             ModelCoefficient = 1.007333
                         },
                         new ModelProperty
                         {
-                            Name = "Gender",
+                            Name = "Patient.Gender",
                             Entries = new List<ModelScaleEntry>(),
                             ModelCoefficient = 0.676926
                         }

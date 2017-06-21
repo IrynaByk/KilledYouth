@@ -367,6 +367,9 @@
     <Resource Include="Resources\Markup\Icons\print.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\Markup\Icons\go-first.png" />
+  </ItemGroup>
+  <ItemGroup>
     <Resource Include="Resources\Markup\Icons\back.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -37,12 +37,14 @@
                 <Label Grid.Column="0" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Логин:" />
                 <Label Grid.Column="0" Grid.Row="2" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Пароль:" />
 
-                <TextBox Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                <TextBox x:Name="LoginInput" FocusManager.FocusedElement="{Binding ElementName=LoginInput}" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Center"
                          Margin="3,5,3,3" MinWidth="160"
+                         TabIndex="0"
                          Text="{Binding Login, UpdateSourceTrigger=PropertyChanged }" />
 
                 <TextBox Grid.Column="1" Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Center"
                          Margin="3" MinWidth="160"
+                         TabIndex="1"
                          Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}" />
 
                 <TextBlock Foreground="Red" FontWeight="SemiBold" 
@@ -53,7 +55,8 @@
 
                 <Button Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="4" HorizontalAlignment="Center" VerticalAlignment="Center"
                         Margin="8" MinWidth="96"
-                        Command="{Binding LoginCommand}" Content="OK" />
+                        TabIndex="2"
+                        Command="{Binding LoginCommand}" Content="OK" IsDefault="True"/>
 
                 <Button Grid.Column="0"
                         Grid.Row="4"
