@@ -97,7 +97,7 @@ namespace HypertensionControlUI.Models
         public Patient()
         {
             PatientVisitDataHistory = new List<PatientVisitData>();
-            Genes = new List<Gene>();
+//            Genes = new List<Gene>();
             Medicine = new List<Medicine>();
         }
 

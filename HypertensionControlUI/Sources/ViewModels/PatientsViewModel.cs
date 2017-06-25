@@ -31,6 +31,7 @@ namespace HypertensionControlUI.ViewModels
 
         public ICommand AddPatientCommand { get; }
 
+        public AsyncDelegateCommand<Patient> AddPatientVisitCommand { get; set; }
         public AsyncDelegateCommand<Patient> EditPatientCommand { get; set; }
         public ICollectionView PatientsView { get; private set; }
         public AsyncDelegateCommand<Patient> ShowPatientCommand { get; set; }
@@ -107,6 +108,13 @@ namespace HypertensionControlUI.ViewModels
             {
                 m.Patient = new Patient();
                 m.Patient.CreatedBy = _identityService.CurrentUser.Login;
+                m.ActualPatientVisitData = new PatientVisitData { Patient = m.Patient };
+            } ) );
+
+            AddPatientVisitCommand = new AsyncDelegateCommand<Patient>(patient => _viewProvider.NavigateToPage<AddPatientViewModel>( m =>
+            {
+                _mainWindowViewModel.Patient = patient ?? SelectedPatient;
+                m.Patient = _mainWindowViewModel.Patient;
                 m.ActualPatientVisitData = new PatientVisitData { Patient = m.Patient };
             } ) );
 
