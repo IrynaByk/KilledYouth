@@ -26,8 +26,8 @@ namespace HypertensionControlUI.Services
             var classificator = new PatientClassificator(model);
 
             var healthyCorrect = 0;
-            var illCorrect = applicablePatients.Count(p => p.Stage != HypertensionStage.Healthy);
-            var healthyIncorrect = applicablePatients.Count(p => p.Stage == HypertensionStage.Healthy);
+            var illCorrect = applicablePatients.Count(p => p.HypertensionStage != HypertensionStage.Healthy);
+            var healthyIncorrect = applicablePatients.Count(p => p.HypertensionStage == HypertensionStage.Healthy);
             var illIncorrect = 0;
 
             var basePatientStageScoresGroupped =
@@ -57,7 +57,7 @@ namespace HypertensionControlUI.Services
             {
                 foreach (var patientScore in scoreGroup)
                 {
-                    if (patientScore.Patient.Stage == HypertensionStage.Healthy)
+                    if (patientScore.Patient.HypertensionStage == HypertensionStage.Healthy)
                     {
                         healthyCorrect ++;
                         healthyIncorrect --;

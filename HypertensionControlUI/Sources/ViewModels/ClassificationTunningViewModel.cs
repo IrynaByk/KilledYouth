@@ -52,8 +52,8 @@ namespace HypertensionControlUI.ViewModels
 
         public List<ClassificationModel> AvailableClassificationModels { get; set; }
 
-        public EditablePatientVisitData CorrectedLastVisitData { get; set; }
-        public EditablePatient CorrectedPatient { get; set; }
+        public PatientVisitData CorrectedLastVisitData { get; set; }
+        public Patient CorrectedPatient { get; set; }
 
         public ICommand PatientsCommand { get; }
         public ICommand ShowPatientCommand { get; set; }
@@ -121,6 +121,7 @@ namespace HypertensionControlUI.ViewModels
                 {
                     ClassifyPatient();
                     ResetCorrectedPatient();
+                    ClassifyCorrectedPatient();
                 }
             }
         }
@@ -163,8 +164,8 @@ namespace HypertensionControlUI.ViewModels
         ///     Maps the classification model properties to the initial patient properties they depend on.
         /// </summary>
         public List<EditablePropertyViewModel> GeneratePatientCorrectionData( ClassificationModel classificationModel,
-                                                                              EditablePatient patient,
-                                                                              EditablePatientVisitData possibleVisitData )
+                                                                              Patient patient,
+                                                                              PatientVisitData possibleVisitData )
         {
             var correctedDataList = new List<EditablePropertyViewModel>();
 
@@ -203,7 +204,7 @@ namespace HypertensionControlUI.ViewModels
             {
                 AvailableClassificationModels = db.ClassificationModels
                                                   .Include( model => model.LimitPoints )
-                                                  .Include( model => model.Properties.Select( property => property.Entries ) )
+                                                  .Include( model => model.Properties.Select( property => property.ScaleEntries ) )
                                                   .ToList()
                                                   .Where( m => IsApplicable( Patient, PatientVisitData, m ) )
                                                   .ToList();
@@ -214,8 +215,8 @@ namespace HypertensionControlUI.ViewModels
 
         private void ResetCorrectedPatient()
         {
-            CorrectedPatient = Mapper.Map<EditablePatient>( Patient );
-            CorrectedLastVisitData = CorrectedPatient.PatientVisitDataHistory.OrderByDescending( d => d.VisitDate ).First();
+            CorrectedPatient = Mapper.Map<Patient>( Patient );
+            CorrectedLastVisitData = CorrectedPatient.PatientVisitHistory.OrderByDescending( d => d.VisitDate ).First();
             CorrectableProperties = GeneratePatientCorrectionData( _selectedClassificationModel, CorrectedPatient, CorrectedLastVisitData );
         }
 
@@ -225,7 +226,7 @@ namespace HypertensionControlUI.ViewModels
             CorrectedClassificationResult = patientClassificator.Classify( new
             {
                 Patient = CorrectedPatient,
-                PatientVisitData = CorrectedPatient.PatientVisitDataHistory.OrderByDescending( pvd => pvd.VisitDate ).First()
+                PatientVisitData = CorrectedPatient.PatientVisitHistory.OrderByDescending( pvd => pvd.VisitDate ).First()
             } );
         }
 
@@ -270,7 +271,7 @@ namespace HypertensionControlUI.ViewModels
         public string MiddleName { get; set; }
         public string Name { get; set; }
         public string Nationality { get; set; }
-        public virtual ICollection<EditablePatientVisitData> PatientVisitDataHistory { get; set; }
+        public virtual ICollection<EditablePatientVisitData> PatientVisitHistory { get; set; }
         public string Phone { get; set; }
         public HypertensionStage? Stage { get; set; }
         public string Surname { get; set; }
@@ -281,7 +282,7 @@ namespace HypertensionControlUI.ViewModels
 
         #region Properties
 
-        public EditablePatientVisitData LastVisitData => PatientVisitDataHistory.OrderByDescending( pvd => pvd.VisitDate ).First();
+        public EditablePatientVisitData LastVisitData => PatientVisitHistory.OrderByDescending( pvd => pvd.VisitDate ).First();
 
         #endregion
     }

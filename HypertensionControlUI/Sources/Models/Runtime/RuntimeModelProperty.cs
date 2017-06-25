@@ -8,7 +8,7 @@ namespace HypertensionControlUI.Models.Runtime
 
         public string Name { get; set; }
         public IScaler Scaler { get; set; }
-        public double ModelCoefficient { get; set; }
+        public double Coefficient { get; set; }
 
         #endregion
     }

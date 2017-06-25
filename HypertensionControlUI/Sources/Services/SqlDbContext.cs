@@ -38,10 +38,10 @@ namespace HypertensionControlUI.Services
                         .HasForeignKey( p => p.ModelId )
                         .WillCascadeOnDelete();
 
-            modelBuilder.Entity<ModelProperty>().HasMany( p => p.Entries ).WithRequired().WillCascadeOnDelete();
+            modelBuilder.Entity<ModelProperty>().HasMany( p => p.ScaleEntries ).WithRequired().WillCascadeOnDelete();
             modelBuilder.Entity<Patient>().HasMany( p => p.Genes ).WithRequired().HasForeignKey( g => g.PatientId );
             modelBuilder.Entity<Patient>().HasMany( p => p.Medicine ).WithRequired();
-            modelBuilder.Entity<PatientVisitData>().HasRequired( pvd => pvd.Patient ).WithMany( p => p.PatientVisitDataHistory );
+            modelBuilder.Entity<PatientVisitData>().HasRequired( pvd => pvd.Patient ).WithMany( p => p.PatientVisitHistory );
             modelBuilder.Entity<ClassificationModel>().HasMany( p => p.LimitPoints ).WithRequired();
         }
 

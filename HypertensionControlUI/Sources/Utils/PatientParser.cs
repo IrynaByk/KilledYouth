@@ -16,7 +16,7 @@ namespace HypertensionControlUI.Utils
 
             var ruCulture = new CultureInfo( "RU-ru" );
 
-            patient.PatientVisitDataHistory.Add( patientVisitData );
+            patient.PatientVisitHistory.Add( patientVisitData );
 
             if ( !string.IsNullOrEmpty( patientProperties["HDurability"] ) )
             {

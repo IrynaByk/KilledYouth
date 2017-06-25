@@ -31,10 +31,10 @@ namespace HypertensionControlUI.Models.Runtime
                               .Select( p => new RuntimeModelProperty
                               {
                                   Name = p.Name,
-                                  Scaler = p.Entries.Any()
-                                      ? new RangedListScaler( p.Entries.Select( e => new RangeEntry( e.LowerBound, e.Value ) ) )
+                                  Scaler = p.ScaleEntries.Any()
+                                      ? new RangedListScaler( p.ScaleEntries.Select( e => new RangeEntry( e.LowerBound, e.Value ) ) )
                                       : (IScaler) new IdentityScaler(),
-                                  ModelCoefficient = p.ModelCoefficient
+                                  Coefficient = p.Coefficient
                               } )
                               .ToList();
 

@@ -1,0 +1,74 @@
+[
+  {
+    "Name": "Классификационная модель с генетическими данными. ",
+    "Description": "Переменные: возраст, пол, ИМТ, объём талии, наследственность сердечно-сосудистых заболеваний у близких родственников мужского пола младше 55, физическая активность, наличие мутации в генах AGT и AGTR2.\r\nПостроена на базе 601 опрошенных респондентов(точная формулировка - у Павловой).\r\nОптимальный порог отсечения выбран так, чтобы правильность определения здоровых и больных пациентов была максимально одинакова.",
+    "LimitPoints": [ {"Point": 0.5 } ],
+    "FreeCoefficient": -1.512651,
+    "Properties": [
+      {
+        "Name": "Patient.Age",
+        "ScaleEntries": [ { "LowerBound": 45.0, "Value": 1.0 } ],
+        "Coefficient": 1.092315
+      },
+      {
+        "Name": "PatientVisitData.ObesityWaistCircumference",
+        "Coefficient": 0.69471
+      },
+      {
+        "Name": "PatientVisitData.ObesityBMI",
+        "Coefficient": 1.430112
+      },
+      {
+        "Name": "Patient.Gender",
+        "Coefficient": 0.705012
+      },
+      {
+        "Name": "PatientVisitData.PhysicalActivity",
+        "Coefficient": 0.339633
+      },
+      {
+        "Name": "Patient.AGT_AGTR2",
+        "Coefficient": 0.468786
+      },
+      {
+        "Name": "Patient.MaleHeredity",
+        "Coefficient": 1.119191
+      }
+    ],
+    "OptimalCutOff": 0.654
+  },
+  {
+    "Name": "Классификационная модель не требующая генетических данных.",
+    "Description": "Переменные: возраст, пол, ИМТ, объём талии, наследственность сердечно-сосудистых заболеваний у близких родственников мужского пола младше 55, физическая активность.\r\nПостроена на базе 601 опрошенных респондентов(точная формулировка - у Павловой).\r\n Оптимальный порог отсечения выбран так, чтобы правильность определения здоровых и больных пациентов была максимально одинакова.",
+    "LimitPoints": [ { "Point": 0.5 } ],
+    "FreeCoefficient": -1.396398,
+    "Properties": [
+      {
+        "Name": "Patient.Age",
+        "ScaleEntries": [ { "LowerBound": 45.0, "Value": 1.0 } ],
+        "Coefficient": 0.997127
+      },
+      {
+        "Name": "PatientVisitData.ObesityWaistCircumference",
+        "Coefficient": 0.742955
+      },
+      {
+        "Name": "PatientVisitData.ObesityBMI",
+        "Coefficient": 1.433926
+      },
+      {
+        "Name": "PatientVisitData.PhysicalActivity",
+        "Coefficient": 0.358464
+      },
+      {
+        "Name": "Patient.MaleHeredity",
+        "Coefficient": 1.007333
+      },
+      {
+        "Name": "Patient.Gender",
+        "Coefficient": 0.676926
+      }
+    ],
+    "OptimalCutOff": 0.654
+  }
+]

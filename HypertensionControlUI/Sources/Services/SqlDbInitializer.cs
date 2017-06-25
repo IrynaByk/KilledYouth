@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Linq;
 using HypertensionControlUI.Models;
 using HypertensionControlUI.Utils;
+using Newtonsoft.Json;
 using SQLite.CodeFirst;
 
 namespace HypertensionControlUI.Services
@@ -78,7 +79,7 @@ namespace HypertensionControlUI.Services
             //                    new Gene { Name = "AGT", Value = 2 },
             //                    new Gene { Name = "AGTR2", Value = 3 }
             //                },
-            //                PatientVisitDataHistory = 
+            //                PatientVisitHistory = 
             //                {
             //                    new PatientVisitData
             //                        {
@@ -138,121 +139,17 @@ namespace HypertensionControlUI.Services
 
             var patients = ReadPatients();
 
-            var models = new List<ClassificationModel>
+            //  Load initial models from the JSON file stored in resources
+            List<ClassificationModel> models;
+            try
             {
-                new ClassificationModel
-                {
-                    LimitPoints = new List<LimitPoint> { new LimitPoint { Point = 0.5 } },
-                    OptimalCutOff = 0.654,
-                    Name = "Классификационная модель с генетическими данными. ",
-                    Description =
-                        "Переменные: возраст, пол, ИМТ, объём талии, наследственность сердечно-сосудистых заболеваний у близких родственников мужского пола младше 55, физическая активность, наличие мутации в генах AGT и AGTR2.\r\n" +
-                        "Построена на базе 601 опрошенных респондентов(точная формулировка - у Павловой).\r\n" +
-                        "Оптимальный порог отсечения выбран так, чтобы правильность определения здоровых и больных пациентов была максимально одинакова.",
-
-                    FreeCoefficient = -1.512651,
-                    Properties = new List<ModelProperty>
-                    {
-                        new ModelProperty
-                        {
-                            Name = "Patient.Age",
-                            Entries = new List<ModelScaleEntry>
-                            {
-                                new ModelScaleEntry { LowerBound = 45, Value = 1 }
-                            },
-                            ModelCoefficient = 1.092315
-                        },
-                        new ModelProperty
-                        {
-                            Name = "PatientVisitData.ObesityWaistCircumference",
-                            Entries = new List<ModelScaleEntry>(),
-                            ModelCoefficient = 0.694710
-                        },
-                        new ModelProperty
-                        {
-                            Name = "PatientVisitData.ObesityBMI",
-                            Entries = new List<ModelScaleEntry>(),
-                            ModelCoefficient = 1.430112
-                        },
-                        new ModelProperty
-                        {
-                            Name = "Patient.Gender",
-                            Entries = new List<ModelScaleEntry>(),
-                            ModelCoefficient = 0.705012
-                        },
-                        new ModelProperty
-                        {
-                            Name = "PatientVisitData.PhysicalActivity",
-                            Entries = new List<ModelScaleEntry>(),
-                            ModelCoefficient = 0.339633
-                        },
-                        new ModelProperty
-                        {
-                            Name = "Patient.AGT_AGTR2",
-                            Entries = new List<ModelScaleEntry>(),
-                            ModelCoefficient = 0.468786
-                        },
-                        new ModelProperty
-                        {
-                            Name = "Patient.MaleHeredity",
-                            Entries = new List<ModelScaleEntry>(),
-                            ModelCoefficient = 1.119191
-                        }
-                    }
-                },
-                new ClassificationModel
-                {
-                    LimitPoints = new List<LimitPoint> { new LimitPoint { Point = 0.5 } },
-                    OptimalCutOff = 0.654,
-                    Name = "Классификационная модель не требующая генетических данных.",
-                    Description =
-                        "Переменные: возраст, пол, ИМТ, объём талии, наследственность сердечно-сосудистых заболеваний у близких родственников мужского пола младше 55, физическая активность.\r\n" +
-                        "Построена на базе 601 опрошенных респондентов(точная формулировка - у Павловой).\r\n Оптимальный порог отсечения выбран так, чтобы правильность определения здоровых и больных пациентов была максимально одинакова.",
-                    FreeCoefficient = -1.396398,
-                    Properties = new List<ModelProperty>
-                    {
-                        new ModelProperty
-                        {
-                            Name = "Patient.Age",
-                            Entries = new List<ModelScaleEntry>
-                            {
-                                new ModelScaleEntry { LowerBound = 45, Value = 1 }
-                            },
-                            ModelCoefficient = 0.997127
-                        },
-                        new ModelProperty
-                        {
-                            Name = "PatientVisitData.ObesityWaistCircumference",
-                            Entries = new List<ModelScaleEntry>(),
-                            ModelCoefficient = 0.742955
-                        },
-                        new ModelProperty
-                        {
-                            Name = "PatientVisitData.ObesityBMI",
-                            Entries = new List<ModelScaleEntry>(),
-                            ModelCoefficient = 1.433926
-                        },
-                        new ModelProperty
-                        {
-                            Name = "PatientVisitData.PhysicalActivity",
-                            Entries = new List<ModelScaleEntry>(),
-                            ModelCoefficient = 0.358464
-                        },
-                        new ModelProperty
-                        {
-                            Name = "Patient.MaleHeredity",
-                            Entries = new List<ModelScaleEntry>(),
-                            ModelCoefficient = 1.007333
-                        },
-                        new ModelProperty
-                        {
-                            Name = "Patient.Gender",
-                            Entries = new List<ModelScaleEntry>(),
-                            ModelCoefficient = 0.676926
-                        }
-                    }
-                }
-            };
+                var modelsJson = _resourceProvider.ReadAllResourceText( "initial_models_data.json" );
+                models = JsonConvert.DeserializeObject<List<ClassificationModel>>( modelsJson );
+            }
+            catch ( Exception )
+            {
+                models = new List<ClassificationModel>();
+            }
 
             //            var optimalCutOffCalculator = new OptimalCutOffCalculator(new PatientPropertyProvider());
             //
@@ -269,12 +166,10 @@ namespace HypertensionControlUI.Services
 
         private List<Patient> ReadPatients()
         {
-            //  Call once!
-
             //  Try to load the data from the application resources
             try
             {
-                var lines = _resourceProvider.ReadAllResourceLines( "base_data.csv" );
+                var lines = _resourceProvider.ReadAllResourceLines( "initial_patients_data.csv" );
 
                 if ( lines.Length == 0 )
                     return new List<Patient>();

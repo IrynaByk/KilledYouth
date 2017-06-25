@@ -14,9 +14,10 @@ namespace HypertensionControlUI.Models
     {
         #region Auto-properties
 
-        public SmokingType Type { get; set; }
-        public double DurationInYears { get; set; }
         public int CigarettesPerDay { get; set; }
+        public double DurationInYears { get; set; }
+
+        public SmokingType Type { get; set; }
 
         #endregion
     }

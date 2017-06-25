@@ -24,7 +24,7 @@
                             <system:String x:Key="Patient.Age">Возраст</system:String>
                             <system:String x:Key="PatientVisitData.WaistCircumference">Объем талии</system:String>
                             <system:String x:Key="PatientVisitData.Weight">Вес</system:String>
-                            <system:String x:Key="PatientVisitData.PatientVisitData">PhysicalActivity</system:String>
+                            <system:String x:Key="PatientVisitData.PhysicalActivity">Физ. активность</system:String>
                         </converters:MapConverter.Values>
                     </converters:MapConverter>
                     <converters:AlcoholConsumptionConverter x:Key="AlcoholConsumptionConverter" />

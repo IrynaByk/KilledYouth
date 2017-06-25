@@ -49,25 +49,21 @@
                 </Button>
             </StackPanel>
 
-                <Border>
-                    <Grid>
+            <Border Margin="0,16">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="480" />
+                        <ColumnDefinition Width="12" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
 
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"></RowDefinition>
-                            <RowDefinition Height="1*"></RowDefinition>
-                            <RowDefinition Height="1.5*"></RowDefinition>
-                            <RowDefinition Height="1*"></RowDefinition>
-                        </Grid.RowDefinitions>
-                        <!--  Classification models  -->
-                        <Border Margin="0,8,0,16">
-                            <StackPanel>
-                                <TextBlock Style="{StaticResource HeaderStyle}" Text="Модели для классификации пациента" />
-                                <Grid MinHeight="120">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition />
-                                    </Grid.ColumnDefinitions>
-                                    <ListBox Grid.Column="0" FontSize="14"
+                    <!--  Models list and description  -->
+                    <Border Grid.Column="0" Style="{StaticResource PrognosisBlockStyle}">
+                        <StackPanel>
+                            <TextBlock Style="{StaticResource HeaderStyle}" Text="Модели для классификации пациента" />
+                            <Border Style="{StaticResource BlockStyle}">
+                                <StackPanel MinHeight="120">
+                                    <ListBox FontSize="14"
                                              ItemsSource="{Binding AvailableClassificationModels}"
                                              SelectedItem="{Binding SelectedClassificationModel, Mode=TwoWay}">
                                         <ListBox.ItemTemplate>
@@ -76,16 +72,27 @@
                                             </DataTemplate>
                                         </ListBox.ItemTemplate>
                                     </ListBox>
-                                    <Border Grid.Column="1" Style="{StaticResource BlockStyle}" Margin="8,0,0,0" Padding="8">
+                                    <Border Style="{StaticResource BlockStyle}" Margin="0,8,0,0" Padding="8">
                                         <TextBlock FontSize="14" TextWrapping="Wrap" Text="{Binding SelectedClassificationModel.Description}" />
                                     </Border>
-                                </Grid>
-                            </StackPanel>
-                        </Border>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </Border>
 
+                    <GridSplitter Grid.Column="1"></GridSplitter>
+                    
+                    <!--  Prognosis  -->
+                    <Grid Grid.Column="2">
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="1*" />
+                            <RowDefinition Height="1.5*" />
+                            <RowDefinition Height="1*" />
+                        </Grid.RowDefinitions>
 
                         <!--  Initial prognosis  -->
-                        <Border Grid.Row="1" Style="{StaticResource PrognosisBlockStyle}">
+                        <Border Grid.Row="0" Style="{StaticResource PrognosisBlockStyle}">
                             <StackPanel>
                                 <TextBlock Style="{StaticResource HeaderStyle}" Text="Прогноз" />
 
@@ -107,7 +114,7 @@
                         </Border>
 
                         <!--  Correction  -->
-                        <Border Grid.Row="2" Style="{StaticResource PrognosisBlockStyle}">
+                        <Border Grid.Row="1" Style="{StaticResource PrognosisBlockStyle}">
                             <StackPanel>
                                 <TextBlock Style="{StaticResource HeaderStyle}" Text="Возможная коррекция" />
 
@@ -191,7 +198,7 @@
                         </Border>
 
                         <!--  Corrected prognosis  -->
-                        <Border Grid.Row="3" Style="{StaticResource PrognosisBlockStyle}">
+                        <Border Grid.Row="2" Style="{StaticResource PrognosisBlockStyle}">
                             <StackPanel>
                                 <TextBlock Style="{StaticResource HeaderStyle}" Text="Прогноз после коррекции" />
                                 <StackPanel TextBlock.FontSize="14" Orientation="Horizontal" Margin="32,0,0,8">
@@ -208,7 +215,8 @@
                         </Border>
 
                     </Grid>
-                </Border>
+                </Grid>
+            </Border>
         </DockPanel>
     </Border>
 

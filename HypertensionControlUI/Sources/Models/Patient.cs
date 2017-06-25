@@ -5,9 +5,34 @@ using System.Linq;
 
 namespace HypertensionControlUI.Models
 {
+    /// <summary>
+    ///     Existing genders.
+    /// </summary>
+    public enum GenderType
+    {
+        Female,
+        Male
+    }
+
+    /// <summary>
+    ///     Existing hypertension stages.
+    /// </summary>
+    public enum HypertensionStage
+    {
+        Healthy,
+        Stage1,
+        Stage2,
+        Stage3
+    }
+
+    /// <summary>
+    ///     Describes a patient stored in a DB.
+    /// </summary>
     public class Patient
     {
         #region Auto-properties
+
+        public int Id { get; set; }
 
         public string AccompanyingIllnesses { get; set; }
         public string Address { get; set; }
@@ -24,9 +49,6 @@ namespace HypertensionControlUI.Models
         public HypertensionAncestralAnamnesis HypertensionAncestralAnamnesis { get; set; }
         public double HypertensionDuration { get; set; }
 
-        //        [DatabaseGenerated( DatabaseGeneratedOption.Identity )]
-        public int Id { get; set; }
-
         public bool MaleHeredity { get; set; }
 
         public virtual ICollection<Medicine> Medicine { get; set; }
@@ -34,7 +56,7 @@ namespace HypertensionControlUI.Models
 
         public string Name { get; set; }
         public string Nationality { get; set; }
-        public virtual ICollection<PatientVisitData> PatientVisitDataHistory { get; set; }
+        public virtual ICollection<PatientVisitData> PatientVisitHistory { get; set; }
         public string Phone { get; set; }
         public string Surname { get; set; }
         public double? TreatmentDuration { get; set; }
@@ -48,7 +70,7 @@ namespace HypertensionControlUI.Models
         public int Age
         {
             get => (DateTime.Now - BirthDate).Days / 365;
-            set => BirthDate = DateTime.Now - TimeSpan.FromDays( Age * 365 );
+            set => BirthDate = DateTime.Now - TimeSpan.FromDays( value * 365 );
         }
 
         [NotMapped]
@@ -81,13 +103,10 @@ namespace HypertensionControlUI.Models
         }
 
         [NotMapped]
-        public PatientVisitData LastVisitData => PatientVisitDataHistory.OrderByDescending( pvd => pvd.VisitDate ).First();
+        public PatientVisitData LastVisitData => PatientVisitHistory.OrderByDescending( pvd => pvd.VisitDate ).First();
 
         [NotMapped]
-        public HypertensionStage? Stage
-        {
-            get { return PatientVisitDataHistory.OrderByDescending( d => d.VisitDate ).First().HypertensionStage; }
-        }
+        public HypertensionStage? HypertensionStage => LastVisitData.HypertensionStage;
 
         #endregion
 
@@ -96,26 +115,11 @@ namespace HypertensionControlUI.Models
 
         public Patient()
         {
-            PatientVisitDataHistory = new List<PatientVisitData>();
-//            Genes = new List<Gene>();
+            PatientVisitHistory = new List<PatientVisitData>();
             Medicine = new List<Medicine>();
         }
 
         #endregion
-    }
-
-    public enum GenderType
-    {
-        Female,
-        Male
-    }
-
-    public enum HypertensionStage
-    {
-        Healthy,
-        Stage1,
-        Stage2,
-        Stage3
     }
 
     public class PatientVisitData

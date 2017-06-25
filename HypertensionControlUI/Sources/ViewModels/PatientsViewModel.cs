@@ -97,7 +97,7 @@ namespace HypertensionControlUI.ViewModels
             using ( var db = _dbContextFactory.GetDbContext() )
             {
                 Patients = db.Patients
-                             .Include( p => p.PatientVisitDataHistory )
+                             .Include( p => p.PatientVisitHistory )
                              .Include( p => p.Clinic )
                              .Include( p => p.Medicine )
                              .Include( p => p.Genes )
@@ -124,7 +124,7 @@ namespace HypertensionControlUI.ViewModels
 
                 m.Patient = _mainWindowViewModel.Patient;
                 m.ActualPatientVisitData = _mainWindowViewModel.Patient
-                                                               .PatientVisitDataHistory
+                                                               .PatientVisitHistory
                                                                .OrderByDescending( pvd => pvd.VisitDate )
                                                                .First();
             } ) );
@@ -135,7 +135,7 @@ namespace HypertensionControlUI.ViewModels
                 m.Patient = _mainWindowViewModel.Patient;
                 m.PatientVisitData =
                     _mainWindowViewModel.Patient
-                                        .PatientVisitDataHistory
+                                        .PatientVisitHistory
                                         .OrderByDescending( pvd => pvd.VisitDate )
                                         .First();
             } ) );

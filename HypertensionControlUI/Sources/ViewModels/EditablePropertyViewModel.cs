@@ -1,4 +1,5 @@
 using System;
+using HypertensionControlUI.Models;
 using HypertensionControlUI.Services;
 
 namespace HypertensionControlUI.ViewModels
@@ -64,7 +65,7 @@ namespace HypertensionControlUI.ViewModels
         /// <param name="path">The property path.</param>
         /// <param name="patient">The patient reference.</param>
         /// <param name="patientVisitData">The patient visit data reference.</param>
-        public EditablePropertyViewModel( string path, EditablePatient patient, EditablePatientVisitData patientVisitData )
+        public EditablePropertyViewModel( string path, Patient patient, PatientVisitData patientVisitData )
         {
             DataSource = new { Patient = patient, PatientVisitData = patientVisitData };
             Path = path;

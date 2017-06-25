@@ -416,7 +416,7 @@ namespace HypertensionControlUI.ViewModels
                 if ( ActualPatientVisitData.Id != 0 )
                     db.Attach( ActualPatientVisitData );
                 else
-                    Patient.PatientVisitDataHistory.Add( ActualPatientVisitData );
+                    Patient.PatientVisitHistory.Add( ActualPatientVisitData );
 
                 db.SaveChanges();
             }

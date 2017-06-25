@@ -29,6 +29,15 @@ namespace HypertensionControlUI.Services
             return stringList.ToArray();
         }
 
+        public string ReadAllResourceText( string name )
+        {
+            using ( var stream = GetResourceStream( name ) )
+            using ( var streamReader = new StreamReader( stream ) )
+            {
+                return streamReader.ReadToEnd();
+            }
+        }
+
         #endregion
     }
 }

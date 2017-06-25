@@ -68,14 +68,14 @@ namespace HypertensionControlUI.ViewModels
             using (var db = _dbContextFactory.GetDbContext())
             {
                 Patients = db.Patients
-                             .Include(p => p.PatientVisitDataHistory)
+                             .Include(p => p.PatientVisitHistory)
                              .Include(p => p.Clinic)
                              .Include(p => p.Medicine)
                              .Include(p => p.Genes)
                              .ToList();
                 ClassificationModels = db.ClassificationModels
                                          .Include( model => model.LimitPoints )
-                                         .Include( model => model.Properties.Select( property => property.Entries ) )
+                                         .Include( model => model.Properties.Select( property => property.ScaleEntries ) )
                                          .ToList();
             }
             PatientStatisticsData = new List<PatientStatisticsRowViewModel>();
@@ -130,7 +130,7 @@ namespace HypertensionControlUI.ViewModels
         {
             get
             {
-                var patientVisitData = _patient.PatientVisitDataHistory
+                var patientVisitData = _patient.PatientVisitHistory
                                   .OrderByDescending( d => d.VisitDate )
                                   .First();
                 if (!IsApplicable(_patient, patientVisitData, _modelWithGene))
@@ -145,7 +145,7 @@ namespace HypertensionControlUI.ViewModels
         {
             get
             {
-                var patientVisitData = _patient.PatientVisitDataHistory
+                var patientVisitData = _patient.PatientVisitHistory
                                               .OrderByDescending(d => d.VisitDate)
                                               .First();
                 if (!IsApplicable(_patient, patientVisitData, _modelWithoutGene))
@@ -157,7 +157,7 @@ namespace HypertensionControlUI.ViewModels
         }
 
         public string Name => _patient.Surname + " " + _patient.Name + " " + _patient.MiddleName;
-        public HypertensionStage? LastStage =>_patient.Stage;
+        public HypertensionStage? LastStage =>_patient.HypertensionStage;
         public string ModelPrediction(PatientVisitData patientVisitData, ClassificationModel model)
         {
             if ( !IsApplicable( _patient, patientVisitData, model) )

@@ -10,7 +10,7 @@
                       mc:Ignorable="d"
                       d:DataContext="{d:DesignInstance Type=viewModels:MainWindowViewModel, IsDesignTimeCreatable=False}"
                       Background="{ StaticResource AppBackgroundBrush}"
-                      Title="HypertensionControl" Width="1140" Height="768" MinWidth="935" MinHeight="320">
+                      Title="HypertensionControl" Width="1140" Height="800" MinWidth="935" MinHeight="320">
     <DockPanel>
         <FrameworkElement.Resources>
             <converters:NotNullToVisibilityConverter x:Key="NotNullToVisibilityConverter" />
@@ -31,8 +31,8 @@
                         <MenuItem MinWidth="180">
                             <MenuItem.Header>
                                 <StackPanel Orientation="Horizontal">
-                                    <Image Source="/Resources/user_man_kid.png" Stretch="None" />
-                                    <TextBlock VerticalAlignment="Center">Здравствуйте,</TextBlock>
+                                    <Image Source="/Resources/Markup/Icons/user_man_kid.png" Stretch="None" />
+                                    <TextBlock VerticalAlignment="Center" Text="Здравствуйте," />
                                     <TextBlock VerticalAlignment="Center" Text="{Binding User.Name}" />
                                 </StackPanel>
                             </MenuItem.Header>
