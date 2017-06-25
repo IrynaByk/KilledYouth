@@ -12,7 +12,8 @@ namespace HypertensionControlUI.Utils
         public static Patient ReadPatientFromDictionary( IDictionary<string, string> patientProperties )
         {
             var patient = new Patient();
-            var patientVisitData = new PatientVisitData { Patient = patient };
+            //need to set initial patients visit data in the past to avoid  bugs  with adding new visit data
+            var patientVisitData = new PatientVisitData { Patient = patient, VisitDate = new DateTime(2015, 1, 1)};
 
             var ruCulture = new CultureInfo( "RU-ru" );
 
@@ -90,8 +91,10 @@ namespace HypertensionControlUI.Utils
 
             if ( !string.IsNullOrEmpty( patientProperties["WaistCircumference"] ) )
                 patientVisitData.WaistCircumference = Convert.ToDouble( patientProperties["WaistCircumference"], ruCulture );
-            if ( !string.IsNullOrEmpty( patientProperties["BMI"] ) )
-                patientVisitData.TemporaryBMI = Convert.ToDouble( patientProperties["BMI"], ruCulture );
+            if (!string.IsNullOrEmpty(patientProperties["Height"]))
+                patientVisitData.Height = Convert.ToDouble(patientProperties["Height"]);
+            if (!string.IsNullOrEmpty(patientProperties["Weight"]))
+                patientVisitData.Weight = Convert.ToDouble(patientProperties["Weight"]);
             if ( patientProperties["HStage"].Contains( "1" ) )
                 patientVisitData.HypertensionStage = HypertensionStage.Stage1;
             else if ( patientProperties["HStage"].Contains( "2" ) )

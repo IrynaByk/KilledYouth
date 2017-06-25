@@ -125,7 +125,6 @@ namespace HypertensionControlUI.Models
         public SaltSensitivityTest SaltSensitivity { get; set; }
         public double Height { get; set; }
         public double Weight { get; set; }
-        public double TemporaryBMI { get; set; }
         public double WaistCircumference { get; set; }
         public Smoking Smoking { get; set; }
         public DietaryHabits DietaryHabits { get; set; }
@@ -153,8 +152,6 @@ namespace HypertensionControlUI.Models
             {
                 if ( Weight != 0 && Height != 0 )
                     return Weight / Height / Height * 10000;
-                if ( TemporaryBMI > 0 )
-                    return TemporaryBMI;
                 return null;
             }
         }
