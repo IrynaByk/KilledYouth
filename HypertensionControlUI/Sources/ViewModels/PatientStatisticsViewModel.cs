@@ -189,7 +189,7 @@ namespace HypertensionControlUI.ViewModels
         {
             return classificationModel
                 .Properties
-                .All(p => PatientPropertyProvider.GetPropertyValue(p.Name, new { Patient= patient, PatientVisistData = visitData}) != null);
+                .All(p => PatientPropertyProvider.GetPropertyValue( new { Patient= patient, PatientVisistData = visitData}, p.Name ) != null);
         }
     }
 

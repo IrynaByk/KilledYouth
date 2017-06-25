@@ -14,10 +14,11 @@ namespace HypertensionControlUI.Services
 
         #region Public methods
 
-        public static object GetPropertyValue( string propertyName, object source )
+        public static object GetPropertyValue( object propertySource, string propertyName )
         {
-            var currentObject = source; //CurrentObject( ref propertyName, patient, visitData );
+            var currentObject = propertySource;
 
+            //  Traverse the property names chain
             foreach ( var propertyNamePart in propertyName.Split( '.' ) )
             {
                 var type = currentObject.GetType();
@@ -60,14 +61,20 @@ namespace HypertensionControlUI.Services
         private static object Convert( object value, Type targetType )
         {
             //  Check for Enum or Enum? type
-
             if ( targetType.IsEnum )
                 return Enum.Parse( targetType, value.ToString() );
-
             if ( Nullable.GetUnderlyingType( targetType ) is Type underlyingType && underlyingType.IsEnum )
                 return Enum.Parse( underlyingType, value.ToString() );
 
-            return System.Convert.ChangeType( value, targetType );
+            //  
+            try
+            {
+                return System.Convert.ChangeType( value, targetType );
+            }
+            catch ( Exception ex ) when ( ex is FormatException || ex is InvalidCastException || ex is ArgumentNullException )
+            {
+                return targetType.IsValueType ? Activator.CreateInstance( targetType ) : null;
+            }
         }
 
         private static object CurrentObject( ref string propertyName, Patient patient, PatientVisitData visitData )

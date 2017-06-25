@@ -34,15 +34,15 @@ namespace HypertensionControlUI.ViewModels
         #region Fields
 
         private readonly DbContextFactory _dbContextFactory;
+        private readonly IViewProvider _viewProvider;
         private readonly MainWindowViewModel _mainWindowViewModel;
         private readonly PatientClassificatorFactory _patientClassificatorFactory;
-        private readonly IViewProvider _viewProvider;
+        private double _classificationResult;
 
-        private List<CorrectablePatientPropertyViewModel> _correctableProperties;
-        private double _correctedResult;
+        private List<EditablePropertyViewModel> _correctableProperties;
+        private double _correctedClassificationResult;
         private Patient _patient;
         private PatientVisitData _patientVisitData;
-        private double _result;
         private ClassificationModel _selectedClassificationModel;
 
         #endregion
@@ -52,14 +52,10 @@ namespace HypertensionControlUI.ViewModels
 
         public List<ClassificationModel> AvailableClassificationModels { get; set; }
 
-        public ICommand ClassifyPossiblePatientCommand { get; }
-
         public EditablePatientVisitData CorrectedLastVisitData { get; set; }
         public EditablePatient CorrectedPatient { get; set; }
 
-        //   public PatientClassificator PatientClassificator { get; set; }
         public ICommand PatientsCommand { get; }
-
         public ICommand ShowPatientCommand { get; set; }
 
         #endregion
@@ -67,18 +63,36 @@ namespace HypertensionControlUI.ViewModels
 
         #region Properties
 
-        public List<CorrectablePatientPropertyViewModel> CorrectableProperties
+        /// <summary>
+        ///     The result of classification applied to the patient
+        /// </summary>
+        public double ClassificationResult
+        {
+            get => _classificationResult;
+            set => Set( ref _classificationResult, value );
+        }
+
+        /// <summary>
+        ///     List of the correctable patient properties.
+        /// </summary>
+        public List<EditablePropertyViewModel> CorrectableProperties
         {
             get => _correctableProperties;
             set => Set( ref _correctableProperties, value );
         }
 
-        public double CorrectedResult
+        /// <summary>
+        ///     The result of classification applied to the corrected patient.
+        /// </summary>
+        public double CorrectedClassificationResult
         {
-            get => _correctedResult;
-            set => Set( ref _correctedResult, value );
+            get => _correctedClassificationResult;
+            set => Set( ref _correctedClassificationResult, value );
         }
 
+        /// <summary>
+        ///     The patient to which the classification model is applied.
+        /// </summary>
         public Patient Patient
         {
             get => _patient;
@@ -90,27 +104,9 @@ namespace HypertensionControlUI.ViewModels
             get => _patientVisitData;
             set
             {
-                if ( Equals( value, _patientVisitData ) )
-                    return;
-                _patientVisitData = value;
-                OnPropertyChanged();
-
-                using ( var db = _dbContextFactory.GetDbContext() )
-                {
-                    AvailableClassificationModels = db.ClassificationModels
-                                                      .Include( model => model.LimitPoints )
-                                                      .Include( model => model.Properties.Select( property => property.Entries ) )
-                                                      .ToList()
-                                                      .Where( m => IsApplicable( Patient, PatientVisitData, m ) )
-                                                      .ToList();
-                }
+                if ( Set( ref _patientVisitData, value ) )
+                    RefreshAvailableClassificationModels();
             }
-        }
-
-        public double Result
-        {
-            get => _result;
-            set => Set( ref _result, value );
         }
 
         /// <summary>
@@ -123,26 +119,10 @@ namespace HypertensionControlUI.ViewModels
             {
                 if ( Set( ref _selectedClassificationModel, value ) )
                 {
-                    _selectedClassificationModel = value;
                     ClassifyPatient();
                     ResetCorrectedPatient();
                 }
             }
-        }
-
-        #endregion
-
-
-        #region Commands
-
-        private void ClassifyPossiblePatientCommandHandler( object obj )
-        {
-            var patientClassificator = _patientClassificatorFactory.GetClassificator( SelectedClassificationModel );
-            CorrectedResult = patientClassificator.Classify( new
-            {
-                Patient = CorrectedPatient,
-                PatientVisitData = CorrectedPatient.PatientVisitDataHistory.OrderByDescending( pvd => pvd.VisitDate ).First()
-            } );
         }
 
         #endregion
@@ -161,11 +141,12 @@ namespace HypertensionControlUI.ViewModels
             _viewProvider = viewProvider;
             _dbContextFactory = dbContextFactory;
 
-            CorrectableProperties = new List<CorrectablePatientPropertyViewModel>();
+            CorrectableProperties = new List<EditablePropertyViewModel>();
 
             //  Init commands
-            ClassifyPossiblePatientCommand = new AsyncDelegateCommand( ClassifyPossiblePatientCommandHandler );
+
             PatientsCommand = new AsyncDelegateCommand( o => _viewProvider.NavigateToPage<PatientsViewModel>( m => _mainWindowViewModel.Patient = null ) );
+
             ShowPatientCommand = new AsyncDelegateCommand( o => _viewProvider.NavigateToPage<IndividualPatientCardViewModel>( m =>
             {
                 m.Patient = Patient;
@@ -181,28 +162,55 @@ namespace HypertensionControlUI.ViewModels
         /// <summary>
         ///     Maps the classification model properties to the initial patient properties they depend on.
         /// </summary>
-        public List<CorrectablePatientPropertyViewModel> GeneratePatientCorrectionData( ClassificationModel classificationModel,
-                                                                                        EditablePatient patient,
-                                                                                        EditablePatientVisitData possibleVisitData )
+        public List<EditablePropertyViewModel> GeneratePatientCorrectionData( ClassificationModel classificationModel,
+                                                                              EditablePatient patient,
+                                                                              EditablePatientVisitData possibleVisitData )
         {
-            var possibleDataList = new List<CorrectablePatientPropertyViewModel>();
+            var correctedDataList = new List<EditablePropertyViewModel>();
 
             //  Select the model properties that can be corrected
             foreach ( var classificationModelProperty in classificationModel.Properties )
             {
                 if ( ModelSourceFactors.TryGetValue( classificationModelProperty.Name, out var propertyKey ) )
                 {
-                    var possibleData = new CorrectablePatientPropertyViewModel( propertyKey, patient, possibleVisitData );
-                    possibleDataList.Add( possibleData );
+                    var correctableProperty = new EditablePropertyViewModel( propertyKey, patient, possibleVisitData );
+                    correctableProperty.CorrectedValueChanged += PossibleData_CorrectedValueChanged;
+                    correctedDataList.Add( correctableProperty );
                 }
             }
-            return possibleDataList;
+            return correctedDataList;
+        }
+
+        #endregion
+
+
+        #region Event handlers
+
+        private void PossibleData_CorrectedValueChanged()
+        {
+            ClassifyCorrectedPatient();
         }
 
         #endregion
 
 
         #region Non-public methods
+
+
+        private void RefreshAvailableClassificationModels()
+        {
+            using ( var db = _dbContextFactory.GetDbContext() )
+            {
+                AvailableClassificationModels = db.ClassificationModels
+                                                  .Include( model => model.LimitPoints )
+                                                  .Include( model => model.Properties.Select( property => property.Entries ) )
+                                                  .ToList()
+                                                  .Where( m => IsApplicable( Patient, PatientVisitData, m ) )
+                                                  .ToList();
+
+                SelectedClassificationModel = AvailableClassificationModels.FirstOrDefault();
+            }
+        }
 
         private void ResetCorrectedPatient()
         {
@@ -211,90 +219,27 @@ namespace HypertensionControlUI.ViewModels
             CorrectableProperties = GeneratePatientCorrectionData( _selectedClassificationModel, CorrectedPatient, CorrectedLastVisitData );
         }
 
+        private void ClassifyCorrectedPatient()
+        {
+            var patientClassificator = _patientClassificatorFactory.GetClassificator( SelectedClassificationModel );
+            CorrectedClassificationResult = patientClassificator.Classify( new
+            {
+                Patient = CorrectedPatient,
+                PatientVisitData = CorrectedPatient.PatientVisitDataHistory.OrderByDescending( pvd => pvd.VisitDate ).First()
+            } );
+        }
+
         private void ClassifyPatient()
         {
             var patientClassificator = _patientClassificatorFactory.GetClassificator( SelectedClassificationModel );
-            Result = patientClassificator.Classify( new { Patient, PatientVisitData = Patient.LastVisitData } );
+            ClassificationResult = patientClassificator.Classify( new { Patient, PatientVisitData = Patient.LastVisitData } );
         }
 
         private bool IsApplicable( Patient patient, PatientVisitData visitData, ClassificationModel classificationModel )
         {
             var dataSource = new { Patient = patient, PatientVisitData = visitData };
 
-            return classificationModel.Properties.All( p => PatientPropertyProvider.GetPropertyValue( p.Name, dataSource ) != null );
-        }
-
-        #endregion
-    }
-
-    /// <summary>
-    ///     Represents a single patient property which value can be corrected.
-    /// </summary>
-    public class CorrectablePatientPropertyViewModel : ViewModelBase
-    {
-        #region Fields
-
-        private readonly object _dataSource;
-
-        #endregion
-
-
-        #region Auto-properties
-
-        /// <summary>
-        ///     The property key.
-        /// </summary>
-        public string Key { get; set; }
-
-        /// <summary>
-        ///     Original propery value.
-        /// </summary>
-        public object OriginalValue { get; }
-
-        #endregion
-
-
-        #region Properties
-
-        /// <summary>
-        ///     Edited property value.
-        /// </summary>
-        public object CorrectedValue
-        {
-            get => PatientPropertyProvider.GetPropertyValue( Key, _dataSource );
-            set
-            {
-                PatientPropertyProvider.UpdatePatientByProperty( Key, _dataSource, value );
-                CorrectedValueChanged?.Invoke();
-            }
-        }
-
-        #endregion
-
-
-        #region Events and invocation
-
-        /// <summary>
-        ///     Notifies about change in the property value.
-        /// </summary>
-        public event Action CorrectedValueChanged;
-
-        #endregion
-
-
-        #region Initialization
-
-        /// <summary>
-        ///     Creates the view-model for the correctable property.
-        /// </summary>
-        /// <param name="key">The property key.</param>
-        /// <param name="patient">The patient reference.</param>
-        /// <param name="patientVisitData">The patient visit data reference.</param>
-        public CorrectablePatientPropertyViewModel( string key, EditablePatient patient, EditablePatientVisitData patientVisitData )
-        {
-            Key = key;
-            _dataSource = new { Patient = patient, PatientVisitData = patientVisitData };
-            OriginalValue = PatientPropertyProvider.GetPropertyValue( key, _dataSource );
+            return classificationModel.Properties.All( p => PatientPropertyProvider.GetPropertyValue( dataSource, p.Name ) != null );
         }
 
         #endregion
@@ -326,11 +271,17 @@ namespace HypertensionControlUI.ViewModels
         public string Name { get; set; }
         public string Nationality { get; set; }
         public virtual ICollection<EditablePatientVisitData> PatientVisitDataHistory { get; set; }
-        public EditablePatientVisitData LastVisitData => PatientVisitDataHistory.OrderByDescending(pvd => pvd.VisitDate).First();
         public string Phone { get; set; }
         public HypertensionStage? Stage { get; set; }
         public string Surname { get; set; }
         public double? TreatmentDuration { get; set; }
+
+        #endregion
+
+
+        #region Properties
+
+        public EditablePatientVisitData LastVisitData => PatientVisitDataHistory.OrderByDescending( pvd => pvd.VisitDate ).First();
 
         #endregion
     }

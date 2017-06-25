@@ -13,7 +13,7 @@ namespace HypertensionControlUI.Services
             var applicablePatients = patients.Where( patient =>
                                              {
                                                  var dataSource = new { Patient = patient, PatientVisitData = patient.LastVisitData };
-                                                 return model.Properties.All( p => PatientPropertyProvider.GetPropertyValue( p.Name, dataSource ) != null );
+                                                 return model.Properties.All( p => PatientPropertyProvider.GetPropertyValue( dataSource, p.Name ) != null );
                                              } )
                                              .ToList();
 

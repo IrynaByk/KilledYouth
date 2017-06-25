@@ -105,6 +105,7 @@
     <Compile Include="Sources\Services\FakeDbContext.cs" />
     <Compile Include="Sources\Services\IDbContext.cs" />
     <Compile Include="Sources\Services\ResourceProvider.cs" />
+    <Compile Include="Sources\ViewModels\EditablePropertyViewModel.cs" />
     <Compile Include="Sources\Views\Converters\MapConverter.cs" />
     <Compile Include="Sources\Views\Converters\HStageConverter.cs" />
     <Compile Include="Sources\ViewModels\PatientStatisticsViewModel.cs" />

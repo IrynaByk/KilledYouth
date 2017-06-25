@@ -30,7 +30,7 @@ namespace HypertensionControlUI.Services
         {
             var enumerable = RuntimeClassificationModel
                 .Properties
-                .Select( p => p.Scaler[Convert.ToDouble( PatientPropertyProvider.GetPropertyValue( p.Name, dataSource ) )] * p.ModelCoefficient )
+                .Select( p => p.Scaler[Convert.ToDouble( PatientPropertyProvider.GetPropertyValue( dataSource, p.Name ) )] * p.ModelCoefficient )
                 .ToList();
 
             var intermediateResult = enumerable.Sum() + RuntimeClassificationModel.FreeCoefficient;

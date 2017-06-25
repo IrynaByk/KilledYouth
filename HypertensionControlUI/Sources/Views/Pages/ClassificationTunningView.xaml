@@ -18,7 +18,15 @@
     <FrameworkElement.Resources>
         <Style x:Key="HeaderStyle" TargetType="TextBlock">
             <Setter Property="FontSize" Value="20" />
-            <Setter Property="Margin" Value="0,8" />
+            <Setter Property="Margin" Value="0,0,0,8" />
+            <Setter Property="Foreground" Value="Navy" />
+        </Style>
+        <Style x:Key="PrognosisBlockStyle" TargetType="Border">
+            <Setter Property="BorderBrush" Value="Navy" />
+            <Setter Property="BorderThickness" Value="0,2,0,0" />
+            <Setter Property="Margin" Value="0,0,16,0" />
+            <Setter Property="SnapsToDevicePixels" Value="True" />
+            <Setter Property="UseLayoutRounding" Value="True" />
         </Style>
     </FrameworkElement.Resources>
 
@@ -41,168 +49,166 @@
                 </Button>
             </StackPanel>
 
-            <Grid Margin="3">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <Grid.Resources>
-                    <converters:EqualityConverter x:Key="NotNullEqualityConverter" True="false" False="true" />
-                </Grid.Resources>
+                <Border>
+                    <Grid>
 
-                <Border Grid.Row="1">
-                    <StackPanel>
-                        <TextBlock Style="{StaticResource HeaderStyle}" Text="Модели для классификации пациента" />
-                        <Grid MinHeight="120">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition />
-                            </Grid.ColumnDefinitions>
-                            <ListBox Grid.Column="0" FontSize="14"
-                                     ItemsSource="{Binding AvailableClassificationModels}"
-                                     SelectedItem="{Binding SelectedClassificationModel, Mode=TwoWay}">
-                                <ListBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding Name}" TextWrapping="Wrap" Margin="2" />
-                                    </DataTemplate>
-                                </ListBox.ItemTemplate>
-                            </ListBox>
-                            <Border Grid.Column="1" Style="{StaticResource BlockStyle}" Margin="8,0" Padding="8">
-                                <TextBlock FontSize="14" TextWrapping="Wrap" Text="{Binding SelectedClassificationModel.Description}" />
-                            </Border>
-                        </Grid>
-                    </StackPanel>
-                </Border>
-
-                <Border Grid.Row="2">
-                    <StackPanel>
-                        <TextBlock Style="{StaticResource HeaderStyle}" Text="Прогноз" />
-
-                        <StackPanel TextBlock.FontSize="14" Orientation="Horizontal" Margin="32,8,0,0">
-                            <TextBlock Margin="0,0,16,0">
-                                <Run Foreground="DimGray" Text="Вероятность болезни:" />
-                                <Run Text="{Binding Result, StringFormat={}{0:f3}}" />
-                            </TextBlock>
-                            <TextBlock>
-                                <Run Foreground="DimGray" Text="Оптимальный порог отсечения:" />
-                                <Run Text="{Binding SelectedClassificationModel.OptimalCutOff}" />
-                            </TextBlock>
-                        </StackPanel>
-
-                        <components:IllnessProbabilityChart Height="70" Margin="32,0"
-                                                            ThumbValue="{Binding Result}"
-                                                            CutOffValue="{Binding SelectedClassificationModel.OptimalCutOff}" />
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition Height="1*"></RowDefinition>
+                            <RowDefinition Height="1.5*"></RowDefinition>
+                            <RowDefinition Height="1*"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <!--  Classification models  -->
+                        <Border Margin="0,8,0,16">
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource HeaderStyle}" Text="Модели для классификации пациента" />
+                                <Grid MinHeight="120">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+                                    <ListBox Grid.Column="0" FontSize="14"
+                                             ItemsSource="{Binding AvailableClassificationModels}"
+                                             SelectedItem="{Binding SelectedClassificationModel, Mode=TwoWay}">
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Name}" TextWrapping="Wrap" Margin="2" />
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                    </ListBox>
+                                    <Border Grid.Column="1" Style="{StaticResource BlockStyle}" Margin="8,0,0,0" Padding="8">
+                                        <TextBlock FontSize="14" TextWrapping="Wrap" Text="{Binding SelectedClassificationModel.Description}" />
+                                    </Border>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
 
 
-                        <TextBlock Style="{StaticResource HeaderStyle}" Margin="5">Возможная коррекция</TextBlock>
+                        <!--  Initial prognosis  -->
+                        <Border Grid.Row="1" Style="{StaticResource PrognosisBlockStyle}">
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource HeaderStyle}" Text="Прогноз" />
 
-                        <ListView Margin="32,5" FontSize="14"
-                                  HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
-                                  ItemsSource="{Binding CorrectableProperties}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-                            <ListView.ItemContainerStyle>
-                                <Style TargetType="ListViewItem">
-                                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                                </Style>
-                            </ListView.ItemContainerStyle>
-                            <ListView.View>
-                                <GridView>
-                                    <GridView.ColumnHeaderContainerStyle>
-                                        <Style TargetType="{x:Type GridViewColumnHeader}">
-                                            <Setter Property="IsEnabled" Value="False" />
-                                            <Style.Triggers>
-                                                <Trigger Property="IsEnabled" Value="False">
-                                                    <Setter Property="TextElement.Foreground" Value="Black" />
-                                                </Trigger>
-                                            </Style.Triggers>
+                                <StackPanel TextBlock.FontSize="14" Orientation="Horizontal" Margin="32,0,0,8">
+                                    <TextBlock Margin="0,0,16,0">
+                                        <Run Foreground="DimGray" Text="Вероятность болезни:" />
+                                        <Run Text="{Binding ClassificationResult, StringFormat={}{0:f3}}" />
+                                    </TextBlock>
+                                    <TextBlock>
+                                        <Run Foreground="DimGray" Text="Оптимальный порог отсечения:" />
+                                        <Run Text="{Binding SelectedClassificationModel.OptimalCutOff}" />
+                                    </TextBlock>
+                                </StackPanel>
+
+                                <components:IllnessProbabilityChart Height="70" Margin="32,0"
+                                                                    ThumbValue="{Binding ClassificationResult}"
+                                                                    CutOffValue="{Binding SelectedClassificationModel.OptimalCutOff}" />
+                            </StackPanel>
+                        </Border>
+
+                        <!--  Correction  -->
+                        <Border Grid.Row="2" Style="{StaticResource PrognosisBlockStyle}">
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource HeaderStyle}" Text="Возможная коррекция" />
+
+                                <ListView Margin="32,5" FontSize="14"
+                                          HorizontalAlignment="Center" HorizontalContentAlignment="Stretch"
+                                          ItemsSource="{Binding CorrectableProperties}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                    <ListView.ItemContainerStyle>
+                                        <Style TargetType="ListViewItem">
+                                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                                         </Style>
-                                    </GridView.ColumnHeaderContainerStyle>
-                                    <GridViewColumn Header="Фактор" Width="120" DisplayMemberBinding="{Binding Path=Key, Converter={StaticResource FactorsConverter}}" />
-                                    <GridViewColumn Header="Текущее значение" Width="240">
-                                        <GridViewColumn.CellTemplate>
-                                            <DataTemplate DataType="viewModels:CorrectablePatientPropertyViewModel">
-                                                <ContentControl Content="{Binding OriginalValue, Mode=OneTime}" HorizontalAlignment="Stretch">
-                                                    <ContentControl.Resources>
-                                                        <DataTemplate DataType="{x:Type system:Double}">
-                                                            <TextBlock Text="{Binding Path=.}" TextAlignment="Right" />
-                                                        </DataTemplate>
-                                                        <DataTemplate DataType="{x:Type system:Int32}">
-                                                            <TextBlock Text="{Binding Path=.}" TextAlignment="Right" />
-                                                        </DataTemplate>
-                                                        <DataTemplate DataType="{x:Type models:PhysicalActivity}">
-                                                            <TextBlock Text="{Binding Path=., Converter={StaticResource PhysicalActivityConverter}}" TextAlignment="Right" />
-                                                        </DataTemplate>
-                                                    </ContentControl.Resources>
-                                                </ContentControl>
-                                            </DataTemplate>
-                                        </GridViewColumn.CellTemplate>
-                                    </GridViewColumn>
-                                    <GridViewColumn Header="Новое значение" Width="250">
-                                        <GridViewColumn.CellTemplate>
-                                            <DataTemplate DataType="viewModels:CorrectablePatientPropertyViewModel">
-                                                <ContentControl Content="{Binding CorrectedValue, Mode=TwoWay}" HorizontalAlignment="Stretch">
-                                                    <ContentControl.Resources>
-                                                        <DataTemplate DataType="{x:Type system:Double}">
-                                                            <TextBox
-                                                                Text="{Binding RelativeSource={RelativeSource AncestorType=ContentControl}, Path=Content, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                                Cursor="Hand" HorizontalAlignment="Stretch" TextAlignment="Right" />
-                                                        </DataTemplate>
-                                                        <DataTemplate DataType="{x:Type system:Int32}">
-                                                            <TextBox
-                                                                Text="{Binding RelativeSource={RelativeSource AncestorType=ContentControl}, Path=Content, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                                Cursor="Hand" HorizontalAlignment="Stretch" TextAlignment="Right" />
-                                                        </DataTemplate>
-                                                        <DataTemplate DataType="{x:Type models:PhysicalActivity}">
-                                                            <ComboBox ItemsSource="{Binding Source={StaticResource PhysicalActivityProvider}}"
-                                                                      SelectedItem="{Binding RelativeSource={RelativeSource AncestorType=ContentControl}, Path=Content, Mode=TwoWay}"
-                                                                      HorizontalAlignment="Stretch" HorizontalContentAlignment="Right">
-                                                                <ComboBox.ItemTemplate>
-                                                                    <DataTemplate>
-                                                                        <TextBlock Text="{Binding Path=., Converter={StaticResource PhysicalActivityConverter}}"
-                                                                                   TextAlignment="Right" />
-                                                                    </DataTemplate>
-                                                                </ComboBox.ItemTemplate>
-                                                            </ComboBox>
-                                                        </DataTemplate>
+                                    </ListView.ItemContainerStyle>
+                                    <ListView.View>
+                                        <GridView>
+                                            <GridView.ColumnHeaderContainerStyle>
+                                                <Style TargetType="{x:Type GridViewColumnHeader}">
+                                                    <Setter Property="IsEnabled" Value="False" />
+                                                    <Style.Triggers>
+                                                        <Trigger Property="IsEnabled" Value="False">
+                                                            <Setter Property="TextElement.Foreground" Value="Black" />
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </GridView.ColumnHeaderContainerStyle>
+                                            <GridViewColumn Header="Фактор" Width="120" DisplayMemberBinding="{Binding Path=Path, Converter={StaticResource FactorsConverter}}" />
+                                            <GridViewColumn Header="Текущее значение" Width="240">
+                                                <GridViewColumn.CellTemplate>
+                                                    <DataTemplate DataType="viewModels:EditablePropertyViewModel">
+                                                        <ContentControl Content="{Binding OriginalValue, Mode=OneTime}" HorizontalAlignment="Stretch">
+                                                            <ContentControl.Resources>
+                                                                <DataTemplate DataType="{x:Type system:Double}">
+                                                                    <TextBlock Text="{Binding Path=.}" TextAlignment="Right" />
+                                                                </DataTemplate>
+                                                                <DataTemplate DataType="{x:Type system:Int32}">
+                                                                    <TextBlock Text="{Binding Path=.}" TextAlignment="Right" />
+                                                                </DataTemplate>
+                                                                <DataTemplate DataType="{x:Type models:PhysicalActivity}">
+                                                                    <TextBlock Text="{Binding Path=., Converter={StaticResource PhysicalActivityConverter}}" TextAlignment="Right" />
+                                                                </DataTemplate>
+                                                            </ContentControl.Resources>
+                                                        </ContentControl>
+                                                    </DataTemplate>
+                                                </GridViewColumn.CellTemplate>
+                                            </GridViewColumn>
+                                            <GridViewColumn Header="Новое значение" Width="250">
+                                                <GridViewColumn.CellTemplate>
+                                                    <DataTemplate DataType="viewModels:EditablePropertyViewModel">
+                                                        <ContentControl Content="{Binding CorrectedValue, Mode=TwoWay}" HorizontalAlignment="Stretch">
+                                                            <ContentControl.Resources>
+                                                                <DataTemplate DataType="{x:Type system:Double}">
+                                                                    <TextBox
+                                                                        Text="{Binding RelativeSource={RelativeSource AncestorType=ContentControl}, Path=Content, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                                        Cursor="Hand" HorizontalAlignment="Stretch" TextAlignment="Right" />
+                                                                </DataTemplate>
+                                                                <DataTemplate DataType="{x:Type system:Int32}">
+                                                                    <TextBox
+                                                                        Text="{Binding RelativeSource={RelativeSource AncestorType=ContentControl}, Path=Content, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                                        Cursor="Hand" HorizontalAlignment="Stretch" TextAlignment="Right" />
+                                                                </DataTemplate>
+                                                                <DataTemplate DataType="{x:Type models:PhysicalActivity}">
+                                                                    <ComboBox ItemsSource="{Binding Source={StaticResource PhysicalActivityProvider}}"
+                                                                              SelectedItem="{Binding RelativeSource={RelativeSource AncestorType=ContentControl}, Path=Content, Mode=TwoWay}"
+                                                                              HorizontalAlignment="Stretch" HorizontalContentAlignment="Right">
+                                                                        <ComboBox.ItemTemplate>
+                                                                            <DataTemplate>
+                                                                                <TextBlock Text="{Binding Path=., Converter={StaticResource PhysicalActivityConverter}}"
+                                                                                           TextAlignment="Right" />
+                                                                            </DataTemplate>
+                                                                        </ComboBox.ItemTemplate>
+                                                                    </ComboBox>
+                                                                </DataTemplate>
 
-                                                    </ContentControl.Resources>
-                                                </ContentControl>
-                                            </DataTemplate>
-                                        </GridViewColumn.CellTemplate>
-                                    </GridViewColumn>
-                                </GridView>
-                            </ListView.View>
-                        </ListView>
+                                                            </ContentControl.Resources>
+                                                        </ContentControl>
+                                                    </DataTemplate>
+                                                </GridViewColumn.CellTemplate>
+                                            </GridViewColumn>
+                                        </GridView>
+                                    </ListView.View>
+                                </ListView>
+                            </StackPanel>
+                        </Border>
 
-                        <TextBlock Style="{StaticResource HeaderStyle}" Margin="5">Прогноз после коррекции</TextBlock>
+                        <!--  Corrected prognosis  -->
+                        <Border Grid.Row="3" Style="{StaticResource PrognosisBlockStyle}">
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource HeaderStyle}" Text="Прогноз после коррекции" />
+                                <StackPanel TextBlock.FontSize="14" Orientation="Horizontal" Margin="32,0,0,8">
+                                    <TextBlock Margin="0,0,16,0">
+                                        <Run Foreground="DimGray" Text="Вероятность болезни:" />
+                                        <Run Text="{Binding CorrectedClassificationResult, StringFormat={}{0:f3}}" />
+                                    </TextBlock>
+                                </StackPanel>
 
-                        <Button HorizontalAlignment="Left"
-                                Command="{Binding ClassifyPossiblePatientCommand}"
-                                IsEnabled="{Binding SelectedClassificationModel, Converter={StaticResource NotNullEqualityConverter}, ConverterParameter={x:Null}, Mode=OneWay}">
-                            <TextBlock Text="Спрогнозировать вероятность болезни после коррекции" />
-                        </Button>
+                                <components:IllnessProbabilityChart Height="70" Margin="32,0"
+                                                                    ThumbValue="{Binding CorrectedClassificationResult}"
+                                                                    CutOffValue="{Binding SelectedClassificationModel.OptimalCutOff}" />
+                            </StackPanel>
+                        </Border>
 
-                        <StackPanel TextBlock.FontSize="14" Orientation="Horizontal" Margin="32,8,0,0">
-                            <TextBlock Margin="0,0,16,0">
-                                <Run Foreground="DimGray" Text="Вероятность болезни:" />
-                                <Run Text="{Binding CorrectedResult, StringFormat={}{0:f3}}" />
-                            </TextBlock>
-                        </StackPanel>
-
-                        <components:IllnessProbabilityChart Height="70" Margin="32,0"
-                                                            ThumbValue="{Binding CorrectedResult}"
-                                                            CutOffValue="{Binding SelectedClassificationModel.OptimalCutOff}" />
-
-
-                    </StackPanel>
+                    </Grid>
                 </Border>
-
-            </Grid>
         </DockPanel>
     </Border>
 
