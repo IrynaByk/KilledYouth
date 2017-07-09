@@ -1,10 +1,6 @@
-﻿using System;
-using System.Linq;
-using System.Security.Authentication;
-using System.Security.Cryptography;
-using System.Text;
-using HypertensionControlUI.CompositionRoot;
-using HypertensionControlUI.Models;
+﻿using System.Security.Authentication;
+using HypertensionControl.Domain.Models;
+using HypertensionControlUI.Interfaces;
 
 namespace HypertensionControlUI.Services
 {
@@ -12,7 +8,7 @@ namespace HypertensionControlUI.Services
     {
         #region Fields
 
-        private readonly DbContextFactory _dbFactory;
+        private readonly IUnitOfWorkFactory _unitOfWorkFactory;
 
         #endregion
 
@@ -26,9 +22,9 @@ namespace HypertensionControlUI.Services
 
         #region Initialization
 
-        public IdentityService( DbContextFactory dbFactory )
+        public IdentityService( IUnitOfWorkFactory unitOfWorkFactory )
         {
-            _dbFactory = dbFactory;
+            _unitOfWorkFactory = unitOfWorkFactory;
         }
 
         #endregion
@@ -38,29 +34,13 @@ namespace HypertensionControlUI.Services
 
         public void Login( string login, string password )
         {
-            using ( var db = _dbFactory.GetDbContext() )
+            using ( var unitOfWork = _unitOfWorkFactory.CreateUnitOfWork() )
             {
-                var passwordHash = HashUtils.GetStringHash( password );
-                CurrentUser = db.Users
-                                .Include( "Job" )
-                                .FirstOrDefault( u => u.Login == login && u.PasswordHash == passwordHash );
+                CurrentUser = unitOfWork.UsersRepository.FindUserByLoginAndPassword( login, password );
 
-                if (CurrentUser == null)
-                    throw new AuthenticationException("Invalid user credentials");
+                if ( CurrentUser == null )
+                    throw new AuthenticationException( "Invalid user credentials" );
             }
-        }
-
-        #endregion
-    }
-
-    public static class HashUtils
-    {
-        #region Public methods
-
-        public static string GetStringHash( string str )
-        {
-            using ( var hash = MD5.Create() )
-                return Convert.ToBase64String( hash.ComputeHash( Encoding.UTF8.GetBytes( str ) ) );
         }
 
         #endregion

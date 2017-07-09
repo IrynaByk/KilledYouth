@@ -8,7 +8,7 @@
                     xmlns:viewModels="clr-namespace:HypertensionControlUI.ViewModels"
                     xmlns:converters="clr-namespace:HypertensionControlUI.Views.Converters"
                     xmlns:system="clr-namespace:System;assembly=mscorlib"
-                    xmlns:models="clr-namespace:HypertensionControlUI.Models"
+                    xmlns:values="clr-namespace:HypertensionControl.Domain.Models.Values;assembly=HypertensionControl.Domain"
                     mc:Ignorable="d"
                     d:DataContext="{d:DesignInstance Type=viewModels:PatientStatisticsViewModel, IsDesignTimeCreatable=False}"
                     d:DesignHeight="500" d:DesignWidth="500"
@@ -19,12 +19,9 @@
         <DockPanel VerticalAlignment="Stretch">
 
             <FrameworkElement.Resources>
-                <converters:EqualityConverter x:Key="NotNullEqualityConverter" True="false" False="true" />
-                <ObjectDataProvider x:Key="HStageProvider"
-                                    MethodName="GetValues"
-                                    ObjectType="{x:Type system:Enum}">
+                <ObjectDataProvider x:Key="HStageProvider" MethodName="GetValues" ObjectType="{x:Type system:Enum}">
                     <ObjectDataProvider.MethodParameters>
-                        <x:Type TypeName="models:HypertensionStage" />
+                        <x:Type TypeName="values:HypertensionStage" />
                     </ObjectDataProvider.MethodParameters>
                 </ObjectDataProvider>
                 <converters:HStageConverter x:Key="HStageConverter" />

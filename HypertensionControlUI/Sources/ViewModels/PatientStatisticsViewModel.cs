@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
-using AutoMapper;
+using HypertensionControl.Domain.Models;
+using HypertensionControl.Domain.Models.Values;
+using HypertensionControl.Domain.Services;
 using HypertensionControlUI.CompositionRoot;
-using HypertensionControlUI.Models;
-using HypertensionControlUI.Services;
+using HypertensionControlUI.Interfaces;
 using HypertensionControlUI.Utils;
 
 namespace HypertensionControlUI.ViewModels
@@ -15,78 +14,147 @@ namespace HypertensionControlUI.ViewModels
     {
         #region Fields
 
-        private readonly DbContextFactory _dbContextFactory;
-        private readonly IViewProvider _viewProvider;
         private readonly MainWindowViewModel _mainWindowViewModel;
+
+        private readonly IUnitOfWorkFactory _unitOfWorkFactory;
+        private readonly IViewProvider _viewProvider;
         private List<Patient> _patients;
         private List<PatientStatisticsRowViewModel> _patientStatisticsData;
-        public ICommand PatientsCommand { get; }
+
         #endregion
 
 
         #region Auto-properties
 
-        public List<ClassificationModel> ClassificationModels { get; set; }
+        public ICommand PatientsCommand { get; }
 
-        public PatientClassificatorFactory PatientClassificatorFactory { get; set; }
+        public List<ClassificationModel> ClassificationModels { get; }
+
+        public PatientClassificatorFactory PatientClassificatorFactory { get; }
 
         #endregion
+
+
+        #region Properties
 
         public List<Patient> Patients
         {
             get => _patients;
-            set
-            {
-                if (_patients == value)
-                    return;
-                _patients = value;
-            }
+            set => Set( ref _patients, value );
         }
 
         public List<PatientStatisticsRowViewModel> PatientStatisticsData
         {
             get => _patientStatisticsData;
-            set
-            {
-                if (Equals(value, _patientStatisticsData))
-                    return;
-                _patientStatisticsData = value;
-                OnPropertyChanged();
-            }
+            set => Set( ref _patientStatisticsData, value );
         }
+
+        #endregion
+
+
+        #region Commands
+
+        private void PatientsCommandHandler( object o )
+        {
+            _viewProvider.NavigateToPage<PatientsViewModel>( m => _mainWindowViewModel.Patient = null );
+        }
+
+        #endregion
+
+
         #region Initialization
 
-        public PatientStatisticsViewModel( DbContextFactory dbContextFactory,
-                                               PatientClassificatorFactory patientClassificatorFactory,
+        public PatientStatisticsViewModel( IUnitOfWorkFactory unitOfWorkFactory,
+                                           PatientClassificatorFactory patientClassificatorFactory,
                                            IViewProvider viewProvider,
                                            MainWindowViewModel mainWindowViewModel )
         {
             PatientClassificatorFactory = patientClassificatorFactory;
+            _unitOfWorkFactory = unitOfWorkFactory;
             _viewProvider = viewProvider;
             _mainWindowViewModel = mainWindowViewModel;
-            _dbContextFactory = dbContextFactory;
-            using (var db = _dbContextFactory.GetDbContext())
+
+            using ( var unitOfWork = _unitOfWorkFactory.CreateUnitOfWork() )
             {
-                Patients = db.Patients
-                             .Include(p => p.PatientVisitHistory)
-                             .Include(p => p.Clinic)
-                             .Include(p => p.Medicine)
-                             .Include(p => p.Genes)
-                             .ToList();
-                ClassificationModels = db.ClassificationModels
-                                         .Include( model => model.LimitPoints )
-                                         .Include( model => model.Properties.Select( property => property.ScaleEntries ) )
-                                         .ToList();
+                Patients = unitOfWork.PatientsRepository.GetAllPatients().ToList();
+                ClassificationModels = unitOfWork.ClassificationModelsRepository.GetAllClassificationModels().ToList();
             }
+
             PatientStatisticsData = new List<PatientStatisticsRowViewModel>();
             foreach ( var patient in Patients )
             {
-                var patientSatisticsRowData = new PatientStatisticsRowViewModel(patient, ClassificationModels[0],ClassificationModels[1]);
-                PatientStatisticsData.Add(patientSatisticsRowData);
+                var patientSatisticsRowData = new PatientStatisticsRowViewModel( patient, ClassificationModels[0], ClassificationModels[1] );
+                PatientStatisticsData.Add( patientSatisticsRowData );
             }
-            PatientsCommand = new AsyncDelegateCommand(o => _viewProvider.NavigateToPage<PatientsViewModel>(m => _mainWindowViewModel.Patient = null));
+
+            PatientsCommand = new AsyncDelegateCommand( PatientsCommandHandler );
+        }
+
+        #endregion
+    }
+
+    public class PatientStatisticsRowViewModel : ViewModelBase
+    {
+        #region Fields
+
+        private readonly ClassificationModel _modelWithGene;
+        private readonly ClassificationModel _modelWithoutGene;
+        private readonly Patient _patient;
+        private double _cutOff;
+
+        #endregion
 
 
+        #region Properties
+
+        public double CutOff
+        {
+            get => _cutOff;
+            set
+            {
+                if ( value == _cutOff )
+                {
+                    return;
+                }
+                _cutOff = value;
+                OnPropertyChanged( nameof(ModelWithGeneLastResult) );
+            }
+        }
+
+        public double? ModelWithGeneLastResult => GetModelScore( _modelWithGene );
+        public double? ModelWithoutGeneLastResult => GetModelScore( _modelWithoutGene );
+
+        public string Name => _patient.Surname + " " + _patient.Name + " " + _patient.MiddleName;
+        public HypertensionStage? LastStage => _patient.HypertensionStage;
+
+        #endregion
+
+
+        #region Initialization
+
+        public PatientStatisticsRowViewModel( Patient patient, ClassificationModel classificationModel1, ClassificationModel classificationModel2 )
+        {
+            _patient = patient;
+            _modelWithGene = classificationModel1;
+            _modelWithoutGene = classificationModel2;
+        }
+
+        #endregion
+
+
+        #region Public methods
+
+        public string ModelPrediction( PatientVisit patientVisit, ClassificationModel model )
+        {
+            if ( !IsApplicable( _patient, patientVisit, model ) )
+            {
+                return "нет данных";
+            }
+
+            var score = Score( patientVisit, model );
+            var description = (score > CutOff ? "болен" : "здоров");
+
+            return $"{score:F4}/{description}";
         }
 
         #endregion
@@ -94,104 +162,30 @@ namespace HypertensionControlUI.ViewModels
 
         #region Non-public methods
 
-
-
-        #endregion
-    }
-
-    public class PatientStatisticsRowViewModel : ViewModelBase
-    {
-        private readonly Patient _patient;
-        private readonly ClassificationModel _modelWithGene;
-        private readonly ClassificationModel _modelWithoutGene;
-        private double _cutOff;
-        
-
-        public PatientStatisticsRowViewModel(Patient patient, ClassificationModel classificationModel1, ClassificationModel classificationModel2)
+        private double? GetModelScore( ClassificationModel model )
         {
-            _patient = patient;
-            _modelWithGene = classificationModel1;
-            _modelWithoutGene = classificationModel2;
+            var patientVisit = _patient.LastVisit;
+            if ( !IsApplicable( _patient, patientVisit, model ) )
+            {
+                return null;
+            }
+            return Score( patientVisit, model );
         }
 
-        public double CutOff
-        {
-            get => _cutOff;
-            set
-            {
-                if (value == _cutOff)
-                    return;
-                _cutOff = value;
-                OnPropertyChanged(nameof(ModelWithGeneLastResult));
-            }
-        }
-
-        public double? ModelWithGeneLastResult
-        {
-            get
-            {
-                var patientVisitData = _patient.PatientVisitHistory
-                                  .OrderByDescending( d => d.VisitDate )
-                                  .First();
-                if (!IsApplicable(_patient, patientVisitData, _modelWithGene))
-                {
-                    return null;
-                }
-                return Score(patientVisitData, _modelWithGene);
-            }
-        }
-
-        public double? ModelWithoutGeneLastResult
-        {
-            get
-            {
-                var patientVisitData = _patient.PatientVisitHistory
-                                              .OrderByDescending(d => d.VisitDate)
-                                              .First();
-                if (!IsApplicable(_patient, patientVisitData, _modelWithoutGene))
-                {
-                    return null;
-                }
-                return Score(patientVisitData, _modelWithoutGene);
-            }
-        }
-
-        public string Name => _patient.Surname + " " + _patient.Name + " " + _patient.MiddleName;
-        public HypertensionStage? LastStage =>_patient.HypertensionStage;
-        public string ModelPrediction(PatientVisitData patientVisitData, ClassificationModel model)
-        {
-            if ( !IsApplicable( _patient, patientVisitData, model) )
-            {
-                return "нет данных";
-            }
-            var score = Score( patientVisitData, model );
-            string result = score.ToString( "F4" ) + "/";
-
-            if ( score > CutOff )
-            {
-                result += "болен";
-            }
-            else
-            {
-                result += "здоров";
-            }
-            return result;
-        }
-         
-        private double Score( PatientVisitData patientVisitData, ClassificationModel model )
+        private double Score( PatientVisit patientVisit, ClassificationModel model )
         {
             var classificator = new PatientClassificator( model );
-            var score = classificator.Classify( new {Patient =  _patient, PatientVisitData = patientVisitData });
+            var score = classificator.Classify( new { Patient = _patient, PatientVisit = patientVisit } );
             return score;
         }
 
-        private bool IsApplicable(Patient patient, PatientVisitData visitData, ClassificationModel classificationModel)
+        private bool IsApplicable( Patient patient, PatientVisit visitData, ClassificationModel classificationModel )
         {
             return classificationModel
                 .Properties
-                .All(p => PatientPropertyProvider.GetPropertyValue( new { Patient= patient, PatientVisistData = visitData}, p.Name ) != null);
+                .All( p => PatientPropertyProvider.GetPropertyValue( new { Patient = patient, PatientVisit = visitData }, p.Name ) != null );
         }
+
+        #endregion
     }
-
-
 }

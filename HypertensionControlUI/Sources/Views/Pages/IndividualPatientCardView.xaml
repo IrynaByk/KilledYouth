@@ -59,15 +59,15 @@
                                 <Paragraph>
                                     <Run Text="Ф.И.О.   " />
                                     <TextBlock>
-                                        <Run Text="{Binding Patient.Surname, Converter={StaticResource NonNullConverter}}" />
-                                        <Run Text="{Binding Patient.Name, Converter={StaticResource NonNullConverter}}" />
-                                        <Run Text="{Binding Patient.MiddleName, Converter={StaticResource NonNullConverter}}" />
+                                        <Run Text="{Binding Patient.Surname, Converter={StaticResource NonNullConverter}, Mode=OneWay}" />
+                                        <Run Text="{Binding Patient.Name, Converter={StaticResource NonNullConverter}, Mode=OneWay}" />
+                                        <Run Text="{Binding Patient.MiddleName, Converter={StaticResource NonNullConverter}, Mode=OneWay}" />
                                     </TextBlock>
                                 </Paragraph>
                                 <Paragraph>
                                     <Run Text="Место рождения   " />
                                     <TextBlock>
-                                        <Run Text="{Binding Patient.BirthPlace, Converter={StaticResource NonNullConverter}}" />
+                                        <Run Text="{Binding Patient.BirthPlace, Converter={StaticResource NonNullConverter}, Mode=OneWay}" />
                                     </TextBlock>
                                     <LineBreak />
                                     <Run FontSize="11" Text="(страна, область)" />
@@ -75,50 +75,50 @@
                                 <Paragraph>
                                     <Run Text="Адрес/тел." />
                                     <TextBlock>
-                                        <Run Text="{Binding Patient.Address, Converter={StaticResource NonNullConverter}}" />
-                                        <Run Text="{Binding Patient.Phone, Converter={StaticResource NonNullConverter}}" />
+                                        <Run Text="{Binding Patient.Address, Converter={StaticResource NonNullConverter}, Mode=OneWay}" />
+                                        <Run Text="{Binding Patient.Phone, Converter={StaticResource NonNullConverter}, Mode=OneWay}" />
                                     </TextBlock>
                                 </Paragraph>
                                 <Paragraph>
                                     <Run Text="Дата рождения (число/месяц/год; полных лет)" />
                                     <TextBlock>
-                                        <Run Text="{Binding Patient.BirthDate, Converter={StaticResource NonNullConverter}, StringFormat=dd/MM/yyy}" />
+                                        <Run Text="{Binding Patient.BirthDate, Converter={StaticResource NonNullConverter}, StringFormat=dd/MM/yyy, Mode=OneWay}" />
                                         <Run Text="; " />
                                         <Run Text="{Binding Patient.Age, Converter={StaticResource NonNullConverter}, Mode=OneWay}" />
                                     </TextBlock>
                                     <Run Text="Национальность" />
                                     <TextBlock>
-                                        <Run Text="{Binding Patient.Nationality, Converter={StaticResource NonNullConverter}}" />
+                                        <Run Text="{Binding Patient.Nationality, Converter={StaticResource NonNullConverter}, Mode=OneWay}" />
                                     </TextBlock>
                                 </Paragraph>
                                 <Paragraph>
                                     <Run Text="Диагноз" />
                                     <TextBlock>
-                                        <Run Text="{Binding Patient.Diagnosis, Converter={StaticResource NonNullConverter}}" />
+                                        <Run Text="{Binding Patient.Diagnosis, Converter={StaticResource NonNullConverter}, Mode=OneWay}" />
                                     </TextBlock>
                                 </Paragraph>
                                 <Paragraph>
                                     <Run Text="Сопутствующие заболевания" />
                                     <TextBlock>
-                                        <Run Text="{Binding Patient.AccompanyingIllnesses, Converter={StaticResource NonNullConverter}}" />
+                                        <Run Text="{Binding Patient.AccompanyingIllnesses, Converter={StaticResource NonNullConverter}, Mode=OneWay}" />
                                     </TextBlock>
                                 </Paragraph>
                                 <Paragraph>
                                     <Run Text="Длительность АГ, гг." />
                                     <TextBlock>
-                                        <Run Text="{Binding Patient.HypertensionDuration, Converter={StaticResource NonNullConverter}}" />
+                                        <Run Text="{Binding Patient.HypertensionDuration, Converter={StaticResource NonNullConverter}, Mode=OneWay}" />
                                     </TextBlock>
                                     <Run Text="АД, мм рт.ст.:  правое плечо " />
                                     <TextBlock>
-                                        <Run Text="{Binding PatientVisitData.BloodPressure.RightShoulderSBP, Converter={StaticResource NonNullConverter}}" />
+                                        <Run Text="{Binding PatientVisit.BloodPressure.RightShoulderSbp, Converter={StaticResource NonNullConverter}, Mode=OneWay}" />
                                     </TextBlock>
                                     <Run Text="левое плечо " />
                                     <TextBlock>
-                                        <Run Text="{Binding PatientVisitData.BloodPressure.LeftShoulderSBP, Converter={StaticResource NonNullConverter}}" />
+                                        <Run Text="{Binding PatientVisit.BloodPressure.LeftShoulderSbp, Converter={StaticResource NonNullConverter}, Mode=OneWay}" />
                                     </TextBlock>
                                     <Run Text="; ЧСС, уд/мин " />
                                     <TextBlock>
-                                        <Run Text="{Binding PatientVisitData.BloodPressure.HeartRate, Converter={StaticResource NonNullConverter}}" />
+                                        <Run Text="{Binding PatientVisit.BloodPressure.HeartRate, Converter={StaticResource NonNullConverter}, Mode=OneWay}" />
                                     </TextBlock>
                                 </Paragraph>
                                 <Paragraph>
@@ -130,26 +130,26 @@
                                 <Paragraph>
                                     <Run Text="Рост, см " />
                                     <TextBlock>
-                                        <Run Text="{Binding PatientVisitData.Height, Converter={StaticResource NonNullConverter}}" />
+                                        <Run Text="{Binding PatientVisit.Height, Converter={StaticResource NonNullConverter}, Mode=OneWay}" />
                                     </TextBlock>
                                     <Run Text=", Вес, кг " />
                                     <TextBlock>
-                                        <Run Text="{Binding PatientVisitData.Weight, Converter={StaticResource NonNullConverter}}" />
+                                        <Run Text="{Binding PatientVisit.Weight, Converter={StaticResource NonNullConverter}, Mode=OneWay}" />
                                     </TextBlock>
                                     <Run Text="ИМТ, кг/м&#178; " />
                                     <TextBlock>
-                                        <Run Text="{Binding PatientVisitData.BMI, Converter={StaticResource NonNullConverter}, StringFormat={}{0:f2}, Mode=OneWay}" />
+                                        <Run Text="{Binding PatientVisit.Bmi, Converter={StaticResource NonNullConverter}, StringFormat={}{0:f2}, Mode=OneWay}" />
                                     </TextBlock>
                                     <Run Text="ОТ, см " />
                                     <TextBlock>
-                                        <Run Text="{Binding PatientVisitData.WaistCircumference, Converter={StaticResource NonNullConverter}}" />
+                                        <Run Text="{Binding PatientVisit.WaistCircumference, Converter={StaticResource NonNullConverter}, Mode=OneWay}" />
                                     </TextBlock>
                                 </Paragraph>
                                 <Paragraph>
                                     <Run Text="Физическая активность: " />
                                     <TextBlock>
                                         <Run
-                                            Text="{Binding PatientVisitData.PhysicalActivity, Converter={StaticResource PhysicalActivityConverter}}" />
+                                            Text="{Binding PatientVisit.PhysicalActivity, Converter={StaticResource PhysicalActivityConverter}, Mode=OneWay}" />
                                     </TextBlock>
                                 </Paragraph>
                                 <Paragraph>
@@ -162,7 +162,7 @@
                                     <Run Text="Употребление алкоголя : " />
                                     <TextBlock>
                                         <Run
-                                            Text="{Binding PatientVisitData.AlcoholСonsumption, Converter={StaticResource AlcoholConsumptionConverter}, Mode=OneWay}" />
+                                            Text="{Binding PatientVisit.AlcoholСonsumption, Converter={StaticResource AlcoholConsumptionConverter}, Mode=OneWay}" />
                                     </TextBlock>
                                     <LineBreak />
                                     <Run
@@ -172,7 +172,7 @@
                                     <Run Text="Наследственный анамнез — " />
                                     <TextBlock>
                                         <Run
-                                            Text="{Binding Patient.HypertensionAncestralAnamnesis, Converter={StaticResource HAAConverter}}" />
+                                            Text="{Binding Patient.HypertensionAncestralAnamnesis, Converter={StaticResource HAAConverter}, Mode=OneWay}" />
                                     </TextBlock>
                                 </Paragraph>
                             </FlowDocument>

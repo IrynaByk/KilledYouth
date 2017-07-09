@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Data.Entity.Core.Mapping;
 using System.Linq;
 using System.Windows.Input;
-using HypertensionControlUI.CompositionRoot;
-using HypertensionControlUI.Models;
+using HypertensionControl.Domain.Models;
+using HypertensionControl.Domain.Models.Values;
+using HypertensionControlUI.Interfaces;
 using HypertensionControlUI.Utils;
-using HypertensionControlUI.Views.Converters;
 
 namespace HypertensionControlUI.ViewModels
 {
@@ -15,8 +14,8 @@ namespace HypertensionControlUI.ViewModels
     {
         #region Fields
 
-        private readonly DbContextFactory _dbContextFactory;
         private readonly MainWindowViewModel _mainWindowViewModel;
+        private readonly IUnitOfWorkFactory _unitOfWorkFactory;
         private readonly IViewProvider _viewProvider;
         private Patient _patient;
         private Clinic _selectedClinic;
@@ -27,9 +26,9 @@ namespace HypertensionControlUI.ViewModels
 
         #region Auto-properties
 
-        public List<Clinic> Clinics { get; set; }
-        public PatientVisitData ActualPatientVisitData { get; set; }
+        public List<Clinic> Clinics { get; }
         public string SelectedClinicName { get; set; }
+        public PatientVisit ActualPatientVisit { get; set; }
         public ICommand PatientsCommand { get; }
         public ICommand AddPatientCommand { get; }
         public ICommand DeleteMedicineCommand { get; }
@@ -49,7 +48,7 @@ namespace HypertensionControlUI.ViewModels
             {
                 _patient = value;
                 Medicines = new ObservableCollection<Medicine>( _patient.Medicine );
-                SelectedClinic = Patient.Clinic;
+                SelectedClinic = Clinics.FirstOrDefault( clinic => clinic.Id == Patient.ClinicId );
             }
         }
 
@@ -58,125 +57,13 @@ namespace HypertensionControlUI.ViewModels
             get => Patient.TreatmentDuration;
             set
             {
-                if ( value == TreatmentDuration )
+                if ( Equals( value, Patient.TreatmentDuration ) )
+                {
                     return;
+                }
                 Patient.TreatmentDuration = value;
-                OnPropertyChanged(nameof(HasTreatment));
-                OnPropertyChanged();
-            }
-        }
 
-        public double Weight
-        {
-            get => ActualPatientVisitData.Weight;
-            set
-            {
-                if (value == Weight)
-                    return;
-                ActualPatientVisitData.Weight = value;
-                OnPropertyChanged(nameof(BMI));
-                OnPropertyChanged(nameof(ObesityBMI));
-                OnPropertyChanged(nameof(HaveHeightWidthWaist));
-                OnPropertyChanged();
-            }
-        }
-        public double Height
-        {
-            get => ActualPatientVisitData.Height;
-            set
-            {
-                if (value == Height)
-                    return;
-                ActualPatientVisitData.Height = value;
-                OnPropertyChanged(nameof(BMI));
-                OnPropertyChanged(nameof(ObesityBMI));
-                OnPropertyChanged(nameof(HaveHeightWidthWaist));
-                OnPropertyChanged();
-            }
-        }
-        public double WaistCircumference
-        {
-            get => ActualPatientVisitData.WaistCircumference;
-            set
-            {
-                if (value == WaistCircumference)
-                    return;
-                ActualPatientVisitData.WaistCircumference = value;
-                OnPropertyChanged(nameof(ObesityWaistCircumference));
-                OnPropertyChanged(nameof(HaveHeightWidthWaist));
-                OnPropertyChanged();
-            }
-        }
-        public double? BMI => ActualPatientVisitData.BMI;
-
-        public string ObesityBMI
-        {
-            get
-            {
-                if (ActualPatientVisitData.ObesityBMI != null)
-                {
-                    return (ActualPatientVisitData.ObesityBMI == true ) ? "Есть" : "Нет";
-                }
-                return "Нет данных";
-            }
-        
-        } 
-        public string ObesityWaistCircumference
-        {
-            get
-            {
-                if (ActualPatientVisitData.ObesityWaistCircumference != null)
-                {
-                    return (ActualPatientVisitData.ObesityWaistCircumference == true) ? "Есть" : "Нет";
-                }
-                return "Нет данных";
-            }
-
-        }
-        
-
-        public SmokingType SmokingType
-        {
-            get => ActualPatientVisitData.Smoking.Type;
-            set
-            {
-                if (value == SmokingType)
-                    return;
-                ActualPatientVisitData.Smoking.Type = value;
-                OnPropertyChanged(nameof(NeverSmoke));
-                OnPropertyChanged(nameof(SmokingNow));
-                OnPropertyChanged(nameof(SmokingBefore));
-                OnPropertyChanged();
-            }
-        }
-
-        public string SelectedClinicAddress
-        {
-            get => _selectedClinicAddress;
-            set
-            {
-                if ( value == _selectedClinicAddress )
-                    return;
-                _selectedClinicAddress = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public Clinic SelectedClinic
-        {
-            get => _selectedClinic;
-            set
-            {
-                if ( _selectedClinic == value )
-                    return;
-                _selectedClinic = value;
-
-                if ( value != null )
-                {
-                    SelectedClinicAddress = value.Address;
-                    SelectedClinicName = value.Name;
-                }
-
+                OnPropertyChanged( nameof(HasTreatment) );
                 OnPropertyChanged();
             }
         }
@@ -187,71 +74,170 @@ namespace HypertensionControlUI.ViewModels
             set
             {
                 if ( HasTreatment == value )
+                {
                     return;
+                }
                 TreatmentDuration = value ? (double?) 0 : null;
-                
             }
         }
 
-        public GeneValue AGT
+        public double Weight
         {
-            get { return GetGene("AGT"); }
+            get => ActualPatientVisit.Weight;
             set
             {
-                if (AGT == value)
+                if ( Equals( value, Weight ) )
+                {
                     return;
-                SetGene( "AGT", value );
+                }
+                ActualPatientVisit.Weight = value;
+
+                OnPropertyChanged( nameof(Bmi) );
+                OnPropertyChanged( nameof(ObesityBmi) );
+                OnPropertyChanged( nameof(HaveHeightWidthWaist) );
+                OnPropertyChanged();
             }
         }
-        public GeneValue AGTR2
+
+        public double Height
         {
-            get { return GetGene("AGTR2"); }
+            get => ActualPatientVisit.Height;
             set
             {
-                if (AGTR2 == value)
+                if ( Equals( value, Height ) )
+                {
                     return;
-                SetGene("AGTR2", value);
+                }
+                ActualPatientVisit.Height = value;
+
+                OnPropertyChanged( nameof(Bmi) );
+                OnPropertyChanged( nameof(ObesityBmi) );
+                OnPropertyChanged( nameof(HaveHeightWidthWaist) );
+                OnPropertyChanged();
             }
         }
 
-        private GeneValue GetGene(string geneName)
+        public double WaistCircumference
         {
-            var value = Patient.Genes.FirstOrDefault( g => g.Name == geneName )?.Value;
-            switch (value)
+            get => ActualPatientVisit.WaistCircumference;
+            set
             {
-                case null:
-                    return GeneValue.None;
-               default:
-                    return (GeneValue)value;
+                if ( Equals( value, WaistCircumference ) )
+                {
+                    return;
+                }
+                ActualPatientVisit.WaistCircumference = value;
+
+                OnPropertyChanged( nameof(ObesityWaistCircumference) );
+                OnPropertyChanged( nameof(HaveHeightWidthWaist) );
+                OnPropertyChanged();
             }
         }
 
-        private void SetGene( string geneName, GeneValue value )
+        public double? Bmi => ActualPatientVisit.Bmi;
+
+        public SmokingType SmokingType
         {
-            if ( value == GeneValue.None )
+            get => ActualPatientVisit.Smoking.Type;
+            set
             {
-                Patient.Genes.Remove( Patient.Genes.FirstOrDefault( g => g.Name == geneName ) );
-                return;
-            }
-            var gene = Patient.Genes.FirstOrDefault( g => g.Name == geneName );
-            if ( gene == null )
-            {
-                gene = new Gene { Name = geneName, Value = Convert.ToInt32( value ), PatientId = Patient.Id };
-                Patient.Genes.Add( gene );
-            }
-            else
-                gene.Value = Convert.ToInt32(value);
+                if ( value == SmokingType )
+                {
+                    return;
+                }
+                ActualPatientVisit.Smoking.Type = value;
 
+                OnPropertyChanged( nameof(NeverSmoke) );
+                OnPropertyChanged( nameof(SmokingNow) );
+                OnPropertyChanged( nameof(SmokingBefore) );
+                OnPropertyChanged();
+            }
         }
 
-        
+        public string ObesityBmi
+        {
+            get
+            {
+                if ( ActualPatientVisit.ObesityBmi == null )
+                {
+                    return "Нет данных";
+                }
+                return ActualPatientVisit.ObesityBmi == true ? "Есть" : "Нет";
+            }
+        }
+
+        public string ObesityWaistCircumference
+        {
+            get
+            {
+                if ( ActualPatientVisit.ObesityWaistCircumference == null )
+                {
+                    return "Нет данных";
+                }
+                return ActualPatientVisit.ObesityWaistCircumference == true ? "Есть" : "Нет";
+            }
+        }
+
+        public string SelectedClinicAddress
+        {
+            get => _selectedClinicAddress;
+            set => Set( ref _selectedClinicAddress, value );
+        }
+
+        public Clinic SelectedClinic
+        {
+            get => _selectedClinic;
+            set
+            {
+                if ( !Set( ref _selectedClinic, value ) )
+                {
+                    return;
+                }
+                if ( _selectedClinic == null )
+                {
+                    return;
+                }
+
+                SelectedClinicAddress = value.Address;
+                SelectedClinicName = value.Name;
+            }
+        }
+
+        public GeneValue Agt
+        {
+            get => GetGene( GenesNames.Agt );
+            set
+            {
+                if ( Agt == value )
+                {
+                    return;
+                }
+                SetGene( GenesNames.Agt, value );
+            }
+        }
+
+        public GeneValue Agtr2
+        {
+            get => GetGene( GenesNames.Agtr2 );
+            set
+            {
+                if ( Agtr2 == value )
+                {
+                    return;
+                }
+                SetGene( GenesNames.Agtr2, value );
+            }
+        }
+
         public bool NeverSmoke
         {
             get => SmokingType == SmokingType.Never;
             set
             {
                 if ( !value )
+                {
                     return;
+                }
                 SmokingType = SmokingType.Never;
             }
         }
@@ -262,7 +248,9 @@ namespace HypertensionControlUI.ViewModels
             set
             {
                 if ( !value )
+                {
                     return;
+                }
                 SmokingType = SmokingType.Now;
             }
         }
@@ -273,7 +261,9 @@ namespace HypertensionControlUI.ViewModels
             set
             {
                 if ( !value )
+                {
                     return;
+                }
                 SmokingType = SmokingType.InPast;
             }
         }
@@ -284,19 +274,25 @@ namespace HypertensionControlUI.ViewModels
             set
             {
                 if ( value == Patient.Name )
+                {
                     return;
+                }
                 Patient.Name = value;
-                OnPropertyChanged();
+
                 OnPropertyChanged( nameof(HaveNameAndAge) );
+                OnPropertyChanged();
             }
         }
+
         public GenderType PatientGender
         {
             get => Patient.Gender;
             set
             {
-                if (value == Patient.Gender)
+                if ( value == Patient.Gender )
+                {
                     return;
+                }
                 Patient.Gender = value;
                 OnPropertyChanged();
             }
@@ -308,7 +304,9 @@ namespace HypertensionControlUI.ViewModels
             set
             {
                 if ( value == Patient.MiddleName )
+                {
                     return;
+                }
                 Patient.MiddleName = value;
                 OnPropertyChanged();
                 OnPropertyChanged( nameof(HaveNameAndAge) );
@@ -321,7 +319,9 @@ namespace HypertensionControlUI.ViewModels
             set
             {
                 if ( value == Patient.Surname )
+                {
                     return;
+                }
                 Patient.Surname = value;
                 OnPropertyChanged();
                 OnPropertyChanged( nameof(HaveNameAndAge) );
@@ -334,7 +334,9 @@ namespace HypertensionControlUI.ViewModels
             set
             {
                 if ( value.Equals( Patient.BirthDate ) )
+                {
                     return;
+                }
                 Patient.BirthDate = value;
                 OnPropertyChanged();
                 OnPropertyChanged( nameof(HaveNameAndAge) );
@@ -345,38 +347,14 @@ namespace HypertensionControlUI.ViewModels
                                       !string.IsNullOrEmpty( Patient.Surname ) &&
                                       Patient.Age > 0 && Patient.Age < 120;
 
-        public bool HaveHeightWidthWaist => (ActualPatientVisitData.Weight > 0) &&
-                                            (ActualPatientVisitData.Height > 0) &&
-                                            (ActualPatientVisitData.WaistCircumference > 0);
+        public bool HaveHeightWidthWaist => ActualPatientVisit.Weight > 0 &&
+                                            ActualPatientVisit.Height > 0 &&
+                                            ActualPatientVisit.WaistCircumference > 0;
 
         #endregion
 
 
-        #region Initialization
-
-        public AddPatientViewModel( MainWindowViewModel mainWindowViewModel, IViewProvider viewProvider, DbContextFactory dbContextFactory )
-        {
-            IsQuestionnaireVisible = false;
-            _mainWindowViewModel = mainWindowViewModel;
-            _viewProvider = viewProvider;
-            _dbContextFactory = dbContextFactory;
-
-            using ( var db = _dbContextFactory.GetDbContext() )
-                Clinics = db.Clinics.ToList();
-            AddPatientCommand = new AsyncDelegateCommand( AddPatientCommandHandler );
-            DeleteMedicineCommand = new AsyncDelegateCommand( DeleteMedicineCommandHandler );
-            AddMedicineCommand = new AsyncDelegateCommand( AddMedicineCommandHandler );
-            PatientsCommand = new AsyncDelegateCommand( o => _viewProvider.NavigateToPage<PatientsViewModel>( m =>
-                                                            {
-                                                                _mainWindowViewModel.Patient = null;
-                                                            }
-                                                        ) );
-        }
-
-        #endregion
-
-
-        #region Non-public methods
+        #region Commands
 
         private void DeleteMedicineCommandHandler( object obj )
         {
@@ -394,49 +372,71 @@ namespace HypertensionControlUI.ViewModels
 
         private void AddPatientCommandHandler( object o )
         {
-            using ( var db = _dbContextFactory.GetDbContext() )
+            using ( var unitOfWork = _unitOfWorkFactory.CreateUnitOfWork() )
             {
-                Patient.Medicine.Clear();
-                Patient.Medicine = Medicines;
                 if ( SelectedClinic != null )
                 {
-                    Patient.Clinic = SelectedClinic;
-                    db.Attach( Patient.Clinic );
+                    Patient.ClinicId = SelectedClinic.Id;
                 }
                 else
-                    Patient.Clinic = new Clinic { Address = SelectedClinicAddress, Name = SelectedClinicName };
+                {
+                    var clinic = Clinic.CreateNew( SelectedClinicAddress, SelectedClinicName );
+                    unitOfWork.ClinicsRepository.SaveClinic( clinic );
+                    Patient.ClinicId = clinic.Id;
+                }
 
-                if ( Patient.Id != 0 )
-                    db.Attach( Patient );
-                else
-                    db.Patients.Add( Patient );
+                Patient.Medicine = Medicines;
 
-                var name = ((HypertensionControlUI.Services.SqlDbContext) db).Entry( Patient.Genes.First() ).OriginalValues["Value"];
+                unitOfWork.PatientsRepository.SavePatient( Patient );
 
-                if ( ActualPatientVisitData.Id != 0 )
-                    db.Attach( ActualPatientVisitData );
-                else
-                    Patient.PatientVisitHistory.Add( ActualPatientVisitData );
-
-                db.SaveChanges();
+                unitOfWork.SaveChanges();
             }
             _mainWindowViewModel.Patient = Patient;
             _viewProvider.NavigateToPage<IndividualPatientCardViewModel>( model =>
             {
                 model.Patient = Patient;
-                model.PatientVisitData = ActualPatientVisitData;
+                model.PatientVisit = ActualPatientVisit;
             } );
         }
 
         #endregion
-    }
 
-    public enum GeneValue
-    {
-        None,
-        One,
-        Two,
-        Three
 
+        #region Initialization
+
+        public AddPatientViewModel( MainWindowViewModel mainWindowViewModel, IViewProvider viewProvider, IUnitOfWorkFactory unitOfWorkFactory )
+        {
+            IsQuestionnaireVisible = false;
+            _mainWindowViewModel = mainWindowViewModel;
+            _viewProvider = viewProvider;
+            _unitOfWorkFactory = unitOfWorkFactory;
+
+            using ( var unitOfWork = _unitOfWorkFactory.CreateUnitOfWork() )
+            {
+                Clinics = unitOfWork.ClinicsRepository.GetAllClinics().OrderBy( clinic => clinic.Name ).ToList();
+            }
+
+            AddPatientCommand = new AsyncDelegateCommand( AddPatientCommandHandler );
+            DeleteMedicineCommand = new AsyncDelegateCommand( DeleteMedicineCommandHandler );
+            AddMedicineCommand = new AsyncDelegateCommand( AddMedicineCommandHandler );
+            PatientsCommand = new AsyncDelegateCommand( o => _viewProvider.NavigateToPage<PatientsViewModel>( m => _mainWindowViewModel.Patient = null ) );
+        }
+
+        #endregion
+
+
+        #region Non-public methods
+
+        private GeneValue GetGene( string geneName )
+        {
+            return Patient.GetGeneValue( geneName );
+        }
+
+        private void SetGene( string geneName, GeneValue value )
+        {
+            Patient.SetGeneValue( geneName, value );
+        }
+
+        #endregion
     }
 }

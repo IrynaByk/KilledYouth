@@ -4,10 +4,10 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:System="clr-namespace:System;assembly=mscorlib"
-      xmlns:models="clr-namespace:HypertensionControlUI.Models"
       xmlns:converters="clr-namespace:HypertensionControlUI.Views.Converters"
       xmlns:viewModels="clr-namespace:HypertensionControlUI.ViewModels"
       xmlns:components="clr-namespace:HypertensionControlUI.Views.Components"
+      xmlns:values="clr-namespace:HypertensionControl.Domain.Models.Values;assembly=HypertensionControl.Domain"
       mc:Ignorable="d"
       d:DesignHeight="300" d:DesignWidth="700"
       d:DataContext="{d:DesignInstance d:Type=viewModels:AddPatientViewModel, IsDesignTimeCreatable=False }"
@@ -15,13 +15,11 @@
 
     <Grid>
         <Grid.Resources>
-            <converters:EqualityConverter x:Key="NotSmokeEqualityConverter" True="false" False="true" />
-
             <ObjectDataProvider x:Key="AlcoholConsumptionProvider"
                                 MethodName="GetValues"
                                 ObjectType="{x:Type System:Enum}">
                 <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="models:AlcoholСonsumption" />
+                    <x:Type TypeName="values:AlcoholСonsumption" />
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
 
@@ -64,7 +62,7 @@
                     Converter={x:Static converters:BoolConverters.NotBoolToVisibility}}">
             Суммарный стаж (мес):
         </TextBlock>
-        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding ActualPatientVisitData.Smoking.DurationInYears}"
+        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding ActualPatientVisit.Smoking.DurationInYears}"
                  Style="{StaticResource InputStyle}" 
                  Visibility="{Binding NeverSmoke, 
                     Converter={x:Static converters:BoolConverters.NotBoolToVisibility}}" />
@@ -73,13 +71,13 @@
                     Converter={x:Static converters:BoolConverters.NotBoolToVisibility}}">
             Количество сигарет в неделю:
         </TextBlock>
-        <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding ActualPatientVisitData.Smoking.CigarettesPerDay}"
+        <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding ActualPatientVisit.Smoking.CigarettesPerDay}"
                  Style="{StaticResource InputStyle}" 
                  Visibility="{Binding NeverSmoke, 
                     Converter={x:Static converters:BoolConverters.NotBoolToVisibility}}" />
         <TextBlock Grid.Row="4" Grid.Column="0" Style="{StaticResource LabelStyle}">Физическая активность</TextBlock>
         <ComboBox Grid.Row="4" Grid.Column="1" ItemsSource="{Binding Source={StaticResource PhysicalActivityProvider}}"
-                  SelectedItem="{Binding ActualPatientVisitData.PhysicalActivity}"
+                  SelectedItem="{Binding ActualPatientVisit.PhysicalActivity}"
                   Style="{StaticResource InputStyle}">
             <ComboBox.ItemTemplate>
                 <DataTemplate>
@@ -89,7 +87,7 @@
         </ComboBox>
         <TextBlock Grid.Row="5" Grid.Column="0" Style="{StaticResource LabelStyle}">Употребление алкоголя:</TextBlock>
         <ComboBox Grid.Row="5" Grid.Column="1" ItemsSource="{Binding Source={StaticResource AlcoholConsumptionProvider}}"
-                  SelectedItem="{Binding ActualPatientVisitData.AlcoholСonsumption}"
+                  SelectedItem="{Binding ActualPatientVisit.AlcoholСonsumption}"
                   Style="{StaticResource InputStyle}" Margin="3,0,3,7">
             <ComboBox.ItemTemplate>
                 <DataTemplate>

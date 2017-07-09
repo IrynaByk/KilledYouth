@@ -8,7 +8,7 @@
       xmlns:viewModels="clr-namespace:HypertensionControlUI.ViewModels"
       xmlns:components="clr-namespace:HypertensionControlUI.Views.Components"
       mc:Ignorable="d"
-      d:DesignHeight="300" d:DesignWidth="300"
+      d:DesignHeight="300" d:DesignWidth="640"
       d:DataContext="{d:DesignInstance d:Type=viewModels:AddPatientViewModel, IsDesignTimeCreatable=False }"
       Title="Page1">
 
@@ -49,9 +49,9 @@
                  Style="{StaticResource InputStyle}" />
 
         <TextBlock Grid.Row="3" Grid.Column="0" Style="{StaticResource LabelStyle}">ИМТ:</TextBlock>
-        <TextBox Grid.Row="3" Grid.Column="1" Style="{StaticResource InputStyle}" IsReadOnly="True" Text="{Binding BMI, Mode=OneWay}" />
+        <TextBox Grid.Row="3" Grid.Column="1" Style="{StaticResource InputStyle}" IsReadOnly="True" Text="{Binding Bmi, Mode=OneWay}" />
         <TextBlock Grid.Row="4" Grid.Column="0" Style="{StaticResource LabelStyle}">Ожирение:</TextBlock>
-        <TextBox Grid.Row="4" Grid.Column="1" Style="{StaticResource InputStyle}" IsReadOnly="True" Text="{Binding ObesityBMI, Mode=OneWay}" />
+        <TextBox Grid.Row="4" Grid.Column="1" Style="{StaticResource InputStyle}" IsReadOnly="True" Text="{Binding ObesityBmi, Mode=OneWay}" />
 
         <TextBlock Grid.Row="5" Grid.Column="0" Style="{StaticResource LabelStyle}">Окружность талии:</TextBlock>
         <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding WaistCircumference}"

@@ -11,16 +11,16 @@ namespace HypertensionControlUI.Views.Pages
     {
         #region Properties
 
+        /// <summary>
+        ///     View-model represented by the current view.
+        /// </summary>
         public override AddPatientViewModel ViewModel
         {
             get => DataContext as AddPatientViewModel;
             set
             {
                 DataContext = value;
-
-                var contentElement = QuestionnaireFrame.Content as FrameworkElement;
-                if ( contentElement != null )
-                    contentElement.DataContext = ViewModel;
+                UpdateQuestionnaireFrameViewModel();
             }
         }
 
@@ -41,8 +41,16 @@ namespace HypertensionControlUI.Views.Pages
 
         private void QuestionnaireFrame_Navigated( object sender, NavigationEventArgs e )
         {
-            var contentElement = e.Content as FrameworkElement;
-            if ( contentElement != null )
+            if ( ReferenceEquals( sender, QuestionnaireFrame ) )
+                UpdateQuestionnaireFrameViewModel();
+        }
+
+        /// <summary>
+        ///     Sets the View-Model of the QuestionnaireFrame to the actual value.
+        /// </summary>
+        private void UpdateQuestionnaireFrameViewModel()
+        {
+            if ( QuestionnaireFrame.Content is FrameworkElement contentElement )
                 contentElement.DataContext = ViewModel;
         }
 

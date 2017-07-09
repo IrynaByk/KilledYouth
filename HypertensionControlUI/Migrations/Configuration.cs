@@ -1,3 +1,5 @@
+using HypertensionControl.Persistence.Services;
+
 namespace HypertensionControlUI.Migrations
 {
     using System;
@@ -5,15 +7,15 @@ namespace HypertensionControlUI.Migrations
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<HypertensionControlUI.Services.SqlDbContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<SqliteDbContext>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = true;
-            ContextKey = "HypertensionControlUI.Services.SqlDbContext";
+            ContextKey = "HypertensionControlUI.Services.SqliteDbContext";
         }
 
-        protected override void Seed(HypertensionControlUI.Services.SqlDbContext context)
+        protected override void Seed(SqliteDbContext context)
         {
             //  This method will be called after migrating to the latest version.
 

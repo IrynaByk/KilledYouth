@@ -1,6 +1,6 @@
 using System;
-using HypertensionControlUI.Models;
-using HypertensionControlUI.Services;
+using HypertensionControl.Domain.Models;
+using HypertensionControl.Domain.Services;
 
 namespace HypertensionControlUI.ViewModels
 {
@@ -64,10 +64,10 @@ namespace HypertensionControlUI.ViewModels
         /// </summary>
         /// <param name="path">The property path.</param>
         /// <param name="patient">The patient reference.</param>
-        /// <param name="patientVisitData">The patient visit data reference.</param>
-        public EditablePropertyViewModel( string path, Patient patient, PatientVisitData patientVisitData )
+        /// <param name="patientVisit">The patient visit data reference.</param>
+        public EditablePropertyViewModel( string path, Patient patient, PatientVisit patientVisit )
         {
-            DataSource = new { Patient = patient, PatientVisitData = patientVisitData };
+            DataSource = new { Patient = patient, PatientVisit = patientVisit };
             Path = path;
             OriginalValue = PatientPropertyProvider.GetPropertyValue( DataSource, path );
         }

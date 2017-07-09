@@ -54,8 +54,11 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AutoMapper, Version=6.0.2.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
-      <HintPath>..\packages\AutoMapper.6.0.2\lib\net45\AutoMapper.dll</HintPath>
+    <Reference Include="AutoMapper, Version=6.1.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.6.1.1\lib\net45\AutoMapper.dll</HintPath>
+    </Reference>
+    <Reference Include="AutoMapper.Collection, Version=3.1.1.0, Culture=neutral, PublicKeyToken=e57c3f0a3d6646db, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.Collection.3.1.1\lib\net45\AutoMapper.Collection.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
@@ -67,26 +70,23 @@
       <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="ReachFramework" />
-    <Reference Include="SimpleInjector">
-      <HintPath>..\packages\SimpleInjector.3.1.2\lib\net45\SimpleInjector.dll</HintPath>
+    <Reference Include="SimpleInjector, Version=4.0.8.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
+      <HintPath>..\packages\SimpleInjector.4.0.8\lib\net45\SimpleInjector.dll</HintPath>
     </Reference>
-    <Reference Include="SQLite.CodeFirst, Version=1.3.1.18, Culture=neutral, PublicKeyToken=eb96ba0a78d831a7, processorArchitecture=MSIL">
-      <HintPath>..\packages\SQLite.CodeFirst.1.3.1.18\lib\net45\SQLite.CodeFirst.dll</HintPath>
+    <Reference Include="SQLite.CodeFirst, Version=1.3.2.19, Culture=neutral, PublicKeyToken=eb96ba0a78d831a7, processorArchitecture=MSIL">
+      <HintPath>..\packages\SQLite.CodeFirst.1.3.2.19\lib\net45\SQLite.CodeFirst.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Data.SQLite, Version=1.0.105.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Data.SQLite.Core.1.0.105.0\lib\net45\System.Data.SQLite.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="System.Data.SQLite, Version=1.0.105.2, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.SQLite.Core.1.0.105.2\lib\net45\System.Data.SQLite.dll</HintPath>
     </Reference>
-    <Reference Include="System.Data.SQLite.EF6, Version=1.0.105.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Data.SQLite.EF6.1.0.105.0\lib\net45\System.Data.SQLite.EF6.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="System.Data.SQLite.EF6, Version=1.0.105.2, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.SQLite.EF6.1.0.105.2\lib\net45\System.Data.SQLite.EF6.dll</HintPath>
     </Reference>
-    <Reference Include="System.Data.SQLite.Linq, Version=1.0.105.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Data.SQLite.Linq.1.0.105.0\lib\net45\System.Data.SQLite.Linq.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="System.Data.SQLite.Linq, Version=1.0.105.2, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.SQLite.Linq.1.0.105.2\lib\net45\System.Data.SQLite.Linq.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -105,58 +105,28 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Sources\Persistence\Entities\Patient.cs" />
-    <Compile Include="Sources\Persistence\Entities\PatientVisitDataEntity.cs" />
-    <Compile Include="Sources\Services\FakeDbContext.cs" />
-    <Compile Include="Sources\Services\IDbContext.cs" />
+    <Compile Include="Sources\Interfaces\IUnitOfWork.cs" />
+    <Compile Include="Sources\Interfaces\IUnitOfWorkFactory.cs" />
+    <Compile Include="Sources\Services\IdentityService.cs" />
+    <Compile Include="Sources\CompositionRoot\UnitOfWork.cs" />
     <Compile Include="Sources\Services\ResourceProvider.cs" />
     <Compile Include="Sources\ViewModels\EditablePropertyViewModel.cs" />
     <Compile Include="Sources\Views\Converters\MapConverter.cs" />
     <Compile Include="Sources\Views\Converters\HStageConverter.cs" />
     <Compile Include="Sources\ViewModels\PatientStatisticsViewModel.cs" />
-    <Compile Include="Sources\Views\Converters\FactorsConverter.cs" />
     <Compile Include="Sources\Views\Converters\IllnessProbabilityThumbConverter.cs" />
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Sources\Collections\IdentityScaler.cs" />
-    <Compile Include="Sources\Collections\IScaler.cs" />
-    <Compile Include="Sources\Services\OptimalCutOffCalculator.cs" />
-    <Compile Include="Sources\Services\SqlDbInitializer.cs" />
     <Compile Include="Sources\CompositionRoot\DbContextFactory.cs" />
     <Compile Include="Sources\CompositionRoot\PatientClassificatorFactory.cs" />
-    <Compile Include="Sources\Models\AlcoholСonsumption.cs" />
-    <Compile Include="Sources\Models\BloodPressure.cs" />
-    <Compile Include="Sources\Models\ClassificationModel.cs" />
-    <Compile Include="Sources\Models\Clinic.cs" />
-    <Compile Include="Sources\Models\DietaryHabits.cs" />
-    <Compile Include="Sources\Models\Gene.cs" />
-    <Compile Include="Sources\Models\HypertensionAncestralAnamnesis.cs" />
-    <Compile Include="Sources\Models\JobTest.cs" />
     <Compile Include="Sources\Models\LimitPoint.cs" />
-    <Compile Include="Sources\Models\Medicine.cs" />
-    <Compile Include="Sources\Models\ModelProperty.cs" />
-    <Compile Include="Sources\Models\ModelScaleEntry.cs" />
-    <Compile Include="Sources\Models\Patient.cs" />
-    <Compile Include="Sources\Models\PhysicalActivity.cs" />
-    <Compile Include="Sources\Collections\RangedListScaler.cs" />
-    <Compile Include="Sources\Collections\RangeEntry.cs" />
-    <Compile Include="Sources\Models\Runtime\RuntimeClassificationModel.cs" />
-    <Compile Include="Sources\Models\Runtime\RuntimeModelProperty.cs" />
-    <Compile Include="Sources\Models\SaltSensitivityTest.cs" />
-    <Compile Include="Sources\Models\Smoking.cs" />
     <Compile Include="Sources\Services\ISettingsProvider.cs" />
-    <Compile Include="Sources\Services\PatientClassificator.cs" />
-    <Compile Include="Sources\Services\PatientPropertyProvider.cs" />
-    <Compile Include="Sources\Services\SqlDbContext.cs" />
-    <Compile Include="Sources\Utils\PatientParser.cs" />
     <Compile Include="Sources\ViewModels\AddPatientViewModel.cs" />
     <Compile Include="Sources\ViewModels\ClassificationTunningViewModel.cs" />
     <Compile Include="Sources\ViewModels\IndividualPatientCardViewModel.cs" />
     <Compile Include="Sources\ViewModels\IViewProvider.cs" />
     <Compile Include="Sources\ViewModels\IViewResult.cs" />
     <Compile Include="Sources\CompositionRoot\ViewProvider.cs" />
-    <Compile Include="Sources\Models\User.cs" />
     <Compile Include="Properties\Annotations.cs" />
-    <Compile Include="Sources\Services\IdentityService.cs" />
     <Compile Include="Sources\Utils\AsyncDelegateCommand.cs" />
     <Compile Include="Sources\Utils\DictionaryExtensions.cs" />
     <Compile Include="Sources\ViewModels\IWindowViewModel.cs" />
@@ -180,10 +150,8 @@
     <Compile Include="Sources\Views\Converters\BoolConverters.cs" />
     <Compile Include="Sources\Views\Converters\EnumBooleanConverter.cs" />
     <Compile Include="Sources\Views\Converters\EqualityConverter.cs" />
-    <Compile Include="Sources\Views\Converters\HypertensionAncestralAnamnesisConverter.cs" />
     <Compile Include="Sources\Views\Converters\NonNullConverter.cs" />
     <Compile Include="Sources\Views\Converters\NotNullToVisibilityConverter.cs" />
-    <Compile Include="Sources\Views\Converters\PhysicalActivityConverter.cs" />
     <Compile Include="Sources\Views\Pages\AddPatientView.xaml.cs">
       <DependentUpon>AddPatientView.xaml</DependentUpon>
     </Compile>
@@ -366,6 +334,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Converters\" />
+    <Folder Include="Sources\Collections\" />
+    <Folder Include="Sources\Domain\" />
+    <Folder Include="Sources\Models\Runtime\" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Markup\Icons\attibutes.png" />
@@ -379,13 +350,23 @@
   <ItemGroup>
     <Resource Include="Resources\Markup\Icons\back.png" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\HypertensionControl.Domain\HypertensionControl.Domain.csproj">
+      <Project>{B7104E23-D96C-486C-8D5B-01CD741AD66D}</Project>
+      <Name>HypertensionControl.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HypertensionControl.Persistence\HypertensionControl.Persistence.csproj">
+      <Project>{B30DE7F8-81E2-4D2B-B563-7934EF50CC1D}</Project>
+      <Name>HypertensionControl.Persistence</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\packages\System.Data.SQLite.Core.1.0.105.0\build\net45\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.105.0\build\net45\System.Data.SQLite.Core.targets')" />
+  <Import Project="..\packages\System.Data.SQLite.Core.1.0.105.2\build\net45\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.105.2\build\net45\System.Data.SQLite.Core.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\System.Data.SQLite.Core.1.0.105.0\build\net45\System.Data.SQLite.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\System.Data.SQLite.Core.1.0.105.0\build\net45\System.Data.SQLite.Core.targets'))" />
+    <Error Condition="!Exists('..\packages\System.Data.SQLite.Core.1.0.105.2\build\net45\System.Data.SQLite.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\System.Data.SQLite.Core.1.0.105.2\build\net45\System.Data.SQLite.Core.targets'))" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

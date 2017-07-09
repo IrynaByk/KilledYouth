@@ -1,6 +1,7 @@
 ﻿using System.Windows.Input;
-using HypertensionControlUI.CompositionRoot;
-using HypertensionControlUI.Models;
+using HypertensionControl.Domain.Models;
+using HypertensionControl.Domain.Models.Values;
+using HypertensionControlUI.Interfaces;
 using HypertensionControlUI.Utils;
 
 namespace HypertensionControlUI.ViewModels
@@ -8,11 +9,12 @@ namespace HypertensionControlUI.ViewModels
     public class IndividualPatientCardViewModel : PageViewModelBase
     {
         #region Fields
-        private readonly IViewProvider _viewProvider;
+
         private readonly MainWindowViewModel _mainWindowViewModel;
-        private readonly DbContextFactory _dbContextFactory;
+        private readonly IUnitOfWorkFactory _unitOfWorkFactory;
+        private readonly IViewProvider _viewProvider;
         private Patient _patient;
-        private PatientVisitData _patientVisitData;
+        private PatientVisit _patientVisit;
 
         #endregion
 
@@ -21,46 +23,36 @@ namespace HypertensionControlUI.ViewModels
 
         public ICommand ClassifyPatientCommand { get; private set; }
 
+        public AsyncDelegateCommand ClassifyPatientTunningCommand { get; set; }
+        public AsyncDelegateCommand PatientsCommand { get; set; }
+
         #endregion
 
 
         #region Properties
 
-        public PatientVisitData PatientVisitData
+        public PatientVisit PatientVisit
         {
-            get => _patientVisitData;
-            set
-            {
-                if ( Equals( value, _patientVisitData ) )
-                    return;
-                _patientVisitData = value;
-                OnPropertyChanged();
-            }
+            get => _patientVisit;
+            set => Set( ref _patientVisit, value );
         }
 
         public Patient Patient
         {
             get => _patient;
-            set
-            {
-                if ( Equals( value, _patient ) )
-                    return;
-                _patient = value;
-                OnPropertyChanged();
-            }
+            set => Set( ref _patient, value );
         }
-
 
         public string TreatmentDescription
         {
             get
             {
                 if ( Patient.TreatmentDuration == null )
+                {
                     return "отсутствует";
-                var result = Patient.TreatmentDuration.ToString();
-                foreach ( var medcine in Patient.Medicine )
-                    result += " " + medcine.Name + medcine.Dose + ";";
-                return result;
+                }
+
+                return Patient.TreatmentDuration + string.Join( "; ", Patient.Medicine );
             }
         }
 
@@ -68,17 +60,26 @@ namespace HypertensionControlUI.ViewModels
         {
             get
             {
-                if ( PatientVisitData.Smoking.Type == SmokingType.Never )
-                    return "никогда";
-                var result = "";
-                if ( PatientVisitData.Smoking.Type == SmokingType.InPast )
-                    result = "в прошлом, "; 
-                else
-                    result = "да, ";
-                result += "количество лет " + PatientVisitData.Smoking.DurationInYears;
-                result += "количество сигарет в день " + PatientVisitData.Smoking.CigarettesPerDay;
-                return result;
+                var smoking = PatientVisit.Smoking;
+
+                return smoking.Type == SmokingType.Never
+                    ? "никогда"
+                    : $"{(smoking.Type == SmokingType.InPast ? "в прошлом" : "да")}, количество лет {smoking.DurationInYears}, количество сигарет в день {smoking.CigarettesPerDay}";
             }
+        }
+
+        #endregion
+
+
+        #region Commands
+
+        private void ClassifyPatientTunningCommandHandler( object obj )
+        {
+            _viewProvider.NavigateToPage<ClassificationTunningViewModel>( model =>
+            {
+                model.Patient = Patient;
+                model.PatientVisit = PatientVisit;
+            } );
         }
 
         #endregion
@@ -86,38 +87,13 @@ namespace HypertensionControlUI.ViewModels
 
         #region Initialization
 
-        public IndividualPatientCardViewModel( DbContextFactory dbContextFactory, IViewProvider viewProvider, MainWindowViewModel mainWindowViewModel )
+        public IndividualPatientCardViewModel( IViewProvider viewProvider, MainWindowViewModel mainWindowViewModel )
         {
-            _dbContextFactory = dbContextFactory;
             _viewProvider = viewProvider;
             _mainWindowViewModel = mainWindowViewModel;
             ClassifyPatientTunningCommand = new AsyncDelegateCommand( ClassifyPatientTunningCommandHandler );
-            PatientsCommand = new AsyncDelegateCommand(o => _viewProvider.NavigateToPage<PatientsViewModel>(m =>
-                                                                         {
-                                                                             _mainWindowViewModel.Patient = null;
-                                                                         }
-                                                                     ));
+            PatientsCommand = new AsyncDelegateCommand( o => _viewProvider.NavigateToPage<PatientsViewModel>( m => _mainWindowViewModel.Patient = null ) );
         }
-
-        private void ClassifyPatientTunningCommandHandler( object obj )
-        {
-            _viewProvider.NavigateToPage<ClassificationTunningViewModel>( model =>
-            {
-                model.Patient = Patient;
-                model.PatientVisitData = PatientVisitData;
-            });
-        }
-        
-
-        public AsyncDelegateCommand ClassifyPatientTunningCommand { get; set; }
-        public AsyncDelegateCommand PatientsCommand { get; set; }
-
-        #endregion
-
-
-        #region Non-public methods
-
-
 
         #endregion
     }

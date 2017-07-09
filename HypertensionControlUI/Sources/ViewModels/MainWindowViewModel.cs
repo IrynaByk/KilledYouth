@@ -1,5 +1,5 @@
 ﻿using System.Windows.Input;
-using HypertensionControlUI.Models;
+using HypertensionControl.Domain.Models;
 using HypertensionControlUI.Utils;
 
 namespace HypertensionControlUI.ViewModels

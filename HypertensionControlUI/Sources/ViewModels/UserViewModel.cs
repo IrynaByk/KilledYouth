@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using HypertensionControlUI.CompositionRoot;
-using HypertensionControlUI.Models;
+using HypertensionControl.Domain.Models;
+using HypertensionControlUI.Interfaces;
 
 namespace HypertensionControlUI.ViewModels
 {
@@ -9,9 +9,7 @@ namespace HypertensionControlUI.ViewModels
     {
         #region Fields
 
-        private readonly DbContextFactory _dbContextFactory;
-        private readonly MainWindowViewModel _mainWindowViewModel;
-        private readonly IViewProvider _viewProvider;
+        private readonly IUnitOfWorkFactory _unitOfWorkFactory;
         private Clinic _selectedClinic;
         private string _selectedClinicAddress;
         private User _user;
@@ -35,7 +33,7 @@ namespace HypertensionControlUI.ViewModels
             set
             {
                 _user = value;
-                SelectedClinic = User.Job;
+                SelectedClinic = Clinics.FirstOrDefault( clinic => clinic.Id == _user.ClinicId );
             }
         }
 
@@ -70,26 +68,17 @@ namespace HypertensionControlUI.ViewModels
             }
         }
 
-        public bool HaveNameAndAge => !string.IsNullOrEmpty( User.Name ) &&
-                                      !string.IsNullOrEmpty( User.Surname ) &&
-                                      !string.IsNullOrEmpty( User.Position ) &&
-                                      User.Job != null &&
-                                      !string.IsNullOrEmpty( User.Job.Name ) &&
-                                      !string.IsNullOrEmpty( User.Job.Address ) &&
-                                      !string.IsNullOrEmpty( User.PasswordHash );
-
         #endregion
 
 
         #region Initialization
 
-        public UserViewModel( DbContextFactory dbContextFactory, MainWindowViewModel mainWindowViewModel, IViewProvider viewProvider )
+        public UserViewModel( IUnitOfWorkFactory unitOfWorkFactory )
         {
-            _dbContextFactory = dbContextFactory;
-            _mainWindowViewModel = mainWindowViewModel;
-            _viewProvider = viewProvider;
-            using ( var db = _dbContextFactory.GetDbContext() )
-                Clinics = db.Clinics.ToList();
+            _unitOfWorkFactory = unitOfWorkFactory;
+
+            using ( var unitOfWork = _unitOfWorkFactory.CreateUnitOfWork() )
+                Clinics = unitOfWork.ClinicsRepository.GetAllClinics().OrderBy( c => c.Name ).ToList();
         }
 
         #endregion

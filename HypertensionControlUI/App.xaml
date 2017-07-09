@@ -3,7 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:converters="clr-namespace:HypertensionControlUI.Views.Converters"
              xmlns:system="clr-namespace:System;assembly=mscorlib"
-             xmlns:models="clr-namespace:HypertensionControlUI.Models">
+             xmlns:models="clr-namespace:HypertensionControlUI.Models"
+             xmlns:values="clr-namespace:HypertensionControl.Domain.Models.Values;assembly=HypertensionControl.Domain">
     <Application.Resources>
 
         <ResourceDictionary>
@@ -18,23 +19,60 @@
                     <!--  Common converters and value providers -->
 
                     <converters:NonNullConverter x:Key="NonNullConverter" />
-                    <converters:PhysicalActivityConverter x:Key="PhysicalActivityConverter" />
-                    <converters:MapConverter x:Key="FactorsConverter">
+
+                    <converters:MapConverter x:Key="FactorsConverter" Default="">
                         <converters:MapConverter.Values>
                             <system:String x:Key="Patient.Age">Возраст</system:String>
-                            <system:String x:Key="PatientVisitData.WaistCircumference">Объем талии</system:String>
-                            <system:String x:Key="PatientVisitData.Weight">Вес</system:String>
-                            <system:String x:Key="PatientVisitData.PhysicalActivity">Физ. активность</system:String>
+                            <system:String x:Key="PatientVisit.WaistCircumference">Объем талии</system:String>
+                            <system:String x:Key="PatientVisit.Weight">Вес</system:String>
+                            <system:String x:Key="PatientVisit.PhysicalActivity">Физ. активность</system:String>
                         </converters:MapConverter.Values>
                     </converters:MapConverter>
-                    <converters:AlcoholConsumptionConverter x:Key="AlcoholConsumptionConverter" />
-                    <converters:HypertensionAncestralAnamnesisConverter x:Key="HAAConverter" />
+
+                    <converters:MapConverter x:Key="PhysicalActivityConverter" Default="">
+                        <converters:MapConverter.Values>
+                            <system:String x:Key="{x:Static values:PhysicalActivity.Never}">Никогда</system:String>
+                            <system:String x:Key="{x:Static values:PhysicalActivity.OncePerWeekOrLess}">Один раз в неделю или меньше</system:String>
+                            <system:String x:Key="{x:Static values:PhysicalActivity.FromOneToThreeTimesPerWeek}">Один-три раза в неделю</system:String>
+                            <system:String x:Key="{x:Static values:PhysicalActivity.MoreThenThreeTimesPerWeek}">Больше трёх раз в неделю</system:String>
+                        </converters:MapConverter.Values>
+                    </converters:MapConverter>
+                    
+                    <converters:MapConverter x:Key="AlcoholConsumptionConverter" Default="">
+                        <converters:MapConverter.Values>
+                            <system:String x:Key="{x:Static values:AlcoholСonsumption.Never}">Никогда или редко</system:String>
+                            <system:String x:Key="{x:Static values:AlcoholСonsumption.Monthly}">1-3 дозы в месяц</system:String>
+                            <system:String x:Key="{x:Static values:AlcoholСonsumption.Weekly}">1-6 доз в неделю</system:String>
+                            <system:String x:Key="{x:Static values:AlcoholСonsumption.Daily}">Больше 1 дозы в день</system:String>
+                        </converters:MapConverter.Values>
+                    </converters:MapConverter>
+
+                    <converters:MapConverter x:Key="HAAConverter" Default="">
+                        <converters:MapConverter.Values>
+                            <system:String x:Key="{x:Static values:HypertensionAncestralAnamnesis.None}">Отсутствует</system:String>
+                            <system:String x:Key="{x:Static values:HypertensionAncestralAnamnesis.Mother}">Мать</system:String>
+                            <system:String x:Key="{x:Static values:HypertensionAncestralAnamnesis.Father}">Отец</system:String>
+                            <system:String x:Key="{x:Static values:HypertensionAncestralAnamnesis.BothMotherAndFather}">Мать и отец</system:String>
+                        </converters:MapConverter.Values>
+                    </converters:MapConverter>
+
+                    <converters:MapConverter x:Key="GeneValuesConverter">
+                        <converters:MapConverter.Values>
+                            <system:String x:Key="{x:Static values:GeneValue.None}">Нет данных</system:String>
+                            <system:String x:Key="{x:Static values:GeneValue.One}">Нет мутаций</system:String>
+                            <system:String x:Key="{x:Static values:GeneValue.Two}">Мутация в одном аллеле</system:String>
+                            <system:String x:Key="{x:Static values:GeneValue.Three}">Мутация в обоих аллелях</system:String>
+                        </converters:MapConverter.Values>
+                    </converters:MapConverter>
+
+                    <!--                    <converters:AlcoholConsumptionConverter x:Key="AlcoholConsumptionConverter" />-->
+                    <!--                    <converters:HypertensionAncestralAnamnesisConverter x:Key="HAAConverter" />-->
                     <converters:EqualityConverter x:Key="NotNullEqualityConverter" True="false" False="true" />
                     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
 
                     <ObjectDataProvider x:Key="PhysicalActivityProvider" ObjectType="{x:Type system:Enum}" MethodName="GetValues">
                         <ObjectDataProvider.MethodParameters>
-                            <x:Type TypeName="models:PhysicalActivity" />
+                            <x:Type TypeName="values:PhysicalActivity" />
                         </ObjectDataProvider.MethodParameters>
                     </ObjectDataProvider>
 

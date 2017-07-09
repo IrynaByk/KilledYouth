@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data.Entity;
 using System.Linq;
 using System.Windows.Data;
 using System.Windows.Input;
-using HypertensionControlUI.CompositionRoot;
-using HypertensionControlUI.Models;
+using HypertensionControl.Domain.Models;
+using HypertensionControlUI.Interfaces;
 using HypertensionControlUI.Services;
 using HypertensionControlUI.Utils;
 
@@ -16,9 +15,10 @@ namespace HypertensionControlUI.ViewModels
     {
         #region Fields
 
-        private readonly DbContextFactory _dbContextFactory;
         private readonly IdentityService _identityService;
         private readonly MainWindowViewModel _mainWindowViewModel;
+
+        private readonly IUnitOfWorkFactory _unitOfWorkFactory;
         private readonly IViewProvider _viewProvider;
         private string _patientFilter = "";
         private List<Patient> _patients;
@@ -57,27 +57,71 @@ namespace HypertensionControlUI.ViewModels
             get => _patients;
             set
             {
-                if ( _patients == value )
-                    return;
-                _patients = value;
-                PatientsView = CollectionViewSource.GetDefaultView( _patients );
-                PatientsView.Filter = PatientsFilter;
-                PatientsView.SortDescriptions.Add( new SortDescription( nameof(Patient.Surname), ListSortDirection.Ascending ) );
-                PatientsView.SortDescriptions.Add( new SortDescription( nameof(Patient.Name), ListSortDirection.Ascending ) );
-                PatientsView.SortDescriptions.Add( new SortDescription( nameof(Patient.MiddleName), ListSortDirection.Ascending ) );
+                if ( Set( ref _patients, value ) )
+                {
+                    PatientsView = CollectionViewSource.GetDefaultView( _patients );
+                    PatientsView.Filter = PatientsFilter;
+                    PatientsView.SortDescriptions.Add( new SortDescription( nameof(Patient.Surname), ListSortDirection.Ascending ) );
+                    PatientsView.SortDescriptions.Add( new SortDescription( nameof(Patient.Name), ListSortDirection.Ascending ) );
+                    PatientsView.SortDescriptions.Add( new SortDescription( nameof(Patient.MiddleName), ListSortDirection.Ascending ) );
+                }
             }
         }
 
         public Patient SelectedPatient
         {
             get => _selectedPatient;
-            set
+            set => Set( ref _selectedPatient, value );
+        }
+
+        #endregion
+
+
+        #region Commands
+
+        private void ShowPatientStatisticsCommandHandler( object o )
+        {
+            _viewProvider.NavigateToPage<PatientStatisticsViewModel>();
+        }
+
+        private void ShowPatientCommandHandler( Patient patient )
+        {
+            _viewProvider.NavigateToPage<IndividualPatientCardViewModel>( m =>
             {
-                if ( Equals( value, _selectedPatient ) )
-                    return;
-                _selectedPatient = value;
-                OnPropertyChanged();
-            }
+                _mainWindowViewModel.Patient = patient ?? SelectedPatient;
+                m.Patient = _mainWindowViewModel.Patient;
+                m.PatientVisit = _mainWindowViewModel.Patient.LastVisit;
+            } );
+        }
+
+        private void EditPatientCommandHandler( Patient patient )
+        {
+            _viewProvider.NavigateToPage<AddPatientViewModel>( m =>
+            {
+                _mainWindowViewModel.Patient = patient ?? SelectedPatient;
+
+                m.Patient = _mainWindowViewModel.Patient;
+                m.ActualPatientVisit = _mainWindowViewModel.Patient.LastVisit;
+            } );
+        }
+
+        private void AddPatientVisitCommandHandler( Patient patient )
+        {
+            _viewProvider.NavigateToPage<AddPatientViewModel>( m =>
+            {
+                _mainWindowViewModel.Patient = patient ?? SelectedPatient;
+                m.Patient = _mainWindowViewModel.Patient;
+                m.ActualPatientVisit = m.Patient.AddVisit();
+            } );
+        }
+
+        private void AddPatientCommandHandler( object _ )
+        {
+            _viewProvider.NavigateToPage<AddPatientViewModel>( m =>
+            {
+                m.Patient = Patient.CreateNew( _identityService.CurrentUser.Login );
+                m.ActualPatientVisit = m.Patient.AddVisit();
+            } );
         }
 
         #endregion
@@ -86,61 +130,23 @@ namespace HypertensionControlUI.ViewModels
         #region Initialization
 
         public PatientsViewModel( IViewProvider viewProvider,
-                                  DbContextFactory dbContextFactory,
+                                  IUnitOfWorkFactory unitOfWorkFactory,
                                   IdentityService identityService,
                                   MainWindowViewModel mainWindowViewModel )
         {
             _viewProvider = viewProvider;
-            _dbContextFactory = dbContextFactory;
+            _unitOfWorkFactory = unitOfWorkFactory;
             _identityService = identityService;
             _mainWindowViewModel = mainWindowViewModel;
-            using ( var db = _dbContextFactory.GetDbContext() )
-            {
-                Patients = db.Patients
-                             .Include( p => p.PatientVisitHistory )
-                             .Include( p => p.Clinic )
-                             .Include( p => p.Medicine )
-                             .Include( p => p.Genes )
-                             .ToList();
-            }
 
-            AddPatientCommand = new AsyncDelegateCommand( o => _viewProvider.NavigateToPage<AddPatientViewModel>( m =>
-            {
-                m.Patient = new Patient();
-                m.Patient.CreatedBy = _identityService.CurrentUser.Login;
-                m.ActualPatientVisitData = new PatientVisitData { Patient = m.Patient };
-            } ) );
+            using ( var db = _unitOfWorkFactory.CreateUnitOfWork() )
+                Patients = db.PatientsRepository.GetAllPatients().ToList();
 
-            AddPatientVisitCommand = new AsyncDelegateCommand<Patient>(patient => _viewProvider.NavigateToPage<AddPatientViewModel>( m =>
-            {
-                _mainWindowViewModel.Patient = patient ?? SelectedPatient;
-                m.Patient = _mainWindowViewModel.Patient;
-                m.ActualPatientVisitData = new PatientVisitData { Patient = m.Patient };
-            } ) );
-
-            EditPatientCommand = new AsyncDelegateCommand<Patient>( patient => _viewProvider.NavigateToPage<AddPatientViewModel>( m =>
-            {
-                _mainWindowViewModel.Patient = patient ?? SelectedPatient;
-
-                m.Patient = _mainWindowViewModel.Patient;
-                m.ActualPatientVisitData = _mainWindowViewModel.Patient
-                                                               .PatientVisitHistory
-                                                               .OrderByDescending( pvd => pvd.VisitDate )
-                                                               .First();
-            } ) );
-
-            ShowPatientCommand = new AsyncDelegateCommand<Patient>( patient => _viewProvider.NavigateToPage<IndividualPatientCardViewModel>( m =>
-            {
-                _mainWindowViewModel.Patient = patient ?? SelectedPatient;
-                m.Patient = _mainWindowViewModel.Patient;
-                m.PatientVisitData =
-                    _mainWindowViewModel.Patient
-                                        .PatientVisitHistory
-                                        .OrderByDescending( pvd => pvd.VisitDate )
-                                        .First();
-            } ) );
-
-            ShowPatientStatistics = new AsyncDelegateCommand( o => _viewProvider.NavigateToPage<PatientStatisticsViewModel>() );
+            AddPatientCommand = new AsyncDelegateCommand( AddPatientCommandHandler );
+            AddPatientVisitCommand = new AsyncDelegateCommand<Patient>( AddPatientVisitCommandHandler );
+            EditPatientCommand = new AsyncDelegateCommand<Patient>( EditPatientCommandHandler );
+            ShowPatientCommand = new AsyncDelegateCommand<Patient>( ShowPatientCommandHandler );
+            ShowPatientStatistics = new AsyncDelegateCommand( ShowPatientStatisticsCommandHandler );
         }
 
         #endregion
@@ -150,12 +156,17 @@ namespace HypertensionControlUI.ViewModels
 
         private bool PatientsFilter( object o )
         {
-            return o is Patient patient &&
-                   (patient.CreatedBy == _identityService.CurrentUser.Login ||
-                    _identityService.CurrentUser.Role == Role.Admin) &&
-                   (patient.Name.IndexOf( PatientFilter, StringComparison.InvariantCultureIgnoreCase ) != -1 ||
-                    patient.MiddleName.IndexOf( PatientFilter, StringComparison.InvariantCultureIgnoreCase ) != -1 ||
-                    patient.Surname.IndexOf( PatientFilter, StringComparison.InvariantCultureIgnoreCase ) != -1);
+            if ( !(o is Patient patient) )
+                return false;
+
+            //  Skip if user privileges do not allow viewing patient
+            if ( _identityService.CurrentUser.Role != Roles.Admin && patient.RegisteredBy != _identityService.CurrentUser.Login )
+                return false;
+
+            //  Filter patient by name
+            return patient.Name.IndexOf( PatientFilter, StringComparison.InvariantCultureIgnoreCase ) != -1 ||
+                   patient.MiddleName.IndexOf( PatientFilter, StringComparison.InvariantCultureIgnoreCase ) != -1 ||
+                   patient.Surname.IndexOf( PatientFilter, StringComparison.InvariantCultureIgnoreCase ) != -1;
         }
 
         #endregion

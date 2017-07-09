@@ -1,5 +1,5 @@
-﻿using HypertensionControlUI.Models;
-using HypertensionControlUI.Services;
+﻿using HypertensionControl.Domain.Models;
+using HypertensionControl.Domain.Services;
 using SimpleInjector;
 
 namespace HypertensionControlUI.CompositionRoot

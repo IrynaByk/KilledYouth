@@ -1,9 +1,12 @@
-﻿using HypertensionControlUI.Services;
+﻿using System;
+using HypertensionControl.Persistence.Interfaces;
+using HypertensionControlUI.Interfaces;
 using SimpleInjector;
+using SimpleInjector.Lifestyles;
 
 namespace HypertensionControlUI.CompositionRoot
 {
-    public class DbContextFactory
+    public class UnitOfWorkFactory : IUnitOfWorkFactory
     {
         #region Fields
 
@@ -14,7 +17,7 @@ namespace HypertensionControlUI.CompositionRoot
 
         #region Initialization
 
-        public DbContextFactory( Container container )
+        public UnitOfWorkFactory( Container container )
         {
             _container = container;
         }
@@ -24,10 +27,54 @@ namespace HypertensionControlUI.CompositionRoot
 
         #region Public methods
 
-        public IDbContext GetDbContext()
+        public IUnitOfWork CreateUnitOfWork() => _container.GetInstance<IUnitOfWork>();
+
+        #endregion
+    }
+
+    public class ScopedUnitOfWorkDecorator : IUnitOfWork
+    {
+        #region Fields
+
+        private readonly IUnitOfWork _delegatee;
+        private readonly Scope _scope;
+
+        #endregion
+
+
+        #region Properties
+
+        public IUsersRepository UsersRepository => _delegatee.UsersRepository;
+
+        public IPatientsRepository PatientsRepository => _delegatee.PatientsRepository;
+
+        public IClinicsRepository ClinicsRepository => _delegatee.ClinicsRepository;
+
+        public IClassificationModelsRepository ClassificationModelsRepository => _delegatee.ClassificationModelsRepository;
+
+        #endregion
+
+
+        #region Initialization
+
+        public ScopedUnitOfWorkDecorator( Container container, Func<IUnitOfWork> decorateeFactory )
         {
-            return _container.GetInstance<IDbContext>();
+            _scope = AsyncScopedLifestyle.BeginScope( container );
+            _delegatee = decorateeFactory();
         }
+
+        #endregion
+
+
+        #region Public methods
+
+        public void Dispose()
+        {
+            _delegatee.Dispose();
+            _scope.Dispose();
+        }
+
+        public void SaveChanges() => _delegatee.SaveChanges();
 
         #endregion
     }

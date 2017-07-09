@@ -1,7 +1,7 @@
 using System;
 using System.Globalization;
 using System.Windows.Data;
-using HypertensionControlUI.Models;
+using HypertensionControl.Domain.Models.Values;
 
 namespace HypertensionControlUI.Views.Converters
 {

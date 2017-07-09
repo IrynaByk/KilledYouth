@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
 using AutoMapper;
+using HypertensionControl.Domain.Models;
+using HypertensionControl.Domain.Services;
+using HypertensionControl.Persistence.Entities;
 using HypertensionControlUI.CompositionRoot;
-using HypertensionControlUI.Models;
-using HypertensionControlUI.Services;
+using HypertensionControlUI.Interfaces;
 using HypertensionControlUI.Utils;
 
 namespace HypertensionControlUI.ViewModels
@@ -21,11 +21,11 @@ namespace HypertensionControlUI.ViewModels
         private static readonly Dictionary<string, string> ModelSourceFactors = new Dictionary<string, string>
         {
             ["Patient.Age"] = "Patient.Age",
-            ["PatientVisitData.ObesityWaistCircumference"] = "PatientVisitData.WaistCircumference",
-            ["PatientVisitData.WaistCircumference"] = "PatientVisitData.WaistCircumference",
-            ["PatientVisitData.ObesityBMI"] = "PatientVisitData.Weight",
-            ["PatientVisitData.BMI"] = "PatientVisitData.Weight",
-            ["PatientVisitData.PhysicalActivity"] = "PatientVisitData.PhysicalActivity"
+            ["PatientVisit.ObesityWaistCircumference"] = "PatientVisit.WaistCircumference",
+            ["PatientVisit.WaistCircumference"] = "PatientVisit.WaistCircumference",
+            ["PatientVisit.ObesityBMI"] = "PatientVisit.Weight",
+            ["PatientVisit.BMI"] = "PatientVisit.Weight",
+            ["PatientVisit.PhysicalActivity"] = "PatientVisit.PhysicalActivity"
         };
 
         #endregion
@@ -33,7 +33,7 @@ namespace HypertensionControlUI.ViewModels
 
         #region Fields
 
-        private readonly DbContextFactory _dbContextFactory;
+        private readonly IUnitOfWorkFactory _unitOfWorkFactory;
         private readonly IViewProvider _viewProvider;
         private readonly MainWindowViewModel _mainWindowViewModel;
         private readonly PatientClassificatorFactory _patientClassificatorFactory;
@@ -42,7 +42,7 @@ namespace HypertensionControlUI.ViewModels
         private List<EditablePropertyViewModel> _correctableProperties;
         private double _correctedClassificationResult;
         private Patient _patient;
-        private PatientVisitData _patientVisitData;
+        private PatientVisit _patientVisit;
         private ClassificationModel _selectedClassificationModel;
 
         #endregion
@@ -52,7 +52,7 @@ namespace HypertensionControlUI.ViewModels
 
         public List<ClassificationModel> AvailableClassificationModels { get; set; }
 
-        public PatientVisitData CorrectedLastVisitData { get; set; }
+        public PatientVisit CorrectedLastVisitData { get; set; }
         public Patient CorrectedPatient { get; set; }
 
         public ICommand PatientsCommand { get; }
@@ -99,12 +99,12 @@ namespace HypertensionControlUI.ViewModels
             set => Set( ref _patient, value );
         }
 
-        public PatientVisitData PatientVisitData
+        public PatientVisit PatientVisit
         {
-            get => _patientVisitData;
+            get => _patientVisit;
             set
             {
-                if ( Set( ref _patientVisitData, value ) )
+                if ( Set( ref _patientVisit, value ) )
                     RefreshAvailableClassificationModels();
             }
         }
@@ -131,16 +131,16 @@ namespace HypertensionControlUI.ViewModels
 
         #region Initialization
 
-        public ClassificationTunningViewModel( DbContextFactory dbContextFactory,
-                                               PatientClassificatorFactory patientClassificatorFactory,
+        public ClassificationTunningViewModel( PatientClassificatorFactory patientClassificatorFactory,
                                                MainWindowViewModel mainWindowViewModel,
-                                               IViewProvider viewProvider )
+                                               IViewProvider viewProvider,
+                                               IUnitOfWorkFactory unitOfWorkFactory )
         {
             //  Inject services
             _patientClassificatorFactory = patientClassificatorFactory;
             _mainWindowViewModel = mainWindowViewModel;
             _viewProvider = viewProvider;
-            _dbContextFactory = dbContextFactory;
+            _unitOfWorkFactory = unitOfWorkFactory;
 
             CorrectableProperties = new List<EditablePropertyViewModel>();
 
@@ -151,7 +151,7 @@ namespace HypertensionControlUI.ViewModels
             ShowPatientCommand = new AsyncDelegateCommand( o => _viewProvider.NavigateToPage<IndividualPatientCardViewModel>( m =>
             {
                 m.Patient = Patient;
-                m.PatientVisitData = Patient.LastVisitData;
+                m.PatientVisit = Patient.LastVisit;
             } ) );
         }
 
@@ -165,7 +165,7 @@ namespace HypertensionControlUI.ViewModels
         /// </summary>
         public List<EditablePropertyViewModel> GeneratePatientCorrectionData( ClassificationModel classificationModel,
                                                                               Patient patient,
-                                                                              PatientVisitData possibleVisitData )
+                                                                              PatientVisit possibleVisitData )
         {
             var correctedDataList = new List<EditablePropertyViewModel>();
 
@@ -200,14 +200,11 @@ namespace HypertensionControlUI.ViewModels
 
         private void RefreshAvailableClassificationModels()
         {
-            using ( var db = _dbContextFactory.GetDbContext() )
+            using ( var unitOfWork = _unitOfWorkFactory.CreateUnitOfWork() )
             {
-                AvailableClassificationModels = db.ClassificationModels
-                                                  .Include( model => model.LimitPoints )
-                                                  .Include( model => model.Properties.Select( property => property.ScaleEntries ) )
-                                                  .ToList()
-                                                  .Where( m => IsApplicable( Patient, PatientVisitData, m ) )
-                                                  .ToList();
+                AvailableClassificationModels = unitOfWork.ClassificationModelsRepository.GetAllClassificationModels()
+                                                          .Where( m => IsApplicable( Patient, PatientVisit, m ) )
+                                                          .ToList();
 
                 SelectedClassificationModel = AvailableClassificationModels.FirstOrDefault();
             }
@@ -216,7 +213,7 @@ namespace HypertensionControlUI.ViewModels
         private void ResetCorrectedPatient()
         {
             CorrectedPatient = Mapper.Map<Patient>( Patient );
-            CorrectedLastVisitData = CorrectedPatient.PatientVisitHistory.OrderByDescending( d => d.VisitDate ).First();
+            CorrectedLastVisitData = CorrectedPatient.LastVisit;
             CorrectableProperties = GeneratePatientCorrectionData( _selectedClassificationModel, CorrectedPatient, CorrectedLastVisitData );
         }
 
@@ -226,91 +223,22 @@ namespace HypertensionControlUI.ViewModels
             CorrectedClassificationResult = patientClassificator.Classify( new
             {
                 Patient = CorrectedPatient,
-                PatientVisitData = CorrectedPatient.PatientVisitHistory.OrderByDescending( pvd => pvd.VisitDate ).First()
+                PatientVisit = CorrectedPatient.LastVisit
             } );
         }
 
         private void ClassifyPatient()
         {
             var patientClassificator = _patientClassificatorFactory.GetClassificator( SelectedClassificationModel );
-            ClassificationResult = patientClassificator.Classify( new { Patient, PatientVisitData = Patient.LastVisitData } );
+            ClassificationResult = patientClassificator.Classify( new { Patient, PatientVisit = Patient.LastVisit } );
         }
 
-        private bool IsApplicable( Patient patient, PatientVisitData visitData, ClassificationModel classificationModel )
+        private bool IsApplicable( Patient patient, PatientVisit visitData, ClassificationModel classificationModel )
         {
-            var dataSource = new { Patient = patient, PatientVisitData = visitData };
+            var dataSource = new { Patient = patient, PatientVisit = visitData };
 
             return classificationModel.Properties.All( p => PatientPropertyProvider.GetPropertyValue( dataSource, p.Name ) != null );
         }
-
-        #endregion
-    }
-
-    public class EditablePatient
-    {
-        #region Auto-properties
-
-        public string AccompanyingIllnesses { get; set; }
-        public string Address { get; set; }
-        public int Age { get; set; }
-        public int? AGT_AGTR2 { get; set; }
-        public DateTime BirthDate { get; set; }
-        public long BirthDateTicks { get; set; }
-        public string BirthPlace { get; set; }
-        public virtual Clinic Clinic { get; set; }
-        public string CreatedBy { get; set; }
-        public string Diagnosis { get; set; }
-        public bool FemaleHeredity { get; set; }
-        public GenderType Gender { get; set; }
-        public virtual ICollection<Gene> Genes { get; set; }
-        public HypertensionAncestralAnamnesis HypertensionAncestralAnamnesis { get; set; }
-        public double HypertensionDuration { get; set; }
-        public int Id { get; set; }
-        public bool MaleHeredity { get; set; }
-        public virtual ICollection<Medicine> Medicine { get; set; }
-        public string MiddleName { get; set; }
-        public string Name { get; set; }
-        public string Nationality { get; set; }
-        public virtual ICollection<EditablePatientVisitData> PatientVisitHistory { get; set; }
-        public string Phone { get; set; }
-        public HypertensionStage? Stage { get; set; }
-        public string Surname { get; set; }
-        public double? TreatmentDuration { get; set; }
-
-        #endregion
-
-
-        #region Properties
-
-        public EditablePatientVisitData LastVisitData => PatientVisitHistory.OrderByDescending( pvd => pvd.VisitDate ).First();
-
-        #endregion
-    }
-
-    public class EditablePatientVisitData
-    {
-        #region Auto-properties
-
-        public AlcoholСonsumption AlcoholСonsumption { get; set; }
-        public BloodPressure BloodPressure { get; set; }
-        public double? BMI { get; set; }
-        public int? DepressionPointsCES_D { get; set; }
-        public DietaryHabits DietaryHabits { get; set; }
-        public double Height { get; set; }
-        public HypertensionStage? HypertensionStage { get; set; }
-        public int Id { get; set; }
-        public bool? ObesityBMI { get; set; }
-        public bool? ObesityWaistCircumference { get; set; }
-        public virtual Patient Patient { get; set; }
-        public PhysicalActivity? PhysicalActivity { get; set; }
-        public SaltSensitivityTest SaltSensitivity { get; set; }
-        public Smoking Smoking { get; set; }
-        public int? StressPointsPSM_25 { get; set; }
-        public double TemporaryBMI { get; set; }
-        public DateTime VisitDate { get; set; }
-        public long VisitDateTicks { get; set; }
-        public double WaistCircumference { get; set; }
-        public double Weight { get; set; }
 
         #endregion
     }

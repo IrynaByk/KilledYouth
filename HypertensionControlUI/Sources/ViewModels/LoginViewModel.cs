@@ -15,8 +15,8 @@ namespace HypertensionControlUI.ViewModels
         private readonly IdentityService _identityService;
 
         private readonly MainWindowViewModel _mainWindowViewModel;
-        private bool _loginFailed;
         private readonly IViewProvider _viewProvider;
+        private bool _loginFailed;
 
         #endregion
 
@@ -64,6 +64,11 @@ namespace HypertensionControlUI.ViewModels
             }
         }
 
+        private bool LoginCommandCanExecute( object o )
+        {
+            return !string.IsNullOrEmpty( Login ) && !string.IsNullOrEmpty( Password );
+        }
+
         #endregion
 
 
@@ -82,22 +87,14 @@ namespace HypertensionControlUI.ViewModels
 
         #region Initialization
 
-        public LoginViewModel( MainWindowViewModel mainWindowViewModel, IdentityService identityService, IViewProvider viewProvider )
+        public LoginViewModel( MainWindowViewModel mainWindowViewModel,
+                               IdentityService identityService,
+                               IViewProvider viewProvider )
         {
             _mainWindowViewModel = mainWindowViewModel;
             _identityService = identityService;
             _viewProvider = viewProvider;
             LoginCommand = new AsyncDelegateCommand( LoginCommandHandler, LoginCommandCanExecute );
-        }
-
-        #endregion
-
-
-        #region Non-public methods
-
-        private bool LoginCommandCanExecute( object o )
-        {
-            return !string.IsNullOrEmpty( Login ) && !string.IsNullOrEmpty( Password );
         }
 
         #endregion

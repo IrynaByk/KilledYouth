@@ -2,10 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Windows;
+using HypertensionControl.Domain.Interfaces;
 
 namespace HypertensionControlUI.Services
 {
-    public class ResourceProvider
+    public class ResourceProvider : IResourceProvider
     {
         #region Public methods
 
