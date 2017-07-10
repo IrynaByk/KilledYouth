@@ -244,4 +244,4 @@ ModelManifest.xml
 # FAKE - F# Make
 .fake/
 
-**/initial_patient_data.csv
+initial_patients_data.csv
