@@ -27,7 +27,6 @@ namespace HypertensionControl.Persistence.Entities
 
         public int? DepressionPointsCesD { get; set; }
         public int? StressPointsPsm25 { get; set; }
-        public double TemporaryBmi { get; set; }
         public double WaistCircumference { get; set; }
         public double Height { get; set; }
         public double Weight { get; set; }

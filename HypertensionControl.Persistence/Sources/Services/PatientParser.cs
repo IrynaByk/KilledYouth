@@ -58,7 +58,7 @@ namespace HypertensionControl.Persistence.Services
 
             //  Create patient visit instance
 
-            var patientVisit = new PatientVisitEntity();
+            var patientVisit = new PatientVisitEntity{VisitDateTicks = new DateTime(2015, 1, 1).Ticks };
 
             Smoking smoking;
             if ( patientProperties["smoke"].Contains( "1" ) )
@@ -86,8 +86,10 @@ namespace HypertensionControl.Persistence.Services
             if ( !string.IsNullOrEmpty( patientProperties["WaistCircumference"] ) )
                 patientVisit.WaistCircumference = Convert.ToDouble( patientProperties["WaistCircumference"], ruCulture );
 
-            if ( !string.IsNullOrEmpty( patientProperties["BMI"] ) )
-                patientVisit.TemporaryBmi = Convert.ToDouble( patientProperties["BMI"], ruCulture );
+            if (!string.IsNullOrEmpty(patientProperties["Height"]))
+                patientVisit.Height = Convert.ToDouble(patientProperties["Height"]);
+            if (!string.IsNullOrEmpty(patientProperties["Weight"]))
+                patientVisit.Weight = Convert.ToDouble(patientProperties["Weight"]);
 
             if ( patientProperties["HStage"].Contains( "1" ) )
                 patientVisit.HypertensionStage = HypertensionStage.Stage1;

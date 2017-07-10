@@ -24,7 +24,6 @@ namespace HypertensionControl.Domain.Models
 
         public int? DepressionPointsCesD { get; set; }
         public int? StressPointsPsm25 { get; set; }
-        public double TemporaryBmi { get; set; }
 
         public double WaistCircumference { get; set; }
         public double Height { get; set; }
@@ -50,8 +49,6 @@ namespace HypertensionControl.Domain.Models
             {
                 if ( Weight > 0 && Height > 0 )
                     return Weight / Height / Height * 10000;
-                if ( TemporaryBmi > 0 )
-                    return TemporaryBmi;
                 return null;
             }
         }
