@@ -7,8 +7,8 @@
     {
         #region Auto-properties
 
-        public string Name { get; }
-        public string Dose { get; }
+        public string Name { get; set; }
+        public string Dose { get; set; }
 
         #endregion
 

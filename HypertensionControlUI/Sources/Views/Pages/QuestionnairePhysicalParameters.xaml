@@ -41,23 +41,23 @@
             <ColumnDefinition Width="2*" />
         </Grid.ColumnDefinitions>
         <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center">Текущие физические параметры пациента</TextBlock>
-        <TextBlock Grid.Row="1" Grid.Column="0" Style="{StaticResource LabelStyle}">Рост:</TextBlock>
+        <TextBlock Grid.Row="1" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}">Рост:</TextBlock>
         <TextBox x:Name="HeightText" Grid.Row="1" Grid.Column="1" Text="{Binding Height}"
-                 Style="{StaticResource InputStyle}" />
-        <TextBlock Grid.Row="2" Grid.Column="0" Style="{StaticResource LabelStyle}">Вес:</TextBlock>
+                 Style="{StaticResource QuestionnaireInputStyle}" />
+        <TextBlock Grid.Row="2" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}">Вес:</TextBlock>
         <TextBox x:Name="WeightText" Grid.Row="2" Grid.Column="1" Text="{Binding Weight}"
-                 Style="{StaticResource InputStyle}" />
+                 Style="{StaticResource QuestionnaireInputStyle}" />
 
-        <TextBlock Grid.Row="3" Grid.Column="0" Style="{StaticResource LabelStyle}">ИМТ:</TextBlock>
-        <TextBox Grid.Row="3" Grid.Column="1" Style="{StaticResource InputStyle}" IsReadOnly="True" Text="{Binding Bmi, Mode=OneWay}" />
-        <TextBlock Grid.Row="4" Grid.Column="0" Style="{StaticResource LabelStyle}">Ожирение:</TextBlock>
-        <TextBox Grid.Row="4" Grid.Column="1" Style="{StaticResource InputStyle}" IsReadOnly="True" Text="{Binding ObesityBmi, Mode=OneWay}" />
+        <TextBlock Grid.Row="3" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}">ИМТ:</TextBlock>
+        <TextBox Grid.Row="3" Grid.Column="1" Style="{StaticResource QuestionnaireInputStyle}" IsReadOnly="True" Text="{Binding Bmi, Mode=OneWay}" />
+        <TextBlock Grid.Row="4" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}">Ожирение:</TextBlock>
+        <TextBox Grid.Row="4" Grid.Column="1" Style="{StaticResource QuestionnaireInputStyle}" IsReadOnly="True" Text="{Binding ObesityBmi, Mode=OneWay}" />
 
-        <TextBlock Grid.Row="5" Grid.Column="0" Style="{StaticResource LabelStyle}">Окружность талии:</TextBlock>
+        <TextBlock Grid.Row="5" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}">Окружность талии:</TextBlock>
         <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding WaistCircumference}"
-                 Style="{StaticResource InputStyle}" />
-        <TextBlock Grid.Row="6" Grid.Column="0" Style="{StaticResource LabelStyle}">Абдоминальное жирение:</TextBlock>
-        <TextBox Grid.Row="6" Grid.Column="1" Style="{StaticResource InputStyle}" IsReadOnly="True" Text="{Binding ObesityWaistCircumference, Mode=OneWay}" />
+                 Style="{StaticResource QuestionnaireInputStyle}" />
+        <TextBlock Grid.Row="6" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}">Абдоминальное жирение:</TextBlock>
+        <TextBox Grid.Row="6" Grid.Column="1" Style="{StaticResource QuestionnaireInputStyle}" IsReadOnly="True" Text="{Binding ObesityWaistCircumference, Mode=OneWay}" />
 
         <!-- Navigation buttons -->
         <Grid Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2">

@@ -37,7 +37,7 @@
                             <system:String x:Key="{x:Static values:PhysicalActivity.MoreThenThreeTimesPerWeek}">Больше трёх раз в неделю</system:String>
                         </converters:MapConverter.Values>
                     </converters:MapConverter>
-                    
+
                     <converters:MapConverter x:Key="AlcoholConsumptionConverter" Default="">
                         <converters:MapConverter.Values>
                             <system:String x:Key="{x:Static values:AlcoholСonsumption.Never}">Никогда или редко</system:String>
@@ -104,18 +104,74 @@
                         <Setter Property="Foreground" Value="{StaticResource GrayedTextBrush}" />
                     </Style>
 
-                    <Style x:Key="LabelStyle" TargetType="TextBlock">
+                    <Style x:Key="QuestionnaireHeaderStyle" TargetType="TextBlock">
+                        <Setter Property="FontSize" Value="20" />
+                        <Setter Property="FontWeight" Value="SemiBold" />
+                        <Setter Property="TextDecorations" Value="{x:Static TextDecorations.Underline}" />
+                        <Setter Property="HorizontalAlignment" Value="Center" />
+                        <Setter Property="VerticalAlignment" Value="Center" />
                         <Setter Property="Margin" Value="5" />
+                        <Setter Property="Padding" Value="4" />
+                    </Style>
+                    
+                    <Style x:Key="QuestionnaireSubheaderStyle" TargetType="TextBlock">
+                        <Setter Property="FontSize" Value="16" />
+                        <Setter Property="FontWeight" Value="SemiBold" />
+                        <Setter Property="HorizontalAlignment" Value="Stretch" />
+                        <Setter Property="TextAlignment" Value="Center" />
+                        <Setter Property="VerticalAlignment" Value="Center" />
+                        <Setter Property="Margin" Value="5" />
+                        <Setter Property="Background" Value="#F0F0F0" />
+                        <Setter Property="Padding" Value="4" />
+                    </Style>
+
+                    <Style x:Key="QuestionnaireLabelStyle" TargetType="TextBlock">
+                        <Setter Property="FontSize" Value="14" />
+                        <Setter Property="FontWeight" Value="SemiBold" />
+                        <Setter Property="Margin" Value="16,3" />
                         <Setter Property="HorizontalAlignment" Value="Right" />
                         <Setter Property="VerticalAlignment" Value="Center" />
+                        <Setter Property="TextAlignment" Value="Right" />
                     </Style>
 
-                    <Style x:Key="InputStyle" TargetType="FrameworkElement">
-                        <Setter Property="Margin" Value="3" />
+                    <Style x:Key="QuestionnaireFormFieldStyle" TargetType="Control">
+                        <Setter Property="FontSize" Value="14" />
+                        <Setter Property="Margin" Value="16,3" />
+                        <Setter Property="MaxHeight" Value="32"></Setter>
+                        <Setter Property="MinHeight" Value="24"></Setter>
                         <Setter Property="HorizontalAlignment" Value="Stretch" />
-                        <Setter Property="VerticalAlignment" Value="Center" />
+                        <Setter Property="VerticalAlignment" Value="Stretch" />
+                        <Setter Property="BorderThickness" Value="2"></Setter>
                     </Style>
 
+                    <Style x:Key="QuestionnaireInputStyle" TargetType="TextBox" BasedOn="{StaticResource QuestionnaireFormFieldStyle}">
+                        <Setter Property="VerticalContentAlignment" Value="Center" />
+                    </Style>
+
+                    <Style x:Key="QuestionnaireDatePickerStyle" TargetType="DatePicker" BasedOn="{StaticResource QuestionnaireFormFieldStyle}">
+                        <Setter Property="VerticalContentAlignment" Value="Center" />
+                    </Style>
+
+                    <Style x:Key="QuestionnaireComboBoxStyle" TargetType="ComboBox" BasedOn="{StaticResource QuestionnaireFormFieldStyle}">
+                        <Setter Property="VerticalContentAlignment" Value="Center" />
+                    </Style>
+
+                    <Style x:Key="QuestionnaireRadioButtonStyle" TargetType="RadioButton" BasedOn="{StaticResource QuestionnaireFormFieldStyle}">
+                        <Setter Property="VerticalContentAlignment" Value="Center" />
+                    </Style>
+                    
+                    <Style x:Key="QuestionnaireCheckBoxStyle" TargetType="CheckBox" BasedOn="{StaticResource QuestionnaireFormFieldStyle}">
+                        <Setter Property="VerticalContentAlignment" Value="Center" />
+                    </Style>
+                    
+                    <Style x:Key="QuestionnaireNavigationButtonStyle" TargetType="Control">
+                        <Setter Property="VerticalContentAlignment" Value="Center" />
+                        <Setter Property="FontSize" Value="14" />
+                        <Setter Property="Margin" Value="3" />
+                        <Setter Property="Padding" Value="8,2" />
+                        <Setter Property="MinWidth" Value="120" />
+                    </Style>
+                    
                 </ResourceDictionary>
 
                 <ResourceDictionary Source="/Resources/PatientCardDocument.xaml" />

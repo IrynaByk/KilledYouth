@@ -41,16 +41,16 @@
         </Grid.ColumnDefinitions>
         <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center">Тестирование пациента</TextBlock>
         <TextBlock Grid.Row="1" Grid.Column="0"  Grid.ColumnSpan="2"
-                Style="{StaticResource InputStyle}">Тест на солевую чувствительность:</TextBlock>
-        <TextBlock Grid.Row="2" Grid.Column="0" Style="{StaticResource InputStyle}">Солевая чувствительность:</TextBlock>
+                Style="{StaticResource QuestionnaireInputStyle}">Тест на солевую чувствительность:</TextBlock>
+        <TextBlock Grid.Row="2" Grid.Column="0" Style="{StaticResource QuestionnaireInputStyle}">Солевая чувствительность:</TextBlock>
         <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding ActualPatientVisit.SaltSensitivity.SaltSensitivity}" />
-        <TextBlock Grid.Row="3" Grid.Column="0" Style="{StaticResource LabelStyle}">Дата анкетирования:</TextBlock>
+        <TextBlock Grid.Row="3" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}">Дата анкетирования:</TextBlock>
         <DatePicker Grid.Row="3" Grid.Column="1" x:Name="SaltDateName"
             SelectedDate="{Binding ActualPatientVisit.SaltSensitivity.TestDate, 
-            UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource InputStyle}" />
-        <TextBlock Grid.Row="4" Grid.Column="0" Style="{StaticResource InputStyle}">Шкала психологического стресса PSM-25:</TextBlock>
+            UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource QuestionnaireInputStyle}" />
+        <TextBlock Grid.Row="4" Grid.Column="0" Style="{StaticResource QuestionnaireInputStyle}">Шкала психологического стресса PSM-25:</TextBlock>
         <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding ActualPatientVisit.StressPointsPSM_25}" />
-        <TextBlock Grid.Row="5" Grid.Column="0" Style="{StaticResource InputStyle}">Шкала депрессии CES-D:</TextBlock>
+        <TextBlock Grid.Row="5" Grid.Column="0" Style="{StaticResource QuestionnaireInputStyle}">Шкала депрессии CES-D:</TextBlock>
         <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding ActualPatientVisit.DepressionPointsCES_D}" />
 
         <!-- Navigation buttons -->
