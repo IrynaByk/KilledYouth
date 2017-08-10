@@ -132,6 +132,8 @@
                         <Setter Property="HorizontalAlignment" Value="Right" />
                         <Setter Property="VerticalAlignment" Value="Center" />
                         <Setter Property="TextAlignment" Value="Right" />
+                        <Setter Property="UseLayoutRounding" Value="False" />
+                        <Setter Property="SnapsToDevicePixels" Value="False" />
                     </Style>
 
                     <Style x:Key="QuestionnaireFormFieldStyle" TargetType="Control">

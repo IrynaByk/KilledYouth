@@ -31,8 +31,6 @@
                     <x:Type TypeName="values:GeneValue" />
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
-
-            <converters:EqualityConverter x:Key="TreatmentEqualityConverter" True="false" False="true" />
         </FrameworkElement.Resources>
 
         <DockPanel DockPanel.Dock="Bottom" Margin="0,32,0,16">
@@ -52,7 +50,7 @@
                 NavigateUri="/Sources/Views/Pages/QuestionnaireBasicPatientInfo.xaml">
                 <StackPanel Orientation="Horizontal">
                     <Image Source="/Resources/Markup/Icons/back.png" Width="24" Height="24" VerticalAlignment="Center" Margin="0,0,8,0" />
-                    <TextBlock Text="Далее" VerticalAlignment="Center" />
+                    <TextBlock Text="Назад" VerticalAlignment="Center" />
                 </StackPanel>
             </components:HyperlinkButton>
             <components:HyperlinkButton
@@ -69,144 +67,167 @@
             <Control />
         </DockPanel>
 
-        <Grid>
-
+        <Grid VerticalAlignment="Stretch">
             <Grid.RowDefinitions>
+                <RowDefinition Height="3*" MinHeight="500"/>
                 <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
+            <Grid Grid.Row="0" ShowGridLines="False">
 
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource QuestionnaireSubheaderStyle}"
-                       Text="Клиническая картина" />
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Row="1" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}"
-                       Text="Диагноз" />
-            <TextBox Grid.Row="1" Grid.Column="1" Style="{StaticResource QuestionnaireInputStyle}"
-                     Text="{Binding Patient.Diagnosis}" />
+                <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource QuestionnaireSubheaderStyle}"
+                           Text="Клиническая картина" />
 
-            <TextBlock Grid.Row="2" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}"
-                       Text="Сопутствующие заболевания" />
-            <TextBox Grid.Row="2" Grid.Column="1" Style="{StaticResource QuestionnaireInputStyle}"
-                     Text="{Binding Patient.AccompanyingIllnesses}" />
+                <TextBlock Grid.Row="1" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}"
+                           Text="Диагноз" />
+                <TextBox Grid.Row="1" Grid.Column="1" Style="{StaticResource QuestionnaireInputStyle}"
+                         Text="{Binding Patient.Diagnosis}" />
 
-            <TextBlock Grid.Row="3" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}"
-                       Text="Длительность АГ" />
-            <TextBox Grid.Row="3" Grid.Column="1" Style="{StaticResource QuestionnaireInputStyle}"
-                     Text="{Binding Patient.HypertensionDuration}" />
+                <TextBlock Grid.Row="2" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}"
+                           Text="Сопутствующие заболевания" />
+                <TextBox Grid.Row="2" Grid.Column="1" Style="{StaticResource QuestionnaireInputStyle}"
+                         Text="{Binding Patient.AccompanyingIllnesses}" />
 
-            <TextBlock Grid.Row="4" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}"
-                       Text="Наследственный анамнез АГ" />
-            <ComboBox Grid.Row="4" Grid.Column="1" Style="{StaticResource QuestionnaireComboBoxStyle}"
-                      ItemsSource="{Binding Source={StaticResource HypertensionAncestralAnamnesisProvider}}"
-                      SelectedItem="{Binding Patient.HypertensionAncestralAnamnesis}">
-                <ComboBox.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding ., Converter={StaticResource HAAConverter}}" />
-                    </DataTemplate>
-                </ComboBox.ItemTemplate>
-            </ComboBox>
+                <TextBlock Grid.Row="3" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}"
+                           Text="Длительность АГ" />
+                <TextBox Grid.Row="3" Grid.Column="1" Style="{StaticResource QuestionnaireInputStyle}"
+                         Text="{Binding Patient.HypertensionDuration}" />
 
-            <TextBlock Grid.Row="5" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}"
-                       Text="Наследственный анамнез ранних ССЗ&#x0d;&#x0a; в первой линии родства" />
-            <StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal">
-                <CheckBox IsChecked="{Binding Patient.MaleHeredity}" Style="{StaticResource QuestionnaireCheckBoxStyle}"
-                          Content="у мужчин младше 55 лет" />
-                <CheckBox IsChecked="{Binding Patient.FemaleHeredity}" Style="{StaticResource QuestionnaireCheckBoxStyle}"
-                          Content="у женщин младше 65 лет" />
-            </StackPanel>
+                <TextBlock Grid.Row="4" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}"
+                           Text="Наследственный анамнез АГ" />
+                <ComboBox Grid.Row="4" Grid.Column="1" Style="{StaticResource QuestionnaireComboBoxStyle}"
+                          ItemsSource="{Binding Source={StaticResource HypertensionAncestralAnamnesisProvider}}"
+                          SelectedItem="{Binding Patient.HypertensionAncestralAnamnesis}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding ., Converter={StaticResource HAAConverter}}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
 
-            <TextBlock Grid.Row="6" Grid.ColumnSpan="2" Style="{StaticResource QuestionnaireSubheaderStyle}"
-                       Text="Гены, влияющие на склонность к гипертензии:" />
+                <TextBlock Grid.Row="5" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}"
+                           Text="Наследственный анамнез ранних ССЗ&#x0d;&#x0a; в первой линии родства" />
+                <StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal">
+                    <CheckBox IsChecked="{Binding Patient.MaleHeredity}" Style="{StaticResource QuestionnaireCheckBoxStyle}"
+                              Content="у мужчин младше 55 лет" />
+                    <CheckBox IsChecked="{Binding Patient.FemaleHeredity}" Style="{StaticResource QuestionnaireCheckBoxStyle}"
+                              Content="у женщин младше 65 лет" />
+                </StackPanel>
 
-            <TextBlock Grid.Row="7" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}"
-                       Text="AGT" />
-            <ComboBox Grid.Row="7" Grid.Column="1"
-                      ItemsSource="{Binding Source={StaticResource GeneValueProvider}}"
-                      SelectedItem="{Binding Agt}"
-                      Style="{StaticResource QuestionnaireComboBoxStyle}">
-                <ComboBox.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding ., Converter={StaticResource GeneValuesConverter}}" />
-                    </DataTemplate>
-                </ComboBox.ItemTemplate>
-            </ComboBox>
-            <TextBlock Grid.Row="8" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}"
-                       Text="AGTR2" />
-            <ComboBox Grid.Row="8" Grid.Column="1"
-                      ItemsSource="{Binding Source={StaticResource GeneValueProvider}}"
-                      SelectedItem="{Binding Agtr2}"
-                      Style="{StaticResource QuestionnaireComboBoxStyle}">
-                <ComboBox.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding ., Converter={StaticResource GeneValuesConverter}}" />
-                    </DataTemplate>
-                </ComboBox.ItemTemplate>
-            </ComboBox>
+                <TextBlock Grid.Row="6" Grid.ColumnSpan="2" Style="{StaticResource QuestionnaireSubheaderStyle}"
+                           Text="Гены, влияющие на склонность к гипертензии:" />
 
-            <TextBlock Grid.Row="9" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}" Text="Регулярное лечение АГ" />
-            <StackPanel Grid.Row="9" Grid.Column="1" Orientation="Horizontal">
-                <RadioButton Style="{StaticResource QuestionnaireRadioButtonStyle}" Content="Да"
-                             IsChecked="{Binding HasTreatment}" />
-                <RadioButton Style="{StaticResource QuestionnaireRadioButtonStyle}" Content="Нет"
-                             IsChecked="{Binding HasTreatment, Converter={x:Static converters:BoolConverters.Not}, Mode=OneWay}" />
-            </StackPanel>
-            <TextBlock Grid.Row="10" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}"
-                       Visibility="{Binding HasTreatment, Converter={x:Static converters:BoolConverters.BoolToVisibility}}"
-                       Text="Длительность лечения, гг." />
-            <TextBox Grid.Row="10" Grid.Column="1" Style="{StaticResource QuestionnaireInputStyle}"
-                     Visibility="{Binding HasTreatment, Converter={x:Static converters:BoolConverters.BoolToVisibility}}"
-                     Text="{Binding TreatmentDuration}" />
+                <TextBlock Grid.Row="7" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}"
+                           Text="AGT" />
+                <ComboBox Grid.Row="7" Grid.Column="1"
+                          ItemsSource="{Binding Source={StaticResource GeneValueProvider}}"
+                          SelectedItem="{Binding Agt}"
+                          Style="{StaticResource QuestionnaireComboBoxStyle}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding ., Converter={StaticResource GeneValuesConverter}}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+                <TextBlock Grid.Row="8" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}"
+                           Text="AGTR2" />
+                <ComboBox Grid.Row="8" Grid.Column="1"
+                          ItemsSource="{Binding Source={StaticResource GeneValueProvider}}"
+                          SelectedItem="{Binding Agtr2}"
+                          Style="{StaticResource QuestionnaireComboBoxStyle}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding ., Converter={StaticResource GeneValuesConverter}}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
 
-            <TextBlock Grid.Row="11" Grid.ColumnSpan="2" Style="{StaticResource QuestionnaireSubheaderStyle}"
-                       Visibility="{Binding HasTreatment, Converter={x:Static converters:BoolConverters.BoolToVisibility}}"
-                       Text="Препараты" />
+                <TextBlock Grid.Row="9" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}" Text="Регулярное лечение АГ" />
+                <StackPanel Grid.Row="9" Grid.Column="1" Orientation="Horizontal">
+                    <RadioButton Style="{StaticResource QuestionnaireRadioButtonStyle}" Content="Да"
+                                 IsChecked="{Binding HasTreatment}" />
+                    <RadioButton Style="{StaticResource QuestionnaireRadioButtonStyle}" Content="Нет"
+                                 IsChecked="{Binding HasTreatment, Converter={x:Static converters:BoolConverters.Not}, Mode=OneWay}" />
+                </StackPanel>
 
-                <StackPanel  Grid.Row="12" Grid.ColumnSpan="2" Visibility="{Binding Path=HasTreatment, Converter={x:Static converters:BoolConverters.BoolToVisibility}}">
+
+                <TextBlock Grid.Row="10" Grid.ColumnSpan="2" Style="{StaticResource QuestionnaireSubheaderStyle}"
+                           Visibility="{Binding HasTreatment, Converter={x:Static converters:BoolConverters.BoolToVisibility}}"
+                           Text="Лечение" />
+
+
+                <TextBlock Grid.Row="11" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}"
+                           Visibility="{Binding HasTreatment, Converter={x:Static converters:BoolConverters.BoolToVisibility}}"
+                           Text="Длительность лечения, гг." />
+
+                <TextBox Grid.Row="11" Grid.Column="1" Style="{StaticResource QuestionnaireInputStyle}"
+                         Visibility="{Binding HasTreatment, Converter={x:Static converters:BoolConverters.BoolToVisibility}}"
+                         Text="{Binding TreatmentDuration}" />
+
+
+                <StackPanel Grid.Row="12" Grid.ColumnSpan="2" Visibility="{Binding Path=HasTreatment, Converter={x:Static converters:BoolConverters.BoolToVisibility}}">
 
                     <Button Command="{Binding AddMedicineCommand}" Content="Добавить препарат" HorizontalAlignment="Right" Margin="6" Padding="2" />
-                    <ListView
-                        MinHeight="32"
-                        ItemsSource="{Binding Medicines}"
-                        HorizontalContentAlignment="Stretch" SelectionChanged="ListView_SelectionChanged">
-                        <ListView.ItemTemplate>
-                            <DataTemplate DataType="{x:Type values:Medicine}">
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="2*" />
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="2*" />
-                                            <ColumnDefinition Width="80" />
-                                        </Grid.ColumnDefinitions>
-                                        <TextBlock Style="{StaticResource QuestionnaireLabelStyle}">Наименование препарата:</TextBlock>
-                                        <TextBox Grid.Column="1" Style="{StaticResource QuestionnaireInputStyle}" Text="{Binding Name}" />
-                                        <TextBlock Grid.Column="2" Style="{StaticResource QuestionnaireLabelStyle}">Дозировка:</TextBlock>
-                                        <TextBox Grid.Column="3" Style="{StaticResource QuestionnaireInputStyle}" Text="{Binding Dose}" />
-                                        <Button Grid.Column="4" Margin="3"
-                                                Command="{Binding Path=DataContext.DeleteMedicineCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}"
-                                                CommandParameter="{Binding}"
-                                                Content="Удалить" />
-                                    </Grid>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
                 </StackPanel>
+
+                <TextBlock Grid.Row="12" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}"
+                           Visibility="{Binding HasTreatment, Converter={x:Static converters:BoolConverters.BoolToVisibility}}"
+                           Text="Список препаратов:" />
+
+
+            </Grid>
+            
+
+            <ListView Grid.Row="1" MinHeight="32" 
+                      ScrollViewer.VerticalScrollBarVisibility="Auto"
+                      ScrollViewer.CanContentScroll="FAlse"
+                      VirtualizingStackPanel.IsVirtualizing="False"
+                      ItemsSource="{Binding Medicines}"
+                      Visibility="{Binding HasTreatment, Converter={x:Static converters:BoolConverters.BoolToVisibility}}"
+                      HorizontalContentAlignment="Stretch"
+                      BorderThickness="0,1">
+                <ListView.ItemTemplate>
+                    <DataTemplate DataType="{x:Type values:Medicine}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="2*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="2*" />
+                                <ColumnDefinition Width="80" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Style="{StaticResource QuestionnaireLabelStyle}" Text="Наименование препарата:"></TextBlock>
+                            <TextBox Grid.Column="1" Style="{StaticResource QuestionnaireInputStyle}" Text="{Binding Name}" />
+                            <TextBlock Grid.Column="2" Style="{StaticResource QuestionnaireLabelStyle}" Text="Дозировка:"></TextBlock>
+                            <TextBox Grid.Column="3" Style="{StaticResource QuestionnaireInputStyle}" Text="{Binding Dose}" />
+                            <Button Grid.Column="4" Margin="3"
+                                    Command="{Binding Path=DataContext.DeleteMedicineCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}"
+                                    CommandParameter="{Binding}"
+                                    Content="Удалить" />
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
         </Grid>
     </DockPanel>
 </Page>

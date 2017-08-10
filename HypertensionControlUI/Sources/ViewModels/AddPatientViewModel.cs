@@ -70,7 +70,7 @@ namespace HypertensionControlUI.ViewModels
 
         public bool HasTreatment
         {
-            get => true || Patient.TreatmentDuration.HasValue;
+            get => Patient.TreatmentDuration.HasValue;
             set
             {
                 if ( HasTreatment == value )
