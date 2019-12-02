@@ -13,7 +13,8 @@
                     d:DesignWidth="640"
                     mc:Ignorable="d"
                     Background="{StaticResource AppBackgroundBrush}"
-                    d:DataContext="{d:DesignInstance Type=viewModels:PatientsViewModel, IsDesignTimeCreatable=False}">
+                    d:DataContext="{d:DesignInstance Type=viewModels:PatientsViewModel, IsDesignTimeCreatable=False}"
+                    Loaded="PatientsView_OnLoaded">
     <DockPanel Grid.Column="0">
 
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
@@ -31,6 +32,7 @@
             <Button
                 Margin="3"
                 HorizontalAlignment="Right"
+                Visibility="{Binding UserPriveleges, Converter={StaticResource BooleanToVisibilityConverter}}"
                 Command="{Binding ShowPatientStatistics}" Padding="8,4">
                 <StackPanel Orientation="Horizontal">
                     <Image Source="/Resources/Markup/Icons/attibutes.png" Width="16" Height="16" Margin="0,0,8,0" />
@@ -60,28 +62,28 @@
                     <ListBox.ItemTemplate>
                         <DataTemplate DataType="{x:Type models:Patient}">
 
-                        <DockPanel x:Name="ItemContainer" Background="Transparent" Height="24">
-                            <StackPanel x:Name="PatientControls" Orientation="Horizontal" DockPanel.Dock="Right" Visibility="Collapsed">
-                                <Button Margin="1" Command="{Binding ElementName=PatientsList, Path=DataContext.EditPatientCommand}" CommandParameter="{Binding}">
-                                    <Image Source="/Resources/Markup/Icons/edit.png" Stretch="UniformToFill" Width="16" Height="16" />
-                                    <Button.ToolTip>Изменить последнее посещение</Button.ToolTip>
-                                </Button>
-                                <Button Margin="1" Command="{Binding ElementName=PatientsList, Path=DataContext.AddPatientVisitCommand}" CommandParameter="{Binding}">
-                                    <Image Source="/Resources/Markup/Icons/plus.png" Stretch="UniformToFill" Width="16" Height="16" />
-                                    <Button.ToolTip>Добавить новое посещение</Button.ToolTip>
-                                </Button>
-                                <Button Margin="1" Command="{Binding ElementName=PatientsList, Path=DataContext.ShowPatientCommand}" CommandParameter="{Binding}">
-                                    <Image Source="/Resources/Markup/Icons/attibutes.png" Width="16" Height="16" />
-                                    <Button.ToolTip>Просмотреть индивидуальную карту</Button.ToolTip>
-                                </Button>
-                            </StackPanel>
+                            <DockPanel x:Name="ItemContainer" Background="Transparent" Height="24">
+                                <StackPanel x:Name="PatientControls" Orientation="Horizontal" DockPanel.Dock="Right" Visibility="Collapsed">
+                                    <Button Margin="1" Command="{Binding ElementName=PatientsList, Path=DataContext.EditPatientCommand}" CommandParameter="{Binding}">
+                                        <Image Source="/Resources/Markup/Icons/edit.png" Stretch="UniformToFill" Width="16" Height="16" />
+                                        <Button.ToolTip>Изменить последнее посещение</Button.ToolTip>
+                                    </Button>
+                                    <Button Margin="1" Command="{Binding ElementName=PatientsList, Path=DataContext.AddPatientVisitCommand}" CommandParameter="{Binding}">
+                                        <Image Source="/Resources/Markup/Icons/plus.png" Stretch="UniformToFill" Width="16" Height="16" />
+                                        <Button.ToolTip>Добавить новое посещение</Button.ToolTip>
+                                    </Button>
+                                    <Button Margin="1" Command="{Binding ElementName=PatientsList, Path=DataContext.ShowPatientCommand}" CommandParameter="{Binding}">
+                                        <Image Source="/Resources/Markup/Icons/attibutes.png" Width="16" Height="16" />
+                                        <Button.ToolTip>Просмотреть индивидуальную карту</Button.ToolTip>
+                                    </Button>
+                                </StackPanel>
 
                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch">
                                     <TextBlock VerticalAlignment="Center">
-                                    <TextBlock Text="{Binding Surname}" Margin="0, 0, 3, 0" />
-                                    <TextBlock Text="{Binding Name}" Margin="0, 0, 3, 0" />
-                                    <TextBlock Text="{Binding MiddleName}" />
-                                </TextBlock>
+                                        <TextBlock Text="{Binding Surname}" Margin="0, 0, 3, 0" />
+                                        <TextBlock Text="{Binding Name}" Margin="0, 0, 3, 0" />
+                                        <TextBlock Text="{Binding MiddleName}" />
+                                    </TextBlock>
                                 </StackPanel>
                             </DockPanel>
 
@@ -97,23 +99,57 @@
             </DockPanel>
             <Border Grid.Column="1" Style="{StaticResource BlockStyle}" Margin="8,0" Padding="24">
                 <DockPanel>
-                    <StackPanel DataContext="{Binding SelectedPatient}" TextElement.FontSize="16">
-                        <StackPanel Orientation="Horizontal" Margin="5">
-                            <TextBlock Style="{StaticResource GrayedLabelStyle}" Margin="0,0,10,0">Пациент: </TextBlock>
+                    <StackPanel TextElement.FontSize="16">
+                        <StackPanel  DataContext="{Binding SelectedPatient}" Orientation="Horizontal" Margin="5">
+                            <TextBlock Style="{StaticResource GrayedLabelStyle}" Margin="0,0,10,0">Пациент:</TextBlock>
                             <TextBlock>
                                 <Run Text="{Binding Surname}" />
                                 <Run Text="{Binding Name}" />
                                 <Run Text="{Binding MiddleName}" />
                             </TextBlock>
                         </StackPanel>
-                        <StackPanel Orientation="Horizontal" Margin="5">
+                        <StackPanel DataContext="{Binding SelectedPatient}" Orientation="Horizontal" Margin="5">
                             <TextBlock Style="{StaticResource GrayedLabelStyle}" Margin="0,0,10,0">Возраст:</TextBlock>
                             <TextBlock Text="{Binding Age}" />
                         </StackPanel>
-                        <StackPanel Orientation="Vertical" Margin="5">
+                        <StackPanel  DataContext="{Binding SelectedPatient}" Orientation="Vertical" Margin="5">
                             <TextBlock Style="{StaticResource GrayedLabelStyle}" HorizontalAlignment="Left" Margin="0,0,10,0">Адрес проживания:</TextBlock>
                             <TextBlock Text="{Binding Address}" />
                         </StackPanel>
+
+                        <StackPanel Margin="5">
+                            <TextBlock Style="{StaticResource GrayedLabelStyle}" HorizontalAlignment="Left" Margin="0,0,10,0">Список посещений:</TextBlock>
+                            <ListBox x:Name="PatientVisitsList"
+                                     MinHeight="32"
+                                     ItemsSource="{Binding PatientVisitsView}" SelectedItem="{Binding SelectedVisit, Mode=TwoWay}"
+                                     HorizontalContentAlignment="Stretch">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate DataType="{x:Type models:PatientVisit}">
+
+                                         <DockPanel x:Name="ItemContainer" Background="Transparent" Height="24">
+                                            <StackPanel x:Name="PatientVisitControls" Orientation="Horizontal" DockPanel.Dock="Right" Visibility="Collapsed">
+                                                <Button Margin="1" Command="{Binding ElementName=PatientVisitsList, Path=DataContext.ShowPatientVisitCommand}" CommandParameter="{Binding}">
+                                                    <Image Source="/Resources/Markup/Icons/attibutes.png" Width="16" Height="16" />
+                                                    <Button.ToolTip>Просмотреть посещение</Button.ToolTip>
+                                                </Button>
+                                            </StackPanel>
+
+                                            <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch">
+                                                <TextBlock Text="{Binding VisitDate, Converter={x:Static converters:DateToStringConverter.Instance}}"></TextBlock>
+                                            </StackPanel>                                   
+                                         </DockPanel>
+
+                                        <DataTemplate.Triggers>
+                                            <Trigger Property="FrameworkElement.IsMouseOver" Value="True">
+                                            <Setter TargetName="PatientVisitControls" Property="Visibility" Value="Visible" />
+                                            </Trigger>
+                                        </DataTemplate.Triggers>
+
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </StackPanel>
+
                     </StackPanel>
 
                 </DockPanel>

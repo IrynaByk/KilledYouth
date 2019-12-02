@@ -1,0 +1,195 @@
+﻿<Page x:Class="HypertensionControlUI.Views.Pages.QuestionnaireCardiovascularIndicators"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:viewModels="clr-namespace:HypertensionControlUI.ViewModels"
+      xmlns:System="clr-namespace:System;assembly=mscorlib"
+      xmlns:models="clr-namespace:HypertensionControlUI.Models"
+      xmlns:converters="clr-namespace:HypertensionControlUI.Views.Converters"
+      xmlns:components="clr-namespace:HypertensionControlUI.Views.Components"
+      mc:Ignorable="d"
+      d:DesignHeight="800" d:DesignWidth="820"
+      d:DataContext="{d:DesignInstance d:Type=viewModels:AddPatientViewModel, IsDesignTimeCreatable=False }"
+      Title="QuestionnaireTests">
+
+    <DockPanel Margin="48,0">
+        <FrameworkElement.Resources>
+            <converters:ZeroToEmptyConverter x:Key="ZeroToEmptyConverter" />
+        </FrameworkElement.Resources>
+        <DockPanel DockPanel.Dock="Bottom" Margin="0,32,0,16">
+
+            <Button DockPanel.Dock="Left"
+                    Style="{StaticResource QuestionnaireNavigationButtonStyle}"
+                    Command="{Binding PatientsCommand}">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="/Resources/Markup/Icons/go-first.png" Width="24" Height="24" VerticalAlignment="Center" Margin="0,0,8,0" />
+                    <TextBlock Text="Отмена" VerticalAlignment="Center" />
+                </StackPanel>
+            </Button>
+            <components:HyperlinkButton
+                DockPanel.Dock="Left"
+                Style="{StaticResource QuestionnaireNavigationButtonStyle}"
+                IsEnabled="{Binding HaveNameAndAge}"
+                NavigateUri="/Sources/Views/Pages/QuestionnaireTests.xaml">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="/Resources/Markup/Icons/back.png" Width="24" Height="24" VerticalAlignment="Center" Margin="0,0,8,0" />
+                    <TextBlock Text="Назад" VerticalAlignment="Center" />
+                </StackPanel>
+            </components:HyperlinkButton>
+            <Button DockPanel.Dock="Right"
+                    Style="{StaticResource QuestionnaireNavigationButtonStyle}"
+                    Command="{Binding AddPatientCommand}"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Сохранить" VerticalAlignment="Center" Margin="0,0,8,0" />
+                    <Image Source="/Resources/Markup/Icons/forward.png" Width="24" Height="24" VerticalAlignment="Center" />
+                </StackPanel>
+            </Button>
+
+            <Control />
+        </DockPanel>
+        <Grid>
+            <Grid.Resources>
+                <Style x:Key="LabelStyle" TargetType="TextBlock">
+                    <Setter Property="Margin" Value="5" />
+                    <Setter Property="HorizontalAlignment" Value="Right" />
+                    <Setter Property="VerticalAlignment" Value="Center" />
+                </Style>
+                <Style x:Key="InputStyle" TargetType="FrameworkElement">
+                    <Setter Property="Margin" Value="3" />
+                    <Setter Property="HorizontalAlignment" Value="Stretch" />
+                    <Setter Property="VerticalAlignment" Value="Center" />
+                </Style>
+            </Grid.Resources>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="3*" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource QuestionnaireSubheaderStyle}">Сердечно-сосудистые показатели</TextBlock>
+            <TextBlock Grid.Row="2" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}">Частота сердечных сокращений, ударов в мин.:</TextBlock>
+            <TextBox Grid.Row="2" Grid.Column="1" Style="{StaticResource QuestionnaireInputStyle}" Text="{Binding ActualPatientVisit.BloodPressure.HeartRate}" />
+            <TextBlock Grid.Row="3" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}">Скорость распространения пульсовой волны, м/с:</TextBlock>
+            <TextBox Grid.Row="3" Grid.Column="1" Style="{StaticResource QuestionnaireInputStyle}" Text="{Binding ActualPatientVisit.PulsWaveVelocity}" />
+            <TextBlock Grid.Row="4" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}">Риск по шкале SCORE, %:</TextBlock>
+            <TextBox Grid.Row="4" Grid.Column="1" Style="{StaticResource QuestionnaireInputStyle}" Text="{Binding ActualPatientVisit.ScoreRisk}" />
+            <TextBlock Grid.Row="5" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}">Индекс аугментации, %:</TextBlock>
+            <TextBox Grid.Row="5" Grid.Column="1" Style="{StaticResource QuestionnaireInputStyle}" Text="{Binding ActualPatientVisit.AugmentationIndex}" />
+            <TextBlock Grid.Row="6" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}" Text="Скрининг фибрилляции предсердия:" />
+            <StackPanel Grid.Row="6" Grid.Column="1" Orientation="Horizontal">
+                <RadioButton Style="{StaticResource QuestionnaireRadioButtonStyle}" Content="Да"
+                             IsChecked="{Binding ActualPatientVisit.AtrialFibrillationScreening}" />
+                <RadioButton Style="{StaticResource QuestionnaireRadioButtonStyle}" Content="Нет"
+                             IsChecked="{Binding ActualPatientVisit.AtrialFibrillationScreening, Converter={x:Static converters:BoolConverters.Not}, Mode=OneWay}" />
+            </StackPanel>
+            <TextBlock Grid.Row="7" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}">Сердечно-лодыжечный сосудистый индекс:</TextBlock>
+            <Grid Grid.Row="7" Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <TextBox Grid.Row="0" Grid.Column="0" Style="{StaticResource HintedTextBox}" components:TextBoxHelpers.PlaceholderText="Cправа"
+                         Text="{Binding ActualPatientVisit.CardiovascularVascularIndexRight, Converter={StaticResource ZeroToEmptyConverter}}" />
+                <TextBox Grid.Row="0" Grid.Column="1" Style="{StaticResource HintedTextBox}" components:TextBoxHelpers.PlaceholderText="Cлева"
+                         Text="{Binding ActualPatientVisit.CardiovascularVascularIndexLeft, Converter={StaticResource ZeroToEmptyConverter}}" />
+            </Grid>
+            <TextBlock Grid.Row="8" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}">Лодыжечно-плечевой индекс давления:</TextBlock>
+            <Grid Grid.Row="8" Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <TextBox Grid.Row="0" Grid.Column="0" Style="{StaticResource HintedTextBox}" components:TextBoxHelpers.PlaceholderText="Cправа"
+                         Text="{Binding ActualPatientVisit.AnkleBrachialPressureIndexRight, Converter={StaticResource ZeroToEmptyConverter}}" />
+                <TextBox Grid.Row="0" Grid.Column="1" Style="{StaticResource HintedTextBox}" components:TextBoxHelpers.PlaceholderText="Cлева"
+                         Text="{Binding ActualPatientVisit.AnkleBrachialPressureIndexLeft, Converter={StaticResource ZeroToEmptyConverter}}" />
+            </Grid>
+            <TextBlock Grid.Row="9" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}">Биологический возраст магистральных артерий:</TextBlock>
+            <Grid Grid.Row="9" Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="0" Grid.Column="0">
+                    <TextBlock TextAlignment="Center" FontSize="14" Text="Справа" />
+                    <StackPanel Orientation="Horizontal">
+                        <TextBox Style="{StaticResource HintedTextBox}" components:TextBoxHelpers.PlaceholderText="min"
+                                 Text="{Binding ActualPatientVisit.BiologicalArteriesAgeRightMin, Converter={StaticResource ZeroToEmptyConverter}}" />
+                        <Border Height="1" Width="15" BorderBrush="Black" BorderThickness="0,1,0,0" />
+                        <TextBox Style="{StaticResource HintedTextBox}" components:TextBoxHelpers.PlaceholderText="max"
+                                 Text="{Binding ActualPatientVisit.BiologicalArteriesAgeRightMax, Converter={StaticResource ZeroToEmptyConverter}}" />
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="0" Grid.Column="1">
+                    <TextBlock TextAlignment="Center" FontSize="14" Text="Слева" />
+                    <StackPanel Orientation="Horizontal">
+                        <TextBox Style="{StaticResource HintedTextBox}" components:TextBoxHelpers.PlaceholderText="min"
+                                 Text="{Binding ActualPatientVisit.BiologicalArteriesAgeLeftMin, Converter={StaticResource ZeroToEmptyConverter}}" />
+                        <Border Height="1" Width="15" BorderBrush="Black" BorderThickness="0,1,0,0" />
+                        <TextBox Style="{StaticResource HintedTextBox}" components:TextBoxHelpers.PlaceholderText="max"
+                                 Text="{Binding ActualPatientVisit.BiologicalArteriesAgeLeftMax, Converter={StaticResource ZeroToEmptyConverter}}" />
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+
+            <TextBlock Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource QuestionnaireSubheaderStyle}" FontSize="14" Background="White"
+                       Visibility="{Binding UserPriveleges, Converter={x:Static converters:BoolConverters.BoolToVisibility}}"
+                       Text="Артериальное давление, мм рт.ст." />
+            <TextBlock Grid.Row="11" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}"
+                       Visibility="{Binding UserPriveleges, Converter={x:Static converters:BoolConverters.BoolToVisibility}}"
+                       Text="Правая рука" />
+            <TextBlock Grid.Row="11" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}"
+                       Visibility="{Binding UserPriveleges, Converter={x:Static converters:BoolConverters.NotBoolToVisibility}}"
+                       Text="Артериальное давление, мм рт.ст." />
+
+            <Grid Grid.Row="11" Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                <TextBox Grid.Row="0" Grid.Column="0" Style="{StaticResource HintedTextBox}" components:TextBoxHelpers.PlaceholderText="систолическое"
+                         Text="{Binding ActualPatientVisit.BloodPressure.RightShoulderSbp, Converter={StaticResource ZeroToEmptyConverter}}" />
+                <TextBox Grid.Row="0" Grid.Column="1" Style="{StaticResource HintedTextBox}" components:TextBoxHelpers.PlaceholderText="диастолическое"
+                         Text="{Binding ActualPatientVisit.BloodPressure.RightShoulderDbp, Converter={StaticResource ZeroToEmptyConverter}}" />
+            </Grid>
+            <TextBlock Grid.Row="12" Grid.Column="0" Visibility="{Binding UserPriveleges, Converter={x:Static converters:BoolConverters.BoolToVisibility}}"
+                       Style="{StaticResource QuestionnaireLabelStyle}">
+                Левая рука
+            </TextBlock>
+            <Grid Grid.Row="12" Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                <TextBox Grid.Row="0" Grid.Column="0"
+                         Visibility="{Binding UserPriveleges, Converter={StaticResource BooleanToVisibilityConverter}}"
+                         Style="{StaticResource HintedTextBox}" components:TextBoxHelpers.PlaceholderText="систолическое"
+                         Text="{Binding ActualPatientVisit.BloodPressure.LeftShoulderSbp, Converter={StaticResource ZeroToEmptyConverter}}" />
+                <TextBox Grid.Row="0" Grid.Column="1"
+                         Visibility="{Binding UserPriveleges, Converter={StaticResource BooleanToVisibilityConverter}}"
+                         Style="{StaticResource HintedTextBox}" components:TextBoxHelpers.PlaceholderText="диастолическое"
+                         Text="{Binding ActualPatientVisit.BloodPressure.LeftShoulderDbp, Converter={StaticResource ZeroToEmptyConverter}}" />
+            </Grid>
+
+        </Grid>
+    </DockPanel>
+</Page>

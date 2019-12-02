@@ -1,5 +1,6 @@
 ﻿using System.Windows.Input;
 using HypertensionControl.Domain.Models;
+using HypertensionControl.Domain.Models.Values;
 using HypertensionControlUI.Utils;
 
 namespace HypertensionControlUI.ViewModels
@@ -10,7 +11,10 @@ namespace HypertensionControlUI.ViewModels
 
         private readonly IViewProvider _viewProvider;
         private Patient _patient;
+        private Patient _correctedPatient;
         private User _user;
+        public double? ClassificationResult { get; set; }
+        public double? PossibleClassificationResult { get; set; }
 
         #endregion
 
@@ -30,10 +34,12 @@ namespace HypertensionControlUI.ViewModels
             get => _patient;
             set
             {
-                if ( Equals( value, _patient ) )
-                    return;
-                _patient = value;
-                OnPropertyChanged();
+                if (Set(ref _patient, value))
+                {
+                    ClassificationResult = null;
+                    PossibleClassificationResult = null;
+                    _correctedPatient = value;
+                }
             }
         }
 
@@ -45,6 +51,18 @@ namespace HypertensionControlUI.ViewModels
                 if ( Equals( value, _user ) )
                     return;
                 _user = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public Patient CorrectedPatient
+        {
+            get => _correctedPatient;
+            set
+            {
+                if (Equals(value, _correctedPatient))
+                    return;
+                _correctedPatient = value;
                 OnPropertyChanged();
             }
         }

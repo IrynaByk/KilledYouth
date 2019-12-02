@@ -13,7 +13,7 @@
       d:DataContext="{d:DesignInstance d:Type=viewModels:AddPatientViewModel, IsDesignTimeCreatable=False }"
       Title="QuestionnaireLifeStyle">
 
-    <DockPanel>
+    <DockPanel Margin="48,0">
 
         <DockPanel DockPanel.Dock="Bottom" Margin="0,32,0,16">
 
@@ -65,6 +65,7 @@
                 <RowDefinition Height="*" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
             <Grid.ColumnDefinitions>
@@ -74,31 +75,9 @@
 
             <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource QuestionnaireSubheaderStyle}"
                        Text="Текущий образ жизни пациента" />
-            
-            <TextBlock Grid.Row="1" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}" 
-                       Text="Курение" />
-            <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
-                <RadioButton IsChecked="{Binding SmokingNow}" Style="{StaticResource QuestionnaireRadioButtonStyle}" GroupName="SmokingGroup" Content="Да" />
-                <RadioButton IsChecked="{Binding NeverSmoke}" Style="{StaticResource QuestionnaireRadioButtonStyle}" GroupName="SmokingGroup" Content="Нет" />
-                <RadioButton IsChecked="{Binding SmokingBefore}" Style="{StaticResource QuestionnaireRadioButtonStyle}" GroupName="SmokingGroup" Content="В прошлом" />
-            </StackPanel>
-            
-            <TextBlock Grid.Row="2" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}"
-                       Visibility="{Binding NeverSmoke, Converter={x:Static converters:BoolConverters.NotBoolToVisibility}}" 
-                       Text="Суммарный стаж (мес):" />
-            <TextBox Grid.Row="2" Grid.Column="1" Style="{StaticResource QuestionnaireInputStyle}"
-                     Visibility="{Binding NeverSmoke, Converter={x:Static converters:BoolConverters.NotBoolToVisibility}}"
-                     Text="{Binding ActualPatientVisit.Smoking.DurationInYears}" />
 
-            <TextBlock Grid.Row="3" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}"
-                       Visibility="{Binding NeverSmoke, Converter={x:Static converters:BoolConverters.NotBoolToVisibility}}" 
-                       Text="Количество сигарет в неделю:" />
-            <TextBox Grid.Row="3" Grid.Column="1" Style="{StaticResource QuestionnaireInputStyle}"
-                     Visibility="{Binding NeverSmoke, Converter={x:Static converters:BoolConverters.NotBoolToVisibility}}"
-                     Text="{Binding ActualPatientVisit.Smoking.CigarettesPerDay}" />
-
-            <TextBlock Grid.Row="4" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}" Text="Физическая активность"></TextBlock>
-            <ComboBox Grid.Row="4" Grid.Column="1" ItemsSource="{Binding Source={StaticResource PhysicalActivityProvider}}"
+            <TextBlock Grid.Row="1" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}" Text="Физическая активность"></TextBlock>
+            <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding Source={StaticResource PhysicalActivityProvider}}"
                       SelectedItem="{Binding ActualPatientVisit.PhysicalActivity}"
                       Style="{StaticResource QuestionnaireComboBoxStyle}">
                 <ComboBox.ItemTemplate>
@@ -108,8 +87,8 @@
                 </ComboBox.ItemTemplate>
             </ComboBox>
             
-            <TextBlock Grid.Row="5" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}">Употребление алкоголя:</TextBlock>
-            <ComboBox Grid.Row="5" Grid.Column="1" ItemsSource="{Binding Source={StaticResource AlcoholConsumptionProvider}}"
+            <TextBlock Grid.Row="2" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}">Употребление алкоголя:</TextBlock>
+            <ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{Binding Source={StaticResource AlcoholConsumptionProvider}}"
                       SelectedItem="{Binding ActualPatientVisit.AlcoholСonsumption}"
                       Style="{StaticResource QuestionnaireComboBoxStyle}">
                 <ComboBox.ItemTemplate>
@@ -118,6 +97,36 @@
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
             </ComboBox>
+            <TextBlock Grid.Row="3" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}">Потребление фруктов и овощей, граммов в день:</TextBlock>
+            <TextBox Grid.Row="3" Grid.Column="1" Style="{StaticResource QuestionnaireInputStyle}"
+                     Text="{Binding ActualPatientVisit.FruitVegInDailyDiet}" />
+            <TextBlock Grid.Row="4" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}" 
+                       Text="Курение" />
+            <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal">
+                <RadioButton IsChecked="{Binding SmokingNow}" Style="{StaticResource QuestionnaireRadioButtonStyle}" GroupName="SmokingGroup" Content="Да" />
+                <RadioButton IsChecked="{Binding NeverSmoke}" Style="{StaticResource QuestionnaireRadioButtonStyle}" GroupName="SmokingGroup" Content="Нет" />
+                <RadioButton IsChecked="{Binding SmokingBefore}" Style="{StaticResource QuestionnaireRadioButtonStyle}" GroupName="SmokingGroup" Content="В прошлом" />
+            </StackPanel>
+
+            <TextBlock Grid.Row="5" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}"
+                       Visibility="{Binding NeverSmoke, Converter={x:Static converters:BoolConverters.NotBoolToVisibility}}" 
+                       Text="Суммарный стаж, лет:" Margin="0,4,16,0" />
+            <TextBox Grid.Row="5" Grid.Column="1" Style="{StaticResource QuestionnaireInputStyle}"
+                     Visibility="{Binding NeverSmoke, Converter={x:Static converters:BoolConverters.NotBoolToVisibility}}"
+                     Text="{Binding SmokingDuration, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBlock Grid.Row="6" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}"
+                       Visibility="{Binding NeverSmoke, Converter={x:Static converters:BoolConverters.NotBoolToVisibility}}" 
+                       Text="Количество сигарет в день:" />
+            <TextBox Grid.Row="6" Grid.Column="1" Style="{StaticResource QuestionnaireInputStyle}"
+                     Visibility="{Binding NeverSmoke, Converter={x:Static converters:BoolConverters.NotBoolToVisibility}}"
+                     Text="{Binding CigarettesCount, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBlock Grid.Row="7" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}"
+                       Visibility="{Binding NeverSmoke, Converter={x:Static converters:BoolConverters.NotBoolToVisibility}}" 
+                       Text="Индекс курения:" />
+            <TextBox Grid.Row="7" Grid.Column="1" Style="{StaticResource QuestionnaireInputStyle}" 
+                     IsReadOnly="True" 
+                     Visibility="{Binding NeverSmoke, Converter={x:Static converters:BoolConverters.NotBoolToVisibility}}"
+                     Text="{Binding SmokeIndex, Mode=OneWay, StringFormat={}{0:f2}}" />
 
 
         </Grid>

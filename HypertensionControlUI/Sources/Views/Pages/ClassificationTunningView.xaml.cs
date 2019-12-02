@@ -11,5 +11,15 @@ namespace HypertensionControlUI.Views.Pages
         {
             InitializeComponent();
         }
+
+        private void IllnessProbabilityChart_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        {
+
+        }
+
+        private void IllnessProbabilityChart_Loaded_1(object sender, System.Windows.RoutedEventArgs e)
+        {
+
+        }
     }
 }

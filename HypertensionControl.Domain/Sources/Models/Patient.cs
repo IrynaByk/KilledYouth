@@ -16,12 +16,7 @@ namespace HypertensionControl.Domain.Models
         ///     A unique patient ID.
         /// </summary>
         public Guid Id { get; private set; }
-
-        /// <summary>
-        ///     ID of the patient's clinic.
-        /// </summary>
-        public Guid ClinicId { get; set; }
-
+       
         /// <summary>
         ///     Name of the doctor who has registered the patient.
         /// </summary>
@@ -46,6 +41,11 @@ namespace HypertensionControl.Domain.Models
         ///     Patient address.
         /// </summary>
         public string Address { get; set; }
+        
+        /// <summary>
+        ///     Clinic where patient is served.
+        /// </summary>
+        public string ClinicName { get; set; }
 
         /// <summary>
         ///     Patient gender.
@@ -61,11 +61,7 @@ namespace HypertensionControl.Domain.Models
         ///     Patient birthplace.
         /// </summary>
         public string BirthPlace { get; set; }
-
-        /// <summary>
-        ///     Patient nationality.
-        /// </summary>
-        public string Nationality { get; set; }
+        
 
         /// <summary>
         ///     Patient phone number.
@@ -140,6 +136,51 @@ namespace HypertensionControl.Domain.Models
             }
         }
 
+        public int? AgtNosCyp11B2
+        {
+            get
+            {
+                Genes.TryGetValue(GenesNames.Agt, out var agtGene);
+                var agt = agtGene?.Value;
+
+                Genes.TryGetValue(GenesNames.Nos, out var nosGene);
+                var nos = nosGene?.Value;
+
+                Genes.TryGetValue(GenesNames.Cyp11B2, out var cyp11B2Gene);
+                var cyp11B2 = cyp11B2Gene?.Value;
+
+                if (agt == null || nos == null || cyp11B2 == null)
+                {
+                    return null;
+                }
+                if (nos >= 2 && agt >= 2 && cyp11B2 >= 2)
+                {
+                    return 1;
+                }
+                return 0;
+            }
+        }
+        public int? MthfrAgtr1
+        {
+            get
+            {
+                Genes.TryGetValue(GenesNames.Mthfr, out var mthfrGene);
+                var mthfr = mthfrGene?.Value;
+
+                Genes.TryGetValue(GenesNames.Agtr1, out var agtr1Gene);
+                var agtr1 = agtr1Gene?.Value;
+
+                if (mthfr == null || agtr1 == null)
+                {
+                    return null;
+                }
+                if (mthfr >= 2 && agtr1 >= 2)
+                {
+                    return 1;
+                }
+                return 0;
+            }
+        }
         #endregion
 
 

@@ -21,7 +21,6 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
 
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -59,21 +58,11 @@
                     Место работы:
         </TextBlock>
         <TextBlock Grid.Row="4" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}">Название:</TextBlock>
-        <ComboBox Grid.Row="4" Grid.Column="1" IsEditable="True"
-                          SelectedItem="{Binding SelectedClinic}"
-                          Text="{Binding SelectedClinicName}"
-                          DisplayMemberPath="Name"
-                          ItemsSource="{Binding Clinics}"
-                          Style="{StaticResource QuestionnaireInputStyle}" />
-        <TextBlock Grid.Row="5" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}">Адрес:</TextBlock>
-        <TextBox Grid.Row="5" Grid.Column="1"
-                         IsEnabled="{Binding SelectedClinic, 
-                         Converter={StaticResource ClinicAdressEqualityConverter}, 
-                        ConverterParameter={x:Null}  }"
-                         Text="{Binding SelectedClinicAddress}"
-                         Style="{StaticResource QuestionnaireInputStyle}" />
-        <TextBlock Grid.Row="6" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}">Должность:</TextBlock>
-        <TextBox Grid.Row="6" Grid.RowSpan="2" Grid.Column="1"
+        <TextBox Grid.Row="4" Grid.Column="1"
+                 Text="{Binding User.ClinicName}"
+                 Style="{StaticResource QuestionnaireInputStyle}" />
+        <TextBlock Grid.Row="5" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}">Должность:</TextBlock>
+        <TextBox Grid.Row="5" Grid.RowSpan="2" Grid.Column="1"
                          Text="{Binding User.Position}"
                          Style="{StaticResource QuestionnaireInputStyle}" />
 

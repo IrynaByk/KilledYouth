@@ -34,28 +34,19 @@ namespace HypertensionControl.Persistence.Services
 
         protected override void Seed( SqliteDbContext context )
         {
-            //  Clinics
-
-            var clinic = new ClinicEntity
-            {
-                Id = Guid.NewGuid(),
-                Name = "Республиканский научно-практический центр «Кардиология»",
-                Address = "Республика Беларусь, г. Минск, ул. Р. Люксембург, 110"
-            };
-
-            context.Clinics.Add( clinic );
-
             //  Users
 
-            context.Users.Add( new UserEntity { Name = "admin", Login = "admin", PasswordHash = HashUtils.GetStringHash( "admin" ), Role = Roles.Admin } );
+            context.Users.Add( new UserEntity { Id = Guid.NewGuid().ToString(), Name = "admin", Login = "admin", PasswordHash = HashUtils.GetStringHash( "admin" ), Role = Roles.Admin } );
 
             context.Users.Add( new UserEntity
             {
+                Id = Guid.NewGuid().ToString(),
                 Name = "Ольга",
                 Surname = "Павлова",
                 MiddleName = "Степановна",
                 PasswordHash = HashUtils.GetStringHash( "password" ),
-                ClinicId = clinic.Id,
+                ClinicName = "Республиканский научно-практический центр «Кардиология»",
+                ClinicAddress = "г. Минск",
                 Position = "Заведующая лабораторией артериальной гипертонии,\n" +
                            "кандидат медицинских наук, доцент,\n" +
                            "высшая категория по специальности кардиология".Replace( "\n",
@@ -63,7 +54,19 @@ namespace HypertensionControl.Persistence.Services
                 Role = Roles.Admin,
                 Login = "VolhaPaulava"
             } );
-
+            context.Users.Add(new UserEntity
+                              {
+                                  Id = Guid.NewGuid().ToString(),
+                                  Name = "Инна",
+                                  Surname = "",
+                                  MiddleName = "Викторовна",
+                                  PasswordHash = HashUtils.GetStringHash("password"),
+                                  ClinicName = "«30-я городская клиническая поликлиника»",
+                                  ClinicAddress = "г. Минск",
+                                  Position = "Главврач",
+                                  Role = Roles.User,
+                                  Login = "InnaViktorovna"
+                              });
             //  Patients
 
             var patients = ReadPatients();
@@ -174,6 +177,7 @@ namespace HypertensionControl.Persistence.Services
                 // Construct the ClassificationModelEntity object using the non-default constructor
                 var classificationModelEntity = new ClassificationModelEntity
                 {
+                    Id = Guid.NewGuid().ToString(),
                     Name = name,
                     Description = description,
                     FreeCoefficient = freeCoefficient,

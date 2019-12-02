@@ -56,10 +56,6 @@
                 <RowDefinition Height="*" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
             <Grid.ColumnDefinitions>
@@ -107,42 +103,22 @@
                        Text="Полных лет" />
             <TextBox Grid.Row="6" Grid.Column="1" Style="{StaticResource QuestionnaireInputStyle}" IsReadOnly="True"
                      Text="{Binding PatientBirthDate, Converter={StaticResource BirthDateToYearsConverter}, Mode=OneWay}" />
-
-            <TextBlock Grid.Row="7" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}"
-                       Text="Место рождения" />
-            <TextBox Grid.Row="7" Grid.Column="1" Style="{StaticResource QuestionnaireInputStyle}"
-                     Text="{Binding Patient.BirthPlace}" />
-
-            <TextBlock Grid.Row="8" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}"
-                       Text="Национальность" />
-            <TextBox Grid.Row="8" Grid.Column="1" Style="{StaticResource QuestionnaireInputStyle}"
-                     Text="{Binding Patient.Nationality}" />
-
-            <TextBlock Grid.Row="9" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}" Text="Адрес проживания" />
-            <TextBox Grid.Row="9" Grid.Column="1"
+          
+            <TextBlock Grid.Row="7" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}" Text="Адрес регистрации" />
+            <TextBox Grid.Row="7" Grid.Column="1"
                      Style="{StaticResource QuestionnaireInputStyle}" Text="{Binding Patient.Address}" />
 
-            <TextBlock Grid.Row="10" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}" Text="Телефон" />
-            <TextBox Grid.Row="10" Grid.Column="1"
+            <TextBlock Grid.Row="8" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}" Text="Телефон" />
+            <TextBox Grid.Row="8" Grid.Column="1"
                      Text="{Binding Patient.Phone}"
                      Style="{StaticResource QuestionnaireInputStyle}" />
 
-            <TextBlock Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource QuestionnaireSubheaderStyle}"
+            <TextBlock Grid.Row="9" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}"
                        Text="Поликлиника" />
-
-            <TextBlock Grid.Row="12" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}" Text="Название" />
-            <ComboBox Grid.Row="12" Grid.Column="1" IsEditable="True"
-                      SelectedItem="{Binding SelectedClinic}"
-                      Text="{Binding SelectedClinicName}"
-                      DisplayMemberPath="Name"
-                      ItemsSource="{Binding Clinics}"
-                      Style="{StaticResource QuestionnaireComboBoxStyle}" />
-
-            <TextBlock Grid.Row="13" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}" Text="Адрес" />
-            <TextBox Grid.Row="13" Grid.Column="1" Style="{StaticResource QuestionnaireInputStyle}"
-                     IsEnabled="{Binding SelectedClinic, Converter={StaticResource ClinicAdressEqualityConverter}, 
-                ConverterParameter={x:Null}  }"
-                     Text="{Binding SelectedClinicAddress}" />
+            <TextBox Grid.Row="9" Grid.Column="1"
+                     Text="{Binding Patient.ClinicName}"
+                     Style="{StaticResource QuestionnaireInputStyle}" />
+            
         </Grid>
     </DockPanel>
 </Page>

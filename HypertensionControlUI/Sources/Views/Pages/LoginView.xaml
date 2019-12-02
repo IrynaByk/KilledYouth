@@ -6,6 +6,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:viewModels="clr-namespace:HypertensionControlUI.ViewModels"
                     xmlns:views="clr-namespace:HypertensionControlUI.Views"
+                    xmlns:components="clr-namespace:HypertensionControlUI.Sources.Views.Components"
                     Title="HipertensialControl"
                     mc:Ignorable="d"
                     SnapsToDevicePixels="True"
@@ -58,9 +59,9 @@
                         TabIndex="2"
                         Command="{Binding LoginCommand}" Content="OK" IsDefault="True"/>
 
-                <Button Grid.Column="0"
-                        Grid.Row="4"
-                        x:Name="DEBUG_LoginAdmin" Content="Admin" Click="DEBUG_LoginAdmin_Click" />
+<!--                <Button Grid.Column="0"-->
+<!--                        Grid.Row="4"-->
+<!--                        x:Name="DEBUG_LoginAdmin" Content="Admin" Click="DEBUG_LoginAdmin_Click" />-->
             </Grid>
         </Border>
     </Grid>

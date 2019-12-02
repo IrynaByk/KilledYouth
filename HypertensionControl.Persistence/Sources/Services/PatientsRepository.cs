@@ -34,13 +34,13 @@ namespace HypertensionControl.Persistence.Services
         public ICollection<Patient> GetAllPatients()
         {
             var patientEntities = _dbContext.Patients.Include( p => p.VisitHistory ).ToList();
-            return _mapper.Map<ICollection<Patient>>( patientEntities );
+            var allPatients = _mapper.Map<ICollection<Patient>>( patientEntities );
+            return allPatients;
         }
 
         public void SavePatient( Patient patient )
         {
-            var patientEntity = _dbContext.Patients.Include( p => p.VisitHistory ).SingleOrDefault( p => p.Id == patient.Id );
-
+            var patientEntity = _dbContext.Patients.Include( p => p.VisitHistory ).SingleOrDefault( p => p.Id == patient.Id.ToString() );
             if ( patientEntity != null ) //  existing entity
             {
                 _mapper.Map( patient, patientEntity );
@@ -50,6 +50,17 @@ namespace HypertensionControl.Persistence.Services
                 patientEntity = _mapper.Map<PatientEntity>( patient );
                 _dbContext.Patients.Add( patientEntity );
             }
+        }
+
+        public Patient ClonePatient( Patient patient )
+        {
+            var patientEntity = _mapper.Map<PatientEntity>( patient );
+            foreach ( var patientVisitEntity in patientEntity.VisitHistory )
+            {
+                patientVisitEntity.Patient = patientEntity;
+                patientVisitEntity.PatientId = patientEntity.Id;
+            }
+            return _mapper.Map<Patient>( patientEntity );
         }
 
         #endregion

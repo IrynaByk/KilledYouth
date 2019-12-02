@@ -20,11 +20,12 @@ namespace HypertensionControl.Persistence.Services
 
             var patient = new PatientEntity
             {
-                Id = Guid.NewGuid(),
+                Id = Guid.NewGuid().ToString(),
                 VisitHistory = new List<PatientVisitEntity>()
             };
 
-            patient.TreatmentDuration = double.TryParse( patientProperties["HDurability"], out var duration ) ? duration : 0;
+            patient.HypertensionDuration = double.TryParse( patientProperties["HDurability"], out var duration ) ? duration : 0;
+            patient.TreatmentDuration = double.TryParse( patientProperties["treatment"], out var treatment) && (treatment > 0) ? patient.HypertensionDuration : 0;
 
             patient.HypertensionAncestralAnamnesis = int.TryParse( patientProperties["Hheredity"], out var anamnesis )
                 ? (HypertensionAncestralAnamnesis) anamnesis
@@ -53,12 +54,20 @@ namespace HypertensionControl.Persistence.Services
                 genes[GenesNames.Agt] = new Gene(GenesNames.Agt, Convert.ToInt32( patientProperties[GenesNames.Agt] ) );
             if ( !string.IsNullOrEmpty( patientProperties[GenesNames.Agtr2] ) )
                 genes[GenesNames.Agtr2] = new Gene(GenesNames.Agtr2, Convert.ToInt32( patientProperties[GenesNames.Agtr2] ) );
+            if ( !string.IsNullOrEmpty( patientProperties[GenesNames.Agtr1] ) )
+                genes[GenesNames.Agtr1] = new Gene(GenesNames.Agtr1, Convert.ToInt32( patientProperties[GenesNames.Agtr1] ) );
+            if ( !string.IsNullOrEmpty( patientProperties[GenesNames.Nos] ) )
+                genes[GenesNames.Nos] = new Gene(GenesNames.Nos, Convert.ToInt32( patientProperties[GenesNames.Nos] ) );
+            if ( !string.IsNullOrEmpty( patientProperties[GenesNames.Cyp11B2] ) )
+                genes[GenesNames.Cyp11B2] = new Gene(GenesNames.Cyp11B2, Convert.ToInt32( patientProperties[GenesNames.Cyp11B2] ) );
+            if ( !string.IsNullOrEmpty( patientProperties[GenesNames.Mthfr] ) )
+                genes[GenesNames.Mthfr] = new Gene(GenesNames.Mthfr, Convert.ToInt32( patientProperties[GenesNames.Mthfr] ) );
 
             patient.GenesSerialized = JsonConvert.SerializeObject( genes );
 
             //  Create patient visit instance
 
-            var patientVisit = new PatientVisitEntity{VisitDateTicks = new DateTime(2015, 1, 1).Ticks };
+            var patientVisit = new PatientVisitEntity{ PatientId= Guid.NewGuid().ToString(), VisitDateTicks = new DateTime(2015, 1, 1).Ticks };
 
             Smoking smoking;
             if ( patientProperties["smoke"].Contains( "1" ) )

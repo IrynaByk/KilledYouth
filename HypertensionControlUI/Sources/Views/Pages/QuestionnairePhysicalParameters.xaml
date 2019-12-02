@@ -68,19 +68,19 @@
                        Text="Текущие физические параметры пациента" />
 
             <TextBlock Grid.Row="1" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}"
-                       Text="Рост:" />
+                       Text="Рост, см:" />
             <TextBox Grid.Row="1" Grid.Column="1" Style="{StaticResource QuestionnaireInputStyle}"
-                     Text="{Binding Height}" />
+                     Text="{Binding Height, UpdateSourceTrigger=PropertyChanged}" />
 
             <TextBlock Grid.Row="2" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}"
-                       Text="Вес:" />
+                       Text="Вес, кг:" />
             <TextBox Grid.Row="2" Style="{StaticResource QuestionnaireInputStyle}" Grid.Column="1"
-                     Text="{Binding Weight}" />
+                     Text="{Binding Weight, UpdateSourceTrigger=PropertyChanged}" />
 
             <TextBlock Grid.Row="3" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}"
-                       Text="ИМТ:" />
+                       Text="ИМТ, кг/м2:" />
             <TextBox Grid.Row="3" Grid.Column="1" Style="{StaticResource QuestionnaireInputStyle}" IsReadOnly="True" 
-                     Text="{Binding Bmi, Mode=OneWay}" />
+                     Text="{Binding Bmi, Mode=OneWay, StringFormat={}{0:f2}}" />
             
             <TextBlock Grid.Row="4" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}" 
                        Text="Ожирение:" />
@@ -88,9 +88,9 @@
                      Text="{Binding ObesityBmi, Mode=OneWay}" />
 
             <TextBlock Grid.Row="5" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}" 
-                       Text="Окружность талии:" />
+                       Text="Окружность талии, см:" />
             <TextBox Grid.Row="5" Grid.Column="1" Style="{StaticResource QuestionnaireInputStyle}" 
-                     Text="{Binding WaistCircumference}" />
+                     Text="{Binding WaistCircumference, UpdateSourceTrigger=PropertyChanged}" />
             
             <TextBlock Grid.Row="6" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}" 
                        Text="Абдоминальное жирение:" />

@@ -16,5 +16,9 @@
     {
         public const string Agt = "AGT";
         public const string Agtr2 = "AGTR2";
+        public const string Nos = "NOS";
+        public const string Agtr1 = "AGTR1";
+        public const string Cyp11B2 = "CYP11B2";
+        public const string Mthfr = "MTHFR";
     }
 }

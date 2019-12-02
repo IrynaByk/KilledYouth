@@ -4,17 +4,18 @@
                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                     xmlns:viewModels="clr-namespace:HypertensionControlUI.ViewModels"
                     mc:Ignorable="d">
+<!--
 
     <ControlTemplate x:Key="IndividualPatientCardTemplate" d:DataContext="{d:DesignInstance Type=viewModels:IndividualPatientCardViewModel, IsDesignTimeCreatable=False}">
         <Border SnapsToDevicePixels="True" UseLayoutRounding="True" BorderThickness="1" BorderBrush="Black" Margin="16">
             <FlowDocumentScrollViewer x:Name="IndividualCardDocumentViewer"
                                       HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalScrollBarVisibility="Auto">
 
-                <FlowDocument PageWidth="1074">
+                <FlowDocument PageWidth="730">
                     <FlowDocument.Resources>
                         <Style TargetType="TextBlock">
                             <Setter Property="Margin" Value="3, 0, 10, 0" />
-                            <Setter Property="TextDecorations" Value="Underline" />
+~1~                            <Setter Property="TextDecorations" Value="Underline" />@1@
                         </Style>
                     </FlowDocument.Resources>
                     <Paragraph>
@@ -49,10 +50,6 @@
                             <Run Text="{Binding Patient.BirthDate, Converter={StaticResource NonNullConverter}, Mode=OneWay, StringFormat=dd/MM/yyy}" />
                             <Run Text="; " />
                             <Run Text="{Binding Patient.Age, Converter={StaticResource NonNullConverter}, Mode=OneWay}" />
-                        </TextBlock>
-                        <Run Text="Национальность" />
-                        <TextBlock>
-                            <Run Text="{Binding Patient.Nationality, Converter={StaticResource NonNullConverter}, Mode=OneWay}" />
                         </TextBlock>
                     </Paragraph>
                     <Paragraph>
@@ -144,6 +141,7 @@
             </FlowDocumentScrollViewer>
         </Border>
     </ControlTemplate>
+-->
 
 
 </ResourceDictionary>

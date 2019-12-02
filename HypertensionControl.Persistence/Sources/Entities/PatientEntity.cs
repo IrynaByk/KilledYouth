@@ -16,19 +16,18 @@ namespace HypertensionControl.Persistence.Entities
 
         [Key]
         [Index]
-        public Guid Id { get; set; }
-
-        public Guid ClinicId { get; set; }
+        public string Id { get; set; }
+        
         public string RegisteredBy { get; set; }
 
         public string Name { get; set; }
         public string MiddleName { get; set; }
         public string Surname { get; set; }
         public string Address { get; set; }
+        public string ClinicName { get; set; }
         public GenderType Gender { get; set; }
         public long BirthDateTicks { get; set; }
         public string BirthPlace { get; set; }
-        public string Nationality { get; set; }
         public string Phone { get; set; }
         public string AccompanyingIllnesses { get; set; }
         public string Diagnosis { get; set; }

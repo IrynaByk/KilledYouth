@@ -8,7 +8,7 @@
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>HypertensionControlUI</RootNamespace>
-    <AssemblyName>HypertensionControlUI</AssemblyName>
+    <AssemblyName>HP</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -30,6 +30,7 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -40,6 +41,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -49,9 +51,13 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject />
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>HnRicon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AutoMapper, Version=6.1.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
@@ -111,10 +117,15 @@
     <Compile Include="Sources\CompositionRoot\UnitOfWork.cs" />
     <Compile Include="Sources\Services\ResourceProvider.cs" />
     <Compile Include="Sources\ViewModels\EditablePropertyViewModel.cs" />
+    <Compile Include="Sources\Views\Components\IllnessBarChart.xaml.cs">
+      <DependentUpon>IllnessBarChart.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Sources\Views\Components\TextBoxHelpers.cs" />
+    <Compile Include="Sources\Views\Converters\DateToStringConverter.cs" />
     <Compile Include="Sources\Views\Converters\MapConverter.cs" />
     <Compile Include="Sources\Views\Converters\HStageConverter.cs" />
     <Compile Include="Sources\ViewModels\PatientStatisticsViewModel.cs" />
-    <Compile Include="Sources\Views\Converters\IllnessProbabilityThumbConverter.cs" />
+    <Compile Include="Sources\Views\Converters\CenteringConverter.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Sources\CompositionRoot\DbContextFactory.cs" />
     <Compile Include="Sources\CompositionRoot\PatientClassificatorFactory.cs" />
@@ -152,6 +163,7 @@
     <Compile Include="Sources\Views\Converters\EqualityConverter.cs" />
     <Compile Include="Sources\Views\Converters\NonNullConverter.cs" />
     <Compile Include="Sources\Views\Converters\NotNullToVisibilityConverter.cs" />
+    <Compile Include="Sources\Views\Converters\ZeroToEmptyConverter.cs" />
     <Compile Include="Sources\Views\Pages\AddPatientView.xaml.cs">
       <DependentUpon>AddPatientView.xaml</DependentUpon>
     </Compile>
@@ -171,9 +183,6 @@
     <Compile Include="Sources\Views\Pages\QuestionnaireBasicPatientInfo.xaml.cs">
       <DependentUpon>QuestionnaireBasicPatientInfo.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Sources\Views\Pages\QuestionnaireDietaryHabitsTest.xaml.cs">
-      <DependentUpon>QuestionnaireDietaryHabitsTest.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Sources\Views\Pages\QuestionnaireHealthInformation.xaml.cs">
       <DependentUpon>QuestionnaireHealthInformation.xaml</DependentUpon>
     </Compile>
@@ -182,6 +191,9 @@
     </Compile>
     <Compile Include="Sources\Views\Pages\QuestionnairePhysicalParameters.xaml.cs">
       <DependentUpon>QuestionnairePhysicalParameters.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Sources\Views\Pages\QuestionnaireCardiovascularIndicators.xaml.cs">
+      <DependentUpon>QuestionnaireCardiovascularIndicators.xaml</DependentUpon>
     </Compile>
     <Compile Include="Sources\Views\Pages\QuestionnaireTests.xaml.cs">
       <DependentUpon>QuestionnaireTests.xaml</DependentUpon>
@@ -206,6 +218,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Sources\Views\Components\IllnessBarChart.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Sources\Views\Components\IllnessProbabilityChart.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -227,10 +243,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Sources\Views\Pages\QuestionnaireBasicPatientInfo.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Sources\Views\Pages\QuestionnaireDietaryHabitsTest.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -269,6 +281,10 @@
     <Page Include="Sources\Views\Pages\PatientsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Sources\Views\Pages\QuestionnaireCardiovascularIndicators.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Sources\Views\Pages\QuestionnaireTests.xaml">
       <SubType>Designer</SubType>
@@ -365,6 +381,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Markup\Icons\button_ok.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="HnRicon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\System.Data.SQLite.Core.1.0.105.2\build\net45\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.105.2\build\net45\System.Data.SQLite.Core.targets')" />
