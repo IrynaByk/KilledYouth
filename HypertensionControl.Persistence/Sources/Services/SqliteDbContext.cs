@@ -19,7 +19,6 @@ namespace HypertensionControl.Persistence.Services
         #region Auto-properties
 
         public DbSet<ClassificationModelEntity> ClassificationModels { get; set; }
-        public DbSet<ClinicEntity> Clinics { get; set; }
         public DbSet<PatientEntity> Patients { get; set; }
         public DbSet<UserEntity> Users { get; set; }
 

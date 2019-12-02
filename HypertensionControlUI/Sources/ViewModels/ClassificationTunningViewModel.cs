@@ -1,12 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
-using AutoMapper;
 using HypertensionControl.Domain.Models;
+using HypertensionControl.Domain.Models.Values;
 using HypertensionControl.Domain.Services;
-using HypertensionControl.Persistence.Entities;
 using HypertensionControlUI.CompositionRoot;
 using HypertensionControlUI.Interfaces;
+using HypertensionControlUI.Services;
 using HypertensionControlUI.Utils;
 
 namespace HypertensionControlUI.ViewModels
@@ -19,31 +20,36 @@ namespace HypertensionControlUI.ViewModels
         ///     Possible mappings of a classification model properties to the initial patient properties they depend on.
         /// </summary>
         private static readonly Dictionary<string, string> ModelSourceFactors = new Dictionary<string, string>
-        {
-            ["Patient.Age"] = "Patient.Age",
-            ["PatientVisit.ObesityWaistCircumference"] = "PatientVisit.WaistCircumference",
-            ["PatientVisit.WaistCircumference"] = "PatientVisit.WaistCircumference",
-            ["PatientVisit.ObesityBMI"] = "PatientVisit.Weight",
-            ["PatientVisit.BMI"] = "PatientVisit.Weight",
-            ["PatientVisit.PhysicalActivity"] = "PatientVisit.PhysicalActivity"
-        };
+                                                                                {
+                                                                                    ["Patient.Age"] = "Patient.Age",
+                                                                                    ["PatientVisit.Bmi"] = "PatientVisit.Weight",
+                                                                                    ["PatientVisit.ObesityWaistCircumference"] =
+                                                                                    "PatientVisit.WaistCircumference",
+                                                                                    ["PatientVisit.WaistCircumference"] = "PatientVisit.WaistCircumference",
+                                                                                    ["PatientVisit.ObesityBmi"] = "PatientVisit.Weight",
+                                                                                    ["PatientVisit.PhysicalActivity"] = "PatientVisit.PhysicalActivity"
+                                                                                };
 
         #endregion
 
 
         #region Fields
 
-        private readonly IUnitOfWorkFactory _unitOfWorkFactory;
-        private readonly IViewProvider _viewProvider;
         private readonly MainWindowViewModel _mainWindowViewModel;
         private readonly PatientClassificatorFactory _patientClassificatorFactory;
+
+        private readonly IUnitOfWorkFactory _unitOfWorkFactory;
+        private readonly IViewProvider _viewProvider;
         private double _classificationResult;
 
         private List<EditablePropertyViewModel> _correctableProperties;
         private double _correctedClassificationResult;
         private Patient _patient;
+        private Patient _correctedPatient;
         private PatientVisit _patientVisit;
         private ClassificationModel _selectedClassificationModel;
+        private ClassificationModel _ventricularHypertrophyModel;
+        
 
         #endregion
 
@@ -52,8 +58,29 @@ namespace HypertensionControlUI.ViewModels
 
         public List<ClassificationModel> AvailableClassificationModels { get; set; }
 
+        public ClassificationModel VentricularHypertrophyModel
+        {
+            get => _ventricularHypertrophyModel;
+            set
+            {
+                if (Set(ref _ventricularHypertrophyModel, value))
+                {
+                    _ventricularHypertrophyModel = value;
+                }
+            }
+        }
+
         public PatientVisit CorrectedLastVisitData { get; set; }
-        public Patient CorrectedPatient { get; set; }
+        public Patient CorrectedPatient {
+            get => _correctedPatient; 
+            set
+            {
+                if (Set(ref _correctedPatient, value))
+                {
+                    _mainWindowViewModel.CorrectedPatient = value;
+                }
+            }
+        }
 
         public ICommand PatientsCommand { get; }
         public ICommand ShowPatientCommand { get; set; }
@@ -69,8 +96,21 @@ namespace HypertensionControlUI.ViewModels
         public double ClassificationResult
         {
             get => _classificationResult;
-            set => Set( ref _classificationResult, value );
+            set
+            {
+               if ( Set( ref _classificationResult, value ))
+               {
+                   _mainWindowViewModel.ClassificationResult = value;
+               }
+            }
         }
+
+        public double? VentricularHypertrophyClassificationResult { get; set; }
+        
+        public Boolean HasHypertension
+        {
+            get => PatientVisit.HypertensionStage.HasValue && PatientVisit.HypertensionStage != HypertensionStage.Healthy;
+       }
 
         /// <summary>
         ///     List of the correctable patient properties.
@@ -79,6 +119,7 @@ namespace HypertensionControlUI.ViewModels
         {
             get => _correctableProperties;
             set => Set( ref _correctableProperties, value );
+            
         }
 
         /// <summary>
@@ -87,7 +128,13 @@ namespace HypertensionControlUI.ViewModels
         public double CorrectedClassificationResult
         {
             get => _correctedClassificationResult;
-            set => Set( ref _correctedClassificationResult, value );
+            set
+            {
+                if ( Set( ref _correctedClassificationResult, value ) )
+                {
+                    _mainWindowViewModel.PossibleClassificationResult = value;
+                }
+            }
         }
 
         /// <summary>
@@ -134,14 +181,14 @@ namespace HypertensionControlUI.ViewModels
         public ClassificationTunningViewModel( PatientClassificatorFactory patientClassificatorFactory,
                                                MainWindowViewModel mainWindowViewModel,
                                                IViewProvider viewProvider,
-                                               IUnitOfWorkFactory unitOfWorkFactory )
+                                               IUnitOfWorkFactory unitOfWorkFactory)
         {
             //  Inject services
             _patientClassificatorFactory = patientClassificatorFactory;
             _mainWindowViewModel = mainWindowViewModel;
             _viewProvider = viewProvider;
             _unitOfWorkFactory = unitOfWorkFactory;
-
+            
             CorrectableProperties = new List<EditablePropertyViewModel>();
 
             //  Init commands
@@ -197,14 +244,18 @@ namespace HypertensionControlUI.ViewModels
 
         #region Non-public methods
 
-
         private void RefreshAvailableClassificationModels()
         {
             using ( var unitOfWork = _unitOfWorkFactory.CreateUnitOfWork() )
             {
+                string HeartData = "Прогноз прогрессирования сердечно-сосудистого ремоделирования.";
                 AvailableClassificationModels = unitOfWork.ClassificationModelsRepository.GetAllClassificationModels()
-                                                          .Where( m => IsApplicable( Patient, PatientVisit, m ) )
+                                                          .Where( m => IsApplicable( Patient, PatientVisit, m ) 
+                                                                       && !m.Name.Contains(HeartData) )
                                                           .ToList();
+
+                VentricularHypertrophyModel = unitOfWork.ClassificationModelsRepository.GetAllClassificationModels().ToList()
+                                                        .Find( model => model.Name.Contains( HeartData ) );
 
                 SelectedClassificationModel = AvailableClassificationModels.FirstOrDefault();
             }
@@ -212,25 +263,37 @@ namespace HypertensionControlUI.ViewModels
 
         private void ResetCorrectedPatient()
         {
-            CorrectedPatient = Mapper.Map<Patient>( Patient );
+            using ( var unitOfWork = _unitOfWorkFactory.CreateUnitOfWork() )
+                CorrectedPatient = unitOfWork.PatientsRepository.ClonePatient( Patient );
+
             CorrectedLastVisitData = CorrectedPatient.LastVisit;
-            CorrectableProperties = GeneratePatientCorrectionData( _selectedClassificationModel, CorrectedPatient, CorrectedLastVisitData );
+           CorrectableProperties = GeneratePatientCorrectionData( _selectedClassificationModel, CorrectedPatient, CorrectedLastVisitData );
         }
 
         private void ClassifyCorrectedPatient()
         {
             var patientClassificator = _patientClassificatorFactory.GetClassificator( SelectedClassificationModel );
             CorrectedClassificationResult = patientClassificator.Classify( new
-            {
-                Patient = CorrectedPatient,
-                PatientVisit = CorrectedPatient.LastVisit
-            } );
+                                                                           {
+                                                                               Patient = CorrectedPatient,
+                                                                               PatientVisit = CorrectedPatient.LastVisit
+                                                                           } );
         }
 
         private void ClassifyPatient()
         {
             var patientClassificator = _patientClassificatorFactory.GetClassificator( SelectedClassificationModel );
             ClassificationResult = patientClassificator.Classify( new { Patient, PatientVisit = Patient.LastVisit } );
+
+            if ( _mainWindowViewModel.User.Role == Roles.Admin && VentricularHypertrophyModel != null )
+            {
+                var patientHeartClassificator = _patientClassificatorFactory.GetClassificator( VentricularHypertrophyModel );
+                VentricularHypertrophyClassificationResult = patientHeartClassificator.Classify( new { Patient, PatientVisit = Patient.LastVisit } );
+            }
+            else
+            {
+                VentricularHypertrophyClassificationResult = null;
+            }
         }
 
         private bool IsApplicable( Patient patient, PatientVisit visitData, ClassificationModel classificationModel )

@@ -13,7 +13,7 @@
                     xmlns:values="clr-namespace:HypertensionControl.Domain.Models.Values;assembly=HypertensionControl.Domain"
                     mc:Ignorable="d"
                     d:DataContext="{d:DesignInstance Type=viewModels:ClassificationTunningViewModel, IsDesignTimeCreatable=False}"
-                    d:DesignHeight="500" d:DesignWidth="500"
+                    d:DesignHeight="500" d:DesignWidth="1200"
                     Title="ClassificationTunning">
 
     <FrameworkElement.Resources>
@@ -61,6 +61,9 @@
                     <!--  Models list and description  -->
                     <Border Grid.Column="0" Style="{StaticResource PrognosisBlockStyle}">
                         <StackPanel>
+                            <FrameworkElement.Resources>
+                                <converters:NotNullToVisibilityConverter x:Key="NotNullToVisibilityConverter" />
+                            </FrameworkElement.Resources>
                             <TextBlock Style="{StaticResource HeaderStyle}" Text="Модели для классификации пациента" />
                             <Border Style="{StaticResource BlockStyle}">
                                 <StackPanel MinHeight="120">
@@ -78,6 +81,18 @@
                                     </Border>
                                 </StackPanel>
                             </Border>
+                            <Grid Visibility="{Binding VentricularHypertrophyClassificationResult, Converter={StaticResource NotNullToVisibilityConverter}}">
+                                <StackPanel TextBlock.FontSize="14" Margin="8,32,0,8" Visibility="{Binding HasHypertension, Converter={x:Static converters:BoolConverters.BoolToVisibility}}">
+                                    <TextBlock Style="{StaticResource HeaderStyle}" TextWrapping="Wrap" Text="Прогноз прогрессирования сердечно-сосудистого ремоделирования" />
+                                    <TextBlock Margin="0,0,16,8">
+                                        <Run Foreground="DimGray" Text="Вероятность развития гипертрофии левого желудочка: " />
+                                        <Run Text="{Binding VentricularHypertrophyClassificationResult, StringFormat=P2, Mode=OneWay}" />
+                                    </TextBlock>
+                                    <TextBlock TextWrapping="Wrap">
+                                        <Run Foreground="DimGray" Text="Вероятность ≤ 55% –  низкая предрасположенность к развитию гипертрофии левого желудочка сердца, &#x0a; &gt; 55% – высокая степень предрасположенности." />
+                                    </TextBlock>
+                                </StackPanel>
+                            </Grid>
                         </StackPanel>
                     </Border>
 
@@ -99,18 +114,17 @@
 
                                 <StackPanel TextBlock.FontSize="14" Orientation="Horizontal" Margin="32,0,0,8">
                                     <TextBlock Margin="0,0,16,0">
-                                        <Run Foreground="DimGray" Text="Вероятность болезни:" />
-                                        <Run Text="{Binding ClassificationResult, StringFormat={}{0:f3}, Mode=OneWay}" />
+                                        <Run Foreground="DimGray" Text="Текущая вероятность болезни:" />
+                                        <Run Text="{Binding ClassificationResult, StringFormat=P2, Mode=OneWay}" />
                                     </TextBlock>
                                     <TextBlock>
-                                        <Run Foreground="DimGray" Text="Оптимальный порог отсечения:" />
-                                        <Run Text="{Binding SelectedClassificationModel.OptimalCutOff, Mode=OneWay}" />
+                                        <Run Foreground="DimGray" Text="Вероятность болезни ≤ 36% – низкая степень предрасположенности, &#x0a; &gt; 73% – высокая степень предрасположенности." />
                                     </TextBlock>
                                 </StackPanel>
 
                                 <components:IllnessProbabilityChart Height="70" Margin="32,0"
                                                                     ThumbValue="{Binding ClassificationResult}"
-                                                                    CutOffValue="{Binding SelectedClassificationModel.OptimalCutOff}" />
+                                                                    CutOffValue1="0.36" CutOffValue2="0.73" />
                             </StackPanel>
                         </Border>
 
@@ -119,7 +133,7 @@
                             <StackPanel>
                                 <TextBlock Style="{StaticResource HeaderStyle}" Text="Возможная коррекция" />
 
-                                <ListView Margin="32,5" FontSize="14"
+                                <ListView Margin="25,5" FontSize="14"
                                           HorizontalAlignment="Center" HorizontalContentAlignment="Stretch"
                                           ItemsSource="{Binding CorrectableProperties}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                                     <ListView.ItemContainerStyle>
@@ -205,13 +219,13 @@
                                 <StackPanel TextBlock.FontSize="14" Orientation="Horizontal" Margin="32,0,0,8">
                                     <TextBlock Margin="0,0,16,0">
                                         <Run Foreground="DimGray" Text="Вероятность болезни:" />
-                                        <Run Text="{Binding CorrectedClassificationResult, StringFormat={}{0:f3}, Mode=OneWay}" />
+                                        <Run Text="{Binding CorrectedClassificationResult, StringFormat=P2, Mode=OneWay}" />
                                     </TextBlock>
                                 </StackPanel>
 
                                 <components:IllnessProbabilityChart Height="70" Margin="32,0"
                                                                     ThumbValue="{Binding CorrectedClassificationResult}"
-                                                                    CutOffValue="{Binding SelectedClassificationModel.OptimalCutOff}" />
+                                                                    CutOffValue1="0.36" CutOffValue2="0.73"/>
                             </StackPanel>
                         </Border>
 

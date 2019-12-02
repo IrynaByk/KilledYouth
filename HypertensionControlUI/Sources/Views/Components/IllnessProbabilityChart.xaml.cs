@@ -20,13 +20,26 @@ namespace HypertensionControlUI.Sources.Views.Components
     /// </summary>
     public partial class IllnessProbabilityChart : UserControl
     {
-        public static readonly DependencyProperty CutOffValueProperty = DependencyProperty.Register(
-            "CutOffValue", typeof (double), typeof (IllnessProbabilityChart), new PropertyMetadata( 0.5 ) );
+        public static readonly DependencyProperty CutOffValueProperty1 = DependencyProperty.Register(
+            "CutOffValue1", typeof (double), typeof (IllnessProbabilityChart), new PropertyMetadata( 0.5 ) );
 
-        public double CutOffValue
+        public double CutOffValue1
         {
-            get => (double) GetValue( CutOffValueProperty );
-            set => SetValue( CutOffValueProperty, value );
+            get => (double) GetValue( CutOffValueProperty1 );
+            set => SetValue( CutOffValueProperty1, value );
+        }
+        public static readonly DependencyProperty CutOffValueProperty2 = DependencyProperty.Register(
+            "CutOffValue2", typeof(double), typeof(IllnessProbabilityChart), new PropertyMetadata(0.5));
+
+        public double CutOffValue2
+        {
+            get => (double)GetValue(CutOffValueProperty2);
+            set => SetValue(CutOffValueProperty2, value);
+        }
+
+        public double MiddleTrackValue
+        {
+            get => (double) (CutOffValue1 + (CutOffValue2 - CutOffValue1) / 2);
         }
 
         public static readonly DependencyProperty ThumbValueProperty = DependencyProperty.Register(

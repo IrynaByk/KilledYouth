@@ -12,71 +12,92 @@
       d:DataContext="{d:DesignInstance d:Type=viewModels:AddPatientViewModel, IsDesignTimeCreatable=False }"
       Title="Page1">
 
-    <Grid>
-        <Grid.Resources>
-            <converters:ImtConverter x:Key="ImtConverter" />
-            <Style x:Key="LabelStyle" TargetType="TextBlock">
-                <Setter Property="Margin" Value="5" />
-                <Setter Property="HorizontalAlignment" Value="Right" />
-                <Setter Property="VerticalAlignment" Value="Center" />
-            </Style>
-            <Style x:Key="InputStyle" TargetType="FrameworkElement">
-                <Setter Property="Margin" Value="3" />
-                <Setter Property="HorizontalAlignment" Value="Stretch" />
-                <Setter Property="VerticalAlignment" Value="Center" />
-            </Style>
-        </Grid.Resources>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition />
-            <ColumnDefinition Width="2*" />
-        </Grid.ColumnDefinitions>
-        <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center">Текущие физические параметры пациента</TextBlock>
-        <TextBlock Grid.Row="1" Grid.Column="0" Style="{StaticResource LabelStyle}">Рост:</TextBlock>
-        <TextBox x:Name="HeightText" Grid.Row="1" Grid.Column="1" Text="{Binding Height}"
-                 Style="{StaticResource InputStyle}" />
-        <TextBlock Grid.Row="2" Grid.Column="0" Style="{StaticResource LabelStyle}">Вес:</TextBlock>
-        <TextBox x:Name="WeightText" Grid.Row="2" Grid.Column="1" Text="{Binding Weight}"
-                 Style="{StaticResource InputStyle}" />
+    <DockPanel Margin="48,0">
 
-        <TextBlock Grid.Row="3" Grid.Column="0" Style="{StaticResource LabelStyle}">ИМТ:</TextBlock>
-        <TextBox Grid.Row="3" Grid.Column="1" Style="{StaticResource InputStyle}" IsReadOnly="True" Text="{Binding Bmi, Mode=OneWay}" />
-        <TextBlock Grid.Row="4" Grid.Column="0" Style="{StaticResource LabelStyle}">Ожирение:</TextBlock>
-        <TextBox Grid.Row="4" Grid.Column="1" Style="{StaticResource InputStyle}" IsReadOnly="True" Text="{Binding ObesityBmi, Mode=OneWay}" />
+        <DockPanel DockPanel.Dock="Bottom" Margin="0,32,0,16">
 
-        <TextBlock Grid.Row="5" Grid.Column="0" Style="{StaticResource LabelStyle}">Окружность талии:</TextBlock>
-        <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding WaistCircumference}"
-                 Style="{StaticResource InputStyle}" />
-        <TextBlock Grid.Row="6" Grid.Column="0" Style="{StaticResource LabelStyle}">Абдоминальное жирение:</TextBlock>
-        <TextBox Grid.Row="6" Grid.Column="1" Style="{StaticResource InputStyle}" IsReadOnly="True" Text="{Binding ObesityWaistCircumference, Mode=OneWay}" />
+            <Button DockPanel.Dock="Left"
+                    Style="{StaticResource QuestionnaireNavigationButtonStyle}"
+                    Command="{Binding PatientsCommand}">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="/Resources/Markup/Icons/go-first.png" Width="24" Height="24" VerticalAlignment="Center" Margin="0,0,8,0" />
+                    <TextBlock Text="Отмена" VerticalAlignment="Center" />
+                </StackPanel>
+            </Button>
+            <components:HyperlinkButton
+                DockPanel.Dock="Left"
+                Style="{StaticResource QuestionnaireNavigationButtonStyle}"
+                IsEnabled="{Binding HaveNameAndAge}"
+                NavigateUri="/Sources/Views/Pages/QuestionnaireHealthInformation.xaml">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="/Resources/Markup/Icons/back.png" Width="24" Height="24" VerticalAlignment="Center" Margin="0,0,8,0" />
+                    <TextBlock Text="Назад" VerticalAlignment="Center" />
+                </StackPanel>
+            </components:HyperlinkButton>
+            <components:HyperlinkButton
+                DockPanel.Dock="Right"
+                Style="{StaticResource QuestionnaireNavigationButtonStyle}"
+                IsEnabled="{Binding HaveNameAndAge}"
+                NavigateUri="/Sources/Views/Pages/QuestionnaireLifeStyle.xaml">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Далее" VerticalAlignment="Center" Margin="0,0,8,0" />
+                    <Image Source="/Resources/Markup/Icons/forward.png" Width="24" Height="24" VerticalAlignment="Center" />
+                </StackPanel>
+            </components:HyperlinkButton>
 
-        <!-- Navigation buttons -->
-        <Grid Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2">
+            <Control />
+        </DockPanel>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition/>
-                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <components:HyperlinkButton Margin="5" HorizontalAlignment="Left"
-                    VerticalAlignment="Center" Width="60"
-                    NavigateUri="/Sources/Views/Pages/QuestionnaireHealthInformation.xaml">
-                Назад
-            </components:HyperlinkButton>
-            <components:HyperlinkButton Grid.Column="2" Margin="5" HorizontalAlignment="Right"
-                    IsEnabled="{Binding HaveHeightWidthWaist}"
-                    VerticalAlignment="Center" Width="60" NavigateUri="/Sources/Views/Pages/QuestionnaireLifeStyle.xaml">
-                Вперед
-            </components:HyperlinkButton>
-        </Grid>
 
-    </Grid>
+            <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource QuestionnaireSubheaderStyle}"
+                       Text="Текущие физические параметры пациента" />
+
+            <TextBlock Grid.Row="1" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}"
+                       Text="Рост, см:" />
+            <TextBox Grid.Row="1" Grid.Column="1" Style="{StaticResource QuestionnaireInputStyle}"
+                     Text="{Binding Height, UpdateSourceTrigger=PropertyChanged}" />
+
+            <TextBlock Grid.Row="2" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}"
+                       Text="Вес, кг:" />
+            <TextBox Grid.Row="2" Style="{StaticResource QuestionnaireInputStyle}" Grid.Column="1"
+                     Text="{Binding Weight, UpdateSourceTrigger=PropertyChanged}" />
+
+            <TextBlock Grid.Row="3" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}"
+                       Text="ИМТ, кг/м2:" />
+            <TextBox Grid.Row="3" Grid.Column="1" Style="{StaticResource QuestionnaireInputStyle}" IsReadOnly="True" 
+                     Text="{Binding Bmi, Mode=OneWay, StringFormat={}{0:f2}}" />
+            
+            <TextBlock Grid.Row="4" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}" 
+                       Text="Ожирение:" />
+            <TextBox Grid.Row="4" Grid.Column="1" Style="{StaticResource QuestionnaireInputStyle}" IsReadOnly="True" 
+                     Text="{Binding ObesityBmi, Mode=OneWay}" />
+
+            <TextBlock Grid.Row="5" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}" 
+                       Text="Окружность талии, см:" />
+            <TextBox Grid.Row="5" Grid.Column="1" Style="{StaticResource QuestionnaireInputStyle}" 
+                     Text="{Binding WaistCircumference, UpdateSourceTrigger=PropertyChanged}" />
+            
+            <TextBlock Grid.Row="6" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}" 
+                       Text="Абдоминальное жирение:" />
+            <TextBox Grid.Row="6" Grid.Column="1" Style="{StaticResource QuestionnaireInputStyle}" IsReadOnly="True" 
+                     Text="{Binding ObesityWaistCircumference, Mode=OneWay}" />
+
+
+        </Grid>
+    </DockPanel>
 </Page>

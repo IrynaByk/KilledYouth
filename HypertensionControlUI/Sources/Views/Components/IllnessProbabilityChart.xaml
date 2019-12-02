@@ -12,14 +12,15 @@
             <Border.Background>
                 <LinearGradientBrush>
                     <GradientStop Color="#00FF00" Offset="0" />
-                    <GradientStop Color="#FFFFFF" Offset="{Binding CutOffValue, ElementName=Container}" />
+                    <GradientStop Color="#FFFFFF" Offset="{Binding CutOffValue1, ElementName=Container}" />
+                    <GradientStop Color="Yellow" Offset="{Binding MiddleTrackValue, ElementName=Container}" />
+                    <GradientStop Color="#FFFFFF" Offset="{Binding CutOffValue2, ElementName=Container}" />
                     <GradientStop Color="#FF0000" Offset="1" />
                 </LinearGradientBrush>
             </Border.Background>
         </Border>
 
-        <Track Minimum="0" Maximum="1" Value="{Binding CutOffValue, ElementName=Container}" x:Name="LineTrack"
-               Margin="0,26,0,0">
+        <Track Minimum="0" Maximum="1" Value="{Binding CutOffValue1, ElementName=Container}" Margin="0,26,0,0">
             <Track.Thumb>
                 <Thumb>
                     <Thumb.Template>
@@ -34,10 +35,38 @@
                                       HorizontalAlignment="Center"/>
                                 <Canvas Grid.Row="1">
                                     <TextBlock x:Name="CutOffValueText"  Foreground="Black" 
-                                           Text="{Binding Value, RelativeSource={RelativeSource FindAncestor, AncestorType=Track}, StringFormat={}{0:f3}}"
+                                           Text="{Binding Value, RelativeSource={RelativeSource FindAncestor, AncestorType=Track}, StringFormat=P2}"
                                            Height="16" HorizontalAlignment="Center">
                                         <TextBlock.RenderTransform>
-                                            <TranslateTransform X="{Binding ElementName=CutOffValueText, Path=ActualWidth, Converter={x:Static converters:IllnessProbabilityThumbConverter.Instance}}"></TranslateTransform>
+                                            <TranslateTransform X="{Binding ElementName=CutOffValueText, Path=ActualWidth, Converter={x:Static converters:CenteringConverter.Instance}}"></TranslateTransform>
+                                        </TextBlock.RenderTransform>
+                                    </TextBlock>
+                                </Canvas>
+                            </Grid>
+                        </ControlTemplate>
+                    </Thumb.Template>
+                </Thumb>
+            </Track.Thumb>
+        </Track>
+        <Track Minimum="0" Maximum="1" Value="{Binding CutOffValue2, ElementName=Container}" Margin="0,26,0,0">
+            <Track.Thumb>
+                <Thumb>
+                    <Thumb.Template>
+                        <ControlTemplate>
+                            <Grid ClipToBounds="False" Width="1">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"></RowDefinition>
+                                    <RowDefinition Height="16"></RowDefinition>
+                                </Grid.RowDefinitions>
+                                <Line Grid.Row="0" Y2="{Binding ActualHeight, RelativeSource={RelativeSource FindAncestor, AncestorType=Track} }"
+                                      Stroke="Black" StrokeThickness="1" StrokeDashArray="5,5"
+                                      HorizontalAlignment="Center"/>
+                                <Canvas Grid.Row="1">
+                                    <TextBlock x:Name="CutOffValueText"  Foreground="Black" 
+                                               Text="{Binding Value, RelativeSource={RelativeSource FindAncestor, AncestorType=Track}, StringFormat=P2}"
+                                               Height="16" HorizontalAlignment="Center">
+                                        <TextBlock.RenderTransform>
+                                            <TranslateTransform X="{Binding ElementName=CutOffValueText, Path=ActualWidth, Converter={x:Static converters:CenteringConverter.Instance}}"></TranslateTransform>
                                         </TextBlock.RenderTransform>
                                     </TextBlock>
                                 </Canvas>
@@ -55,10 +84,10 @@
                             <Canvas ClipToBounds="False" Width="1">
                                 <StackPanel x:Name="ThumbContainer" ClipToBounds="False" HorizontalAlignment="Center">
                                     <FrameworkElement.RenderTransform>
-                                        <TranslateTransform X="{Binding ElementName=ThumbContainer, Path=ActualWidth, Converter={x:Static converters:IllnessProbabilityThumbConverter.Instance}}"/>
+                                        <TranslateTransform X="{Binding ElementName=ThumbContainer, Path=ActualWidth, Converter={x:Static converters:CenteringConverter.Instance}}"/>
                                     </FrameworkElement.RenderTransform>
                                     <TextBlock Foreground="Black"
-                                               Text="{Binding Value, RelativeSource={RelativeSource FindAncestor, AncestorType=Track}, StringFormat={}{0:f3}}"
+                                               Text="{Binding Value, RelativeSource={RelativeSource FindAncestor, AncestorType=Track}, StringFormat=P2}"
                                                Height="16" HorizontalAlignment="Center" ClipToBounds="False" />
                                     <Path Stroke="Black" Fill="White" Data="M1,0 L6,10 L11,0 Z" HorizontalAlignment="Center" />
                                 </StackPanel>

@@ -1,4 +1,7 @@
-﻿using HypertensionControlUI.ViewModels;
+﻿using System.Reflection;
+using System.Windows;
+using System.Windows.Controls;
+using HypertensionControlUI.ViewModels;
 
 namespace HypertensionControlUI.Views.Pages
 {
@@ -15,5 +18,22 @@ namespace HypertensionControlUI.Views.Pages
         }
 
         #endregion
+
+
+        private void PatientsView_OnLoaded( object sender, RoutedEventArgs e )
+        {
+            var selectedPatientIndex = PatientsList.SelectedIndex;
+            if ( selectedPatientIndex != -1 )
+            {
+                VirtualizingStackPanel vsp = (VirtualizingStackPanel)typeof(ItemsControl).InvokeMember(
+                    "_itemsHost",
+                    BindingFlags.Instance | BindingFlags.GetField | BindingFlags.NonPublic, null,
+                    PatientsList, null
+                );
+                double scrollHeight = vsp.ScrollOwner.ScrollableHeight;
+                double offset = scrollHeight * selectedPatientIndex / PatientsList.Items.Count;
+                vsp.SetVerticalOffset(offset);
+            }
+        }
     }
 }

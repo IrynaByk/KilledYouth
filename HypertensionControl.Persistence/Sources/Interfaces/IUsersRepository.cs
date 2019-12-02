@@ -18,19 +18,11 @@ namespace HypertensionControl.Persistence.Interfaces
 
         ICollection<Patient> GetAllPatients();
         void SavePatient( Patient patient );
+        Patient ClonePatient( Patient patient );
 
         #endregion
     }
 
-    public interface IClinicsRepository
-    {
-        #region Public methods
-
-        ICollection<Clinic> GetAllClinics();
-        void SaveClinic( Clinic clinic );
-
-        #endregion
-    }
 
     public interface IClassificationModelsRepository
     {

@@ -80,7 +80,6 @@ namespace HypertensionControlUI
             //  Register the persistence repositories
             container.Register<IUsersRepository, UsersRepository>(Lifestyle.Scoped);
             container.Register<IPatientsRepository, PatientsRepository>(Lifestyle.Scoped);
-            container.Register<IClinicsRepository, ClinicsRepository>(Lifestyle.Scoped);
             container.Register<IClassificationModelsRepository, ClassificationModelsRepository>(Lifestyle.Scoped);
 
             //  Register the Identity service

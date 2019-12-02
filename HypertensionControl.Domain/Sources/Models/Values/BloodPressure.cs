@@ -7,11 +7,11 @@
     {
         #region Auto-properties
 
-        public double RightShoulderSbp { get; set; }
-        public double RightShoulderDbp { get; set; }
-        public double LeftShoulderSbp { get; set; }
-        public double LeftShoulderDbp { get; set; }
-        public double HeartRate { get; set; }
+        public int RightShoulderSbp { get; set; }
+        public int RightShoulderDbp { get; set; }
+        public int LeftShoulderSbp { get; set; }
+        public int LeftShoulderDbp { get; set; }
+        public int HeartRate { get; set; }
 
         #endregion
     }

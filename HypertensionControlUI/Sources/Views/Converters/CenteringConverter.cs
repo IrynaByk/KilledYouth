@@ -4,9 +4,9 @@ using System.Windows.Data;
 
 namespace HypertensionControlUI.Views.Converters
 {
-    public class IllnessProbabilityThumbConverter : IValueConverter
+    public class CenteringConverter : IValueConverter
     {
-        public static readonly IllnessProbabilityThumbConverter Instance = new IllnessProbabilityThumbConverter();
+        public static readonly CenteringConverter Instance = new CenteringConverter();
 
         public object Convert( object value, Type targetType, object parameter, CultureInfo culture )
         {

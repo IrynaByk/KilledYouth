@@ -11,7 +11,7 @@ namespace HypertensionControl.Persistence.Entities
 
         [Key]
         [Index]
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         [Index]
         public string Login { get; set; }
@@ -23,7 +23,8 @@ namespace HypertensionControl.Persistence.Entities
         public string MiddleName { get; set; }
         public string Surname { get; set; }
 
-        public Guid ClinicId { get; set; }
+        public string ClinicName { get; set; }
+        public string ClinicAddress { get; set; }
 
         public string Position { get; set; }
         public string Role { get; set; }

@@ -8,154 +8,117 @@
       xmlns:viewModels="clr-namespace:HypertensionControlUI.ViewModels"
       xmlns:enums="clr-namespace:HypertensionControl.Domain.Models.Values;assembly=HypertensionControl.Domain"
       mc:Ignorable="d"
-      d:DesignHeight="500" d:DesignWidth="300"
-      d:DataContext="{d:DesignInstance d:Type=viewModels:AddPatientViewModel, IsDesignTimeCreatable=False }"
+      d:DesignHeight="500" d:DesignWidth="640"
+      d:DataContext="{d:DesignInstance d:Type=viewModels:AddPatientViewModel, IsDesignTimeCreatable=True}"
       Title="QuestionnaireBasicPatientInfo">
-    <Border>
-        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <Grid.Resources>
-                <converters:BirthDateToYears x:Key="BirthDateToYearsConverter" />
-                <converters:EqualityConverter x:Key="ClinicAdressEqualityConverter" True="true" False="false" />
-                <Style x:Key="LabelStyle" TargetType="TextBlock">
-                    <Setter Property="Margin" Value="5" />
-                    <Setter Property="HorizontalAlignment" Value="Right" />
-                    <Setter Property="VerticalAlignment" Value="Center" />
-                </Style>
-                <Style x:Key="InputStyle" TargetType="FrameworkElement">
-                    <Setter Property="Margin" Value="3" />
-                    <Setter Property="HorizontalAlignment" Value="Stretch" />
-                    <Setter Property="VerticalAlignment" Value="Center" />
-                </Style>
-            </Grid.Resources>
+    <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="48,0">
+        
+        <FrameworkElement.Resources>
+            <converters:BirthDateToYears x:Key="BirthDateToYearsConverter" />
+            <converters:EqualityConverter x:Key="ClinicAdressEqualityConverter" True="true" False="false" />
+        </FrameworkElement.Resources>
 
-            <TextBlock Grid.ColumnSpan="2" HorizontalAlignment="Center" FontSize="16" Margin="5">Добавление нового пациента</TextBlock>
+        <DockPanel DockPanel.Dock="Bottom" Margin="0,32,0,16">
 
-            <Grid Grid.Row="1" Grid.ColumnSpan="2">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition Width="2*" />
-                </Grid.ColumnDefinitions>
-                <TextBlock Grid.Row="0" Grid.Column="0" Style="{StaticResource LabelStyle}">Фамилия:</TextBlock>
-                <TextBox Grid.Row="0" Grid.Column="1"
-                         Text="{Binding PatientSurname, UpdateSourceTrigger=PropertyChanged}"
-                         Style="{StaticResource InputStyle}" />
-                <TextBlock Grid.Row="1" Grid.Column="0" Style="{StaticResource LabelStyle}">Имя:</TextBlock>
-                <TextBox Grid.Row="1" Grid.Column="1"
-                         Text="{Binding PatientName, UpdateSourceTrigger=PropertyChanged}"
-                         Style="{StaticResource InputStyle}" />
-                <TextBlock Grid.Row="2" Grid.Column="0" Style="{StaticResource LabelStyle}">Отчество:</TextBlock>
-                <TextBox Grid.Row="2" Grid.Column="1"
-                         Text="{Binding PatientMiddleName, UpdateSourceTrigger=PropertyChanged}"
-                         Style="{StaticResource InputStyle}" />
-                <TextBlock Grid.Row="3" Grid.Column="0" Style="{StaticResource LabelStyle}">Пол:</TextBlock>
-                <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal">
-                    <StackPanel.Resources>
-                        <converters:EqualityConverter x:Key="GenderConverter" True="true" False="false" />
-                    </StackPanel.Resources>
-                    <RadioButton IsChecked="{Binding PatientGender, 
-                                                     Converter={x:Static converters:BoolConverters.EnumConverter}, 
-                                                     ConverterParameter={x:Static enums:GenderType.Male}}" 
-                                 Style="{StaticResource InputStyle}"
-                                 Content="м" />
-                    <RadioButton IsChecked="{Binding PatientGender, 
-                                                     Converter={x:Static converters:BoolConverters.EnumConverter}, 
-                                                     ConverterParameter={x:Static enums:GenderType.Female}}" 
-                                 Style="{StaticResource InputStyle}"
-                                 Content="ж" />
+            <Button  DockPanel.Dock="Left"
+                     Style="{StaticResource QuestionnaireNavigationButtonStyle}"
+                    Command="{Binding PatientsCommand}">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="/Resources/Markup/Icons/go-first.png" Width="24" Height="24" VerticalAlignment="Center" Margin="0,0,8,0" />
+                    <TextBlock Text="Отмена" VerticalAlignment="Center" />
                 </StackPanel>
-                <TextBlock Grid.Row="4" Grid.Column="0" Style="{StaticResource LabelStyle}">Дата рождения:</TextBlock>
-                <DatePicker Grid.Row="4" Grid.Column="1"
-                            x:Name="DateName"
-                            SelectedDate="{Binding PatientBirthDate, UpdateSourceTrigger=PropertyChanged}"
-                            Style="{StaticResource InputStyle}" />
-                <TextBlock Grid.Row="5" Grid.Column="0" Style="{StaticResource LabelStyle}">Полных лет:</TextBlock>
-                <TextBox Grid.Row="5" Grid.Column="1" Style="{StaticResource InputStyle}" IsReadOnly="True"
-                         Text="{Binding Converter={StaticResource BirthDateToYearsConverter}, Mode=OneWay, ElementName=DateName, Path=Text}" />
+            </Button>
+            
+            <components:HyperlinkButton 
+                DockPanel.Dock="Right" 
+                Style="{StaticResource QuestionnaireNavigationButtonStyle}"
+                                        IsEnabled="{Binding HaveNameAndAge}"
+                NavigateUri="/Sources/Views/Pages/QuestionnaireHealthInformation.xaml">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Далее" VerticalAlignment="Center" Margin="0,0,8,0" />
+                    <Image Source="/Resources/Markup/Icons/forward.png" Width="24" Height="24" VerticalAlignment="Center"/>
+                </StackPanel>
+            </components:HyperlinkButton>
+
+            <Control />
+        </DockPanel>
 
 
-                <TextBlock Grid.Row="6" Grid.Column="0" Style="{StaticResource LabelStyle}">Место рождения:</TextBlock>
-                <TextBox Grid.Row="6" Grid.Column="1"
-                         Text="{Binding Patient.BirthPlace}"
-                         Style="{StaticResource InputStyle}" />
-                <TextBlock Grid.Row="7" Grid.Column="0" Style="{StaticResource LabelStyle}">Национальность:</TextBlock>
-                <TextBox Grid.Row="7" Grid.Column="1"
-                         Text="{Binding Patient.Nationality}"
-                         Style="{StaticResource InputStyle}" />
-                <TextBlock Grid.Row="8" Grid.Column="0" Style="{StaticResource LabelStyle}">Адрес проживания:</TextBlock>
-                <TextBox Grid.Row="8" Grid.Column="1"
-                         Text="{Binding Patient.Address}"
-                         Style="{StaticResource InputStyle}" />
-                <TextBlock Grid.Row="9" Grid.Column="0" Style="{StaticResource LabelStyle}">Телефон:</TextBlock>
-                <TextBox Grid.Row="9" Grid.Column="1"
-                         Text="{Binding Patient.Phone}"
-                         Style="{StaticResource InputStyle}" />
-                <TextBlock Grid.Row="10" Grid.ColumnSpan="2"
-                           Margin="5" HorizontalAlignment="Left"
-                           VerticalAlignment="Center">
-                    Обслуживается в поликлинике:
-                </TextBlock>
-                <TextBlock Grid.Row="11" Grid.Column="0" Style="{StaticResource LabelStyle}">Название:</TextBlock>
-                <ComboBox Grid.Row="11" Grid.Column="1" IsEditable="True"
-                          SelectedItem="{Binding SelectedClinic}"
-                          Text="{Binding SelectedClinicName}"
-                          DisplayMemberPath="Name"
-                          ItemsSource="{Binding Clinics}"
-                          Style="{StaticResource InputStyle}" />
-                <TextBlock Grid.Row="12" Grid.Column="0" Style="{StaticResource LabelStyle}">Адрес:</TextBlock>
-                <TextBox Grid.Row="12" Grid.Column="1"
-                         IsEnabled="{Binding SelectedClinic, 
-                         Converter={StaticResource ClinicAdressEqualityConverter}, 
-                        ConverterParameter={x:Null}  }"
-                         Text="{Binding SelectedClinicAddress}"
-                         Style="{StaticResource InputStyle}" />
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
 
-                <!-- Navigation buttons -->
-                <Grid Grid.Row="13" Grid.Column="0" Grid.ColumnSpan="2">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <components:HyperlinkButton Grid.Column="2" Margin="5" HorizontalAlignment="Left"
-                                                VerticalAlignment="Center" Width="60"
-                                                IsEnabled="{Binding HaveNameAndAge}"
-                                                NavigateUri="/Sources/Views/Pages/QuestionnaireHealthInformation.xaml">
-                        Вперед
-                    </components:HyperlinkButton>
-                    <Button Margin="5" HorizontalAlignment="Right"
-                            VerticalAlignment="Center" Width="60"
-                            Command="{Binding PatientsCommand}">
-                        Назад
-                    </Button>
-                </Grid>
-            </Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Style="{StaticResource QuestionnaireSubheaderStyle}"
+                       Text="Основная информация" />
+
+            <TextBlock Grid.Row="1" Grid.Column="0" Style="{DynamicResource QuestionnaireLabelStyle}"
+                       Text="Фамилия" />
+            <TextBox Grid.Row="1" Grid.Column="1" Style="{StaticResource QuestionnaireInputStyle}"
+                     Text="{Binding PatientSurname, UpdateSourceTrigger=PropertyChanged}" />
+
+            <TextBlock Grid.Row="2" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}"
+                       Text="Имя" />
+            <TextBox Grid.Row="2" Style="{StaticResource QuestionnaireInputStyle}" Grid.Column="1"
+                     Text="{Binding PatientName, UpdateSourceTrigger=PropertyChanged}" />
+
+            <TextBlock Grid.Row="3" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}"
+                       Text="Отчество" />
+            <TextBox Grid.Row="3" Grid.Column="1" Style="{StaticResource QuestionnaireInputStyle}"
+                     Text="{Binding PatientMiddleName, UpdateSourceTrigger=PropertyChanged}" />
+
+            <TextBlock Grid.Row="4" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}"
+                       Text="Пол" />
+            <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal">
+                <RadioButton Style="{StaticResource QuestionnaireRadioButtonStyle}"
+                             Content="мужской"
+                             IsChecked="{Binding PatientGender, Converter={x:Static converters:BoolConverters.EnumConverter}, 
+                                                 ConverterParameter={x:Static enums:GenderType.Male}}" />
+                <RadioButton Style="{StaticResource QuestionnaireRadioButtonStyle}"
+                             Content="женский"
+                             IsChecked="{Binding PatientGender, Converter={x:Static converters:BoolConverters.EnumConverter}, 
+                                                 ConverterParameter={x:Static enums:GenderType.Female}}" />
+            </StackPanel>
+
+            <TextBlock Grid.Row="5" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}"
+                       Text="Дата рождения" />
+            <DatePicker Grid.Row="5" Grid.Column="1" Style="{StaticResource QuestionnaireDatePickerStyle}"
+                        SelectedDate="{Binding PatientBirthDate, UpdateSourceTrigger=PropertyChanged}" />
+
+            <TextBlock Grid.Row="6" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}"
+                       Text="Полных лет" />
+            <TextBox Grid.Row="6" Grid.Column="1" Style="{StaticResource QuestionnaireInputStyle}" IsReadOnly="True"
+                     Text="{Binding PatientBirthDate, Converter={StaticResource BirthDateToYearsConverter}, Mode=OneWay}" />
+          
+            <TextBlock Grid.Row="7" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}" Text="Адрес регистрации" />
+            <TextBox Grid.Row="7" Grid.Column="1"
+                     Style="{StaticResource QuestionnaireInputStyle}" Text="{Binding Patient.Address}" />
+
+            <TextBlock Grid.Row="8" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}" Text="Телефон" />
+            <TextBox Grid.Row="8" Grid.Column="1"
+                     Text="{Binding Patient.Phone}"
+                     Style="{StaticResource QuestionnaireInputStyle}" />
+
+            <TextBlock Grid.Row="9" Grid.Column="0" Style="{StaticResource QuestionnaireLabelStyle}"
+                       Text="Поликлиника" />
+            <TextBox Grid.Row="9" Grid.Column="1"
+                     Text="{Binding Patient.ClinicName}"
+                     Style="{StaticResource QuestionnaireInputStyle}" />
+            
         </Grid>
-    </Border>
+    </DockPanel>
 </Page>

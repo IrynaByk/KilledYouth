@@ -205,6 +205,7 @@ UpgradeLog*.htm
 # SQL Server files
 *.mdf
 *.ldf
+*.sqlite
 
 # Business Intelligence projects
 *.rdl.data
@@ -245,3 +246,4 @@ ModelManifest.xml
 .fake/
 
 initial_patients_data.csv
+/30

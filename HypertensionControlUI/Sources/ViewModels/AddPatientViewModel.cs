@@ -6,6 +6,7 @@ using System.Windows.Input;
 using HypertensionControl.Domain.Models;
 using HypertensionControl.Domain.Models.Values;
 using HypertensionControlUI.Interfaces;
+using HypertensionControlUI.Services;
 using HypertensionControlUI.Utils;
 
 namespace HypertensionControlUI.ViewModels
@@ -14,20 +15,17 @@ namespace HypertensionControlUI.ViewModels
     {
         #region Fields
 
+        private readonly IdentityService _identityService;
         private readonly MainWindowViewModel _mainWindowViewModel;
         private readonly IUnitOfWorkFactory _unitOfWorkFactory;
         private readonly IViewProvider _viewProvider;
         private Patient _patient;
-        private Clinic _selectedClinic;
-        private string _selectedClinicAddress;
 
         #endregion
 
 
         #region Auto-properties
 
-        public List<Clinic> Clinics { get; }
-        public string SelectedClinicName { get; set; }
         public PatientVisit ActualPatientVisit { get; set; }
         public ICommand PatientsCommand { get; }
         public ICommand AddPatientCommand { get; }
@@ -48,10 +46,12 @@ namespace HypertensionControlUI.ViewModels
             {
                 _patient = value;
                 Medicines = new ObservableCollection<Medicine>( _patient.Medicine );
-                SelectedClinic = Clinics.FirstOrDefault( clinic => clinic.Id == Patient.ClinicId );
             }
         }
-
+        public bool UserPriveleges
+        {
+            get => _identityService.CurrentUser.Role == Roles.Admin;
+        }
         public double? TreatmentDuration
         {
             get => Patient.TreatmentDuration;
@@ -136,6 +136,38 @@ namespace HypertensionControlUI.ViewModels
 
         public double? Bmi => ActualPatientVisit.Bmi;
 
+        public double? SmokeIndex => ActualPatientVisit.SmokeIndex;
+
+        public int CigarettesCount
+        {
+            get => ActualPatientVisit.Smoking.CigarettesPerDay;
+            set
+            {
+                if (value == CigarettesCount)
+                {
+                    return;
+                }
+                ActualPatientVisit.Smoking.CigarettesPerDay = value;
+                
+                OnPropertyChanged(nameof(SmokeIndex));
+                OnPropertyChanged();
+            }
+        }
+        public double SmokingDuration
+        {
+            get => ActualPatientVisit.Smoking.DurationInYears;
+            set
+            {
+                if (value == SmokingDuration)
+                {
+                    return;
+                }
+                ActualPatientVisit.Smoking.DurationInYears = value;
+               
+                OnPropertyChanged(nameof(SmokeIndex));
+                OnPropertyChanged();
+            }
+        }
         public SmokingType SmokingType
         {
             get => ActualPatientVisit.Smoking.Type;
@@ -150,6 +182,7 @@ namespace HypertensionControlUI.ViewModels
                 OnPropertyChanged( nameof(NeverSmoke) );
                 OnPropertyChanged( nameof(SmokingNow) );
                 OnPropertyChanged( nameof(SmokingBefore) );
+                OnPropertyChanged( nameof(SmokeIndex) );
                 OnPropertyChanged();
             }
         }
@@ -175,31 +208,6 @@ namespace HypertensionControlUI.ViewModels
                     return "Нет данных";
                 }
                 return ActualPatientVisit.ObesityWaistCircumference == true ? "Есть" : "Нет";
-            }
-        }
-
-        public string SelectedClinicAddress
-        {
-            get => _selectedClinicAddress;
-            set => Set( ref _selectedClinicAddress, value );
-        }
-
-        public Clinic SelectedClinic
-        {
-            get => _selectedClinic;
-            set
-            {
-                if ( !Set( ref _selectedClinic, value ) )
-                {
-                    return;
-                }
-                if ( _selectedClinic == null )
-                {
-                    return;
-                }
-
-                SelectedClinicAddress = value.Address;
-                SelectedClinicName = value.Name;
             }
         }
 
@@ -374,17 +382,6 @@ namespace HypertensionControlUI.ViewModels
         {
             using ( var unitOfWork = _unitOfWorkFactory.CreateUnitOfWork() )
             {
-                if ( SelectedClinic != null )
-                {
-                    Patient.ClinicId = SelectedClinic.Id;
-                }
-                else
-                {
-                    var clinic = Clinic.CreateNew( SelectedClinicAddress, SelectedClinicName );
-                    unitOfWork.ClinicsRepository.SaveClinic( clinic );
-                    Patient.ClinicId = clinic.Id;
-                }
-
                 Patient.Medicine = Medicines;
 
                 unitOfWork.PatientsRepository.SavePatient( Patient );
@@ -404,17 +401,13 @@ namespace HypertensionControlUI.ViewModels
 
         #region Initialization
 
-        public AddPatientViewModel( MainWindowViewModel mainWindowViewModel, IViewProvider viewProvider, IUnitOfWorkFactory unitOfWorkFactory )
+        public AddPatientViewModel( MainWindowViewModel mainWindowViewModel, IViewProvider viewProvider, IUnitOfWorkFactory unitOfWorkFactory, IdentityService identityService )
         {
             IsQuestionnaireVisible = false;
             _mainWindowViewModel = mainWindowViewModel;
             _viewProvider = viewProvider;
             _unitOfWorkFactory = unitOfWorkFactory;
-
-            using ( var unitOfWork = _unitOfWorkFactory.CreateUnitOfWork() )
-            {
-                Clinics = unitOfWork.ClinicsRepository.GetAllClinics().OrderBy( clinic => clinic.Name ).ToList();
-            }
+            _identityService = identityService;
 
             AddPatientCommand = new AsyncDelegateCommand( AddPatientCommandHandler );
             DeleteMedicineCommand = new AsyncDelegateCommand( DeleteMedicineCommandHandler );

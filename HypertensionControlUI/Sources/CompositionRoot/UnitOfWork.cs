@@ -20,8 +20,6 @@ namespace HypertensionControlUI.CompositionRoot
 
         public IPatientsRepository PatientsRepository { get; }
 
-        public IClinicsRepository ClinicsRepository { get; }
-
         public IClassificationModelsRepository ClassificationModelsRepository { get; }
 
         #endregion
@@ -32,13 +30,11 @@ namespace HypertensionControlUI.CompositionRoot
         public DbContextUnitOfWork( SqliteDbContext dbContext,
                                     IUsersRepository usersRepository,
                                     IPatientsRepository patientsRepository,
-                                    IClinicsRepository clinicsRepository,
                                     IClassificationModelsRepository classificationModelsRepository )
         {
             _dbContext = dbContext;
             UsersRepository = usersRepository;
             PatientsRepository = patientsRepository;
-            ClinicsRepository = clinicsRepository;
             ClassificationModelsRepository = classificationModelsRepository;
         }
 

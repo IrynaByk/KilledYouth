@@ -10,7 +10,6 @@ namespace HypertensionControlUI.Interfaces
 
         IUsersRepository UsersRepository { get; }
         IPatientsRepository PatientsRepository { get; }
-        IClinicsRepository ClinicsRepository { get; }
         IClassificationModelsRepository ClassificationModelsRepository { get; }
     }
 

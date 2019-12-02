@@ -10,18 +10,14 @@
                     mc:Ignorable="d"
                     d:DataContext="{d:DesignInstance Type=viewModels:AddPatientViewModel, IsDesignTimeCreatable=False}">
 
-    
-    <Border BorderThickness="1"
-            MinWidth="500"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center">
-        <Grid>
+
+        <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+
+            <!-- Caption -->
+            <TextBlock DockPanel.Dock="Top" Style="{StaticResource QuestionnaireHeaderStyle}">Добавление нового пациента</TextBlock>
             <!-- Questionnaire -->
-            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                <Frame x:Name="QuestionnaireFrame" NavigationUIVisibility="Hidden"
-                       Source="QuestionnaireBasicPatientInfo.xaml" Navigated="QuestionnaireFrame_Navigated" />
-            </Grid>
-        </Grid>
-    </Border>
+            <Frame x:Name="QuestionnaireFrame" NavigationUIVisibility="Hidden"
+                   Source="QuestionnaireBasicPatientInfo.xaml" Navigated="QuestionnaireFrame_Navigated" />
+        </DockPanel>
 
 </views:PageViewBase>

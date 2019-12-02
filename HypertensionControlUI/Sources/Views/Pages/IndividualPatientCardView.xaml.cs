@@ -38,8 +38,8 @@ namespace HypertensionControlUI.Views.Pages
             var dialog = new PrintDialog();
             if ( dialog.ShowDialog() == true )
             {
-                documentClone.PageHeight = dialog.PrintableAreaHeight;
-                documentClone.PageWidth = dialog.PrintableAreaWidth;
+                documentClone.PageHeight = dialog.PrintableAreaHeight - 96;
+                documentClone.PageWidth = dialog.PrintableAreaWidth - 96;
                 documentClone.PagePadding = new Thickness( 0 );
 
                 documentClone.ColumnGap = 0;

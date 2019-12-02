@@ -48,8 +48,6 @@ namespace HypertensionControlUI.CompositionRoot
 
         public IPatientsRepository PatientsRepository => _delegatee.PatientsRepository;
 
-        public IClinicsRepository ClinicsRepository => _delegatee.ClinicsRepository;
-
         public IClassificationModelsRepository ClassificationModelsRepository => _delegatee.ClassificationModelsRepository;
 
         #endregion

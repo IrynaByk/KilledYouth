@@ -6,6 +6,8 @@
                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                     xmlns:viewModels="clr-namespace:HypertensionControlUI.ViewModels"
                     xmlns:views="clr-namespace:HypertensionControlUI.Views"
+                    xmlns:components="clr-namespace:HypertensionControlUI.Sources.Views.Components"
+                    xmlns:converters="clr-namespace:HypertensionControlUI.Views.Converters"
                     mc:Ignorable="d"
                     d:DataContext="{d:DesignInstance Type=viewModels:IndividualPatientCardViewModel, IsDesignTimeCreatable=False}"
                     Title="IndividualPatientCard"
@@ -46,137 +48,236 @@
                                                   VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Disabled"
                                                   HorizontalAlignment="Center" HorizontalContentAlignment="Center">
 
-                            <FlowDocument PageWidth="1074">
+                            <FlowDocument PageWidth="730">
                                 <FlowDocument.Resources>
                                     <Style TargetType="TextBlock">
                                         <Setter Property="Margin" Value="3, 0, 10, 0" />
-                                        <Setter Property="TextDecorations" Value="Underline" />
+<!--                                        <Setter Property="TextDecorations" Value="Underline" />-->
                                     </Style>
                                 </FlowDocument.Resources>
-                                <Paragraph>
-                                    <Bold>Индивидуальная карта</Bold>
+                                <Paragraph Margin="5,25,5,5" TextAlignment="Right">
+                                    Учреждение здравоохранения
                                 </Paragraph>
-                                <Paragraph>
-                                    <Run Text="Ф.И.О.   " />
+                                <Paragraph TextAlignment="Right" Padding="0,0,0,40">
+                                    <TextBlock>
+                                        <Run Text="{Binding ClinicName, Converter={StaticResource NonNullConverter}, Mode=OneWay}" />
+                                        <Run Text=", " />
+                                        <Run Text="{Binding ClinicAddress, Converter={StaticResource NonNullConverter}, Mode=OneWay}" />
+                                    </TextBlock>
+                                </Paragraph>
+                                <Paragraph TextAlignment="Center" Padding="0,0,0,30" FontSize="16">
+                                    <Bold>Кабинет профилактики артериальной гипертензии</Bold>
+                                </Paragraph>
+                                <Paragraph Margin="5,15,0,5" TextAlignment="Left">
+                                    <Bold>Результаты обследования</Bold>
+                                </Paragraph>
+                                <Paragraph Margin="5,0">
+                                    <Run Text="Ф.И.О.  – " />
                                     <TextBlock>
                                         <Run Text="{Binding Patient.Surname, Converter={StaticResource NonNullConverter}, Mode=OneWay}" />
                                         <Run Text="{Binding Patient.Name, Converter={StaticResource NonNullConverter}, Mode=OneWay}" />
                                         <Run Text="{Binding Patient.MiddleName, Converter={StaticResource NonNullConverter}, Mode=OneWay}" />
                                     </TextBlock>
                                 </Paragraph>
-                                <Paragraph>
-                                    <Run Text="Место рождения   " />
-                                    <TextBlock>
-                                        <Run Text="{Binding Patient.BirthPlace, Converter={StaticResource NonNullConverter}, Mode=OneWay}" />
-                                    </TextBlock>
-                                    <LineBreak />
-                                    <Run FontSize="11" Text="(страна, область)" />
-                                </Paragraph>
-                                <Paragraph>
-                                    <Run Text="Адрес/тел." />
-                                    <TextBlock>
-                                        <Run Text="{Binding Patient.Address, Converter={StaticResource NonNullConverter}, Mode=OneWay}" />
-                                        <Run Text="{Binding Patient.Phone, Converter={StaticResource NonNullConverter}, Mode=OneWay}" />
-                                    </TextBlock>
-                                </Paragraph>
-                                <Paragraph>
-                                    <Run Text="Дата рождения (число/месяц/год; полных лет)" />
+                                <Paragraph Margin="5,0">
+                                    <Run Text="Дата рождения, полный возраст – " />
                                     <TextBlock>
                                         <Run Text="{Binding Patient.BirthDate, Converter={StaticResource NonNullConverter}, StringFormat=dd/MM/yyy, Mode=OneWay}" />
                                         <Run Text="; " />
                                         <Run Text="{Binding Patient.Age, Converter={StaticResource NonNullConverter}, Mode=OneWay}" />
                                     </TextBlock>
-                                    <Run Text="Национальность" />
+                                </Paragraph>
+                                <Paragraph Margin="5,15,0,5">
+                                    <Bold>Наследственный анамнез:</Bold>
+                                </Paragraph>
+                                <Paragraph Margin="5,0">
+                                    <Run Text="по ранним сердечно-сосудистым осложнениям – " />
                                     <TextBlock>
-                                        <Run Text="{Binding Patient.Nationality, Converter={StaticResource NonNullConverter}, Mode=OneWay}" />
+                                        <Run
+                                            Text="{Binding PatientHeredity, Mode=OneWay}" />
                                     </TextBlock>
                                 </Paragraph>
-                                <Paragraph>
-                                    <Run Text="Диагноз" />
+                                <Paragraph Margin="5,0">
+                                    <Run Text="по артериальной гипертензии – " />
                                     <TextBlock>
-                                        <Run Text="{Binding Patient.Diagnosis, Converter={StaticResource NonNullConverter}, Mode=OneWay}" />
+                                        <Run
+                                            Text="{Binding HypertensionAnamnesis, Mode=OneWay}" />
                                     </TextBlock>
                                 </Paragraph>
-                                <Paragraph>
-                                    <Run Text="Сопутствующие заболевания" />
+                                <Paragraph Margin="5,15,0,5">
+                                    <Bold>Биологические факторы риска:</Bold>
+                                </Paragraph>
+                                <Paragraph Margin="5,0">
+                                    <Run Text="индекс массы тела – " />
                                     <TextBlock>
-                                        <Run Text="{Binding Patient.AccompanyingIllnesses, Converter={StaticResource NonNullConverter}, Mode=OneWay}" />
+                                        <Run Text="{Binding PatientVisit.Bmi, Converter={StaticResource NonNullConverter}, StringFormat={}{0:f2}, Mode=OneWay}" />
+                                        <Run Text=" кг/м²" />
                                     </TextBlock>
                                 </Paragraph>
-                                <Paragraph>
-                                    <Run Text="Длительность АГ, гг." />
+                                <Paragraph Margin="5,0">
+                                    <Run Text="окружность талии  – " />
                                     <TextBlock>
-                                        <Run Text="{Binding Patient.HypertensionDuration, Converter={StaticResource NonNullConverter}, Mode=OneWay}" />
+                                        <Run Text="{Binding PatientVisit.WaistCircumference, Converter={StaticResource NonNullConverter}, Mode=OneWay}" />
+                                        <Run Text=" см" />
                                     </TextBlock>
-                                    <Run Text="АД, мм рт.ст.:  правое плечо " />
+                                </Paragraph>
+                                <Paragraph Margin="5,0">
+                                    <Run Text="АД – " />
                                     <TextBlock>
                                         <Run Text="{Binding PatientVisit.BloodPressure.RightShoulderSbp, Converter={StaticResource NonNullConverter}, Mode=OneWay}" />
                                     </TextBlock>
-                                    <Run Text="левое плечо " />
+                                    <Run Text="/" />
                                     <TextBlock>
-                                        <Run Text="{Binding PatientVisit.BloodPressure.LeftShoulderSbp, Converter={StaticResource NonNullConverter}, Mode=OneWay}" />
+                                        <Run Text="{Binding PatientVisit.BloodPressure.RightShoulderDbp, Converter={StaticResource NonNullConverter}, Mode=OneWay}" />
                                     </TextBlock>
-                                    <Run Text="; ЧСС, уд/мин " />
+                                    <Run Text="мм рт.ст., пульс – " />
                                     <TextBlock>
                                         <Run Text="{Binding PatientVisit.BloodPressure.HeartRate, Converter={StaticResource NonNullConverter}, Mode=OneWay}" />
                                     </TextBlock>
-                                </Paragraph>
-                                <Paragraph>
-                                    <Run Text="Регулярное АГ лечение: да, срок, лек.средства, доза в сут; нет " />
+                                    <Run Text="уд. в мин. Скрининг ФП " />
                                     <TextBlock>
-                                        <Run Text="{Binding TreatmentDescription, Converter={StaticResource NonNullConverter}, Mode=OneWay}" />
+                                        <Run Text="{Binding AtrialFibrillationScreening, Mode=OneWay}" />
                                     </TextBlock>
                                 </Paragraph>
-                                <Paragraph>
-                                    <Run Text="Рост, см " />
+                                <Paragraph Margin="5,0">
+                                    <Run Text="общий холестерин  – " />
                                     <TextBlock>
-                                        <Run Text="{Binding PatientVisit.Height, Converter={StaticResource NonNullConverter}, Mode=OneWay}" />
+                                        <Run Text="{Binding PatientVisit.TotalCholesterol, StringFormat={}{0:f2}, Converter={StaticResource NonNullConverter}, Mode=OneWay}" />
                                     </TextBlock>
-                                    <Run Text=", Вес, кг " />
+                                    <Run Text="ммоль/л" />
+                                </Paragraph>
+                                <Paragraph Margin="5,0">
+                                    <Run Text="глюкоза  – " />
                                     <TextBlock>
-                                        <Run Text="{Binding PatientVisit.Weight, Converter={StaticResource NonNullConverter}, Mode=OneWay}" />
+                                        <Run Text="{Binding PatientVisit.Glucose, StringFormat={}{0:f2}, Converter={StaticResource NonNullConverter}, Mode=OneWay}" />
                                     </TextBlock>
-                                    <Run Text="ИМТ, кг/м&#178; " />
+                                    <Run Text="ммоль/л (капиллярная кровь)" />
+                                </Paragraph>
+                                <Paragraph Margin="5,0">
+                                    <Run Text="креатинин  – " />
                                     <TextBlock>
-                                        <Run Text="{Binding PatientVisit.Bmi, Converter={StaticResource NonNullConverter}, StringFormat={}{0:f2}, Mode=OneWay}" />
+                                        <Run Text="{Binding PatientVisit.Creatinine, StringFormat={}{0:f2}, Converter={StaticResource NonNullConverter}, Mode=OneWay}" />
                                     </TextBlock>
-                                    <Run Text="ОТ, см " />
+                                    <Run Text="ммоль/л (капиллярная кровь)" />
+                                </Paragraph>
+                                <Paragraph Margin="5,0">
+                                    <Run Text="гликированный гемоглобин  – " />
                                     <TextBlock>
-                                        <Run Text="{Binding PatientVisit.WaistCircumference, Converter={StaticResource NonNullConverter}, Mode=OneWay}" />
+                                        <Run Text="{Binding PatientVisit.GlycolicHemoglobin, StringFormat={}{0:f2}, Converter={StaticResource NonNullConverter}, Mode=OneWay}" />
+                                        <Run Text="%"/>
                                     </TextBlock>
                                 </Paragraph>
-                                <Paragraph>
-                                    <Run Text="Физическая активность: " />
-                                    <TextBlock>
-                                        <Run
-                                            Text="{Binding PatientVisit.PhysicalActivity, Converter={StaticResource PhysicalActivityConverter}, Mode=OneWay}" />
-                                    </TextBlock>
+                                <Paragraph Margin="5,15,0,5">
+                                    <Bold>Поведенческие факторы риска:</Bold>
                                 </Paragraph>
-                                <Paragraph>
-                                    <Run Text="Курение:" />
+                                <Paragraph Margin="5,0">
+                                    <Run Text="курение  – " />
                                     <TextBlock>
                                         <Run Text="{Binding SmokingDescription, Converter={StaticResource NonNullConverter}, Mode=OneWay}" />
                                     </TextBlock>
                                 </Paragraph>
-                                <Paragraph>
-                                    <Run Text="Употребление алкоголя : " />
+                                <Paragraph Margin="5,0">
+                                    <Run Text="{Binding SmokeIndexText, Converter={StaticResource NonNullConverter}, Mode=OneWay}" />
+                                </Paragraph>
+                                <Paragraph Margin="5,0">
+                                    <Run Text="употребление алкоголя  – " />
                                     <TextBlock>
                                         <Run
-                                            Text="{Binding PatientVisit.AlcoholСonsumption, Converter={StaticResource AlcoholConsumptionConverter}, Mode=OneWay}" />
+                                            Text="{Binding Alcohol, Mode=OneWay}" />
                                     </TextBlock>
-                                    <LineBreak />
-                                    <Run
-                                        Text="(максимальное разовое потребление: 1 станд. доза — 150 мл вина, 45 мл крепких напитков или 330 мл пива )" />
+                                </Paragraph>
+                                <Paragraph Margin="5,0">
+                                    <Run Text="физическая активность  – " />
+                                    <TextBlock>
+                                        <Run
+                                            Text="{Binding Phiz, Mode=OneWay}" />
+                                    </TextBlock>
+                                </Paragraph>
+                                <Paragraph Margin="5,0">
+                                    <Run Text="рацион питания   – " />
+                                    <TextBlock>
+                                        <Run
+                                            Text="{Binding Diet, Mode=OneWay}" />
+                                    </TextBlock>
+                                </Paragraph>
+                                <Paragraph Margin="5,15,0,5">
+                                    <Bold>Психосоциальные факторы риска:</Bold>
+                                </Paragraph>
+                                <Paragraph Margin="5,0">
+                                    <Run Text="тревога и депрессия  – " />
+                                    <TextBlock>
+                                        <Run
+                                            Text="{Binding PatientVisit.DepressionPointsCesD, Converter={StaticResource NonNullConverter}, Mode=OneWay}" />
+                                    </TextBlock>
+                                    <Run Text="баллов (шкала CES-D)" />
+                                </Paragraph>
+                                <Paragraph Margin="5,0">
+                                    <Run Text="стрессоустойчивость и адаптация к стрессу  – " />
+                                    <TextBlock>
+                                        <Run
+                                            Text="{Binding PatientVisit.StressPointsPsm25, Converter={StaticResource NonNullConverter}, Mode=OneWay}" />
+                                    </TextBlock>
+                                    <Run Text="баллов  (шкала PSM-25)" />
+                                </Paragraph>
+                                <Paragraph Margin="5,15,0,5">
+                                    <Bold>Оценка жесткости артерий:</Bold>
+                                </Paragraph>
+                                <Paragraph Margin="5,0">
+                                    <Run Text="сердечно-лодыжечный сосудистый индекс  – " />
+                                    <Run Text="{Binding PatientVisit.CardiovascularVascularIndexLeft, StringFormat={}{0:f2}, Mode=OneWay}" />
+                                    <Run Text=" и " />
+                                    <Run Text="{Binding PatientVisit.CardiovascularVascularIndexRight, StringFormat={}{0:f2}, Mode=OneWay}" />
+                                    <Run Text="(слева и справа)" />
+                                </Paragraph>
+                                <Paragraph Margin="5,0">
+                                    <Run Text="лодыжечно-плечевой индекс давления  – " />
+                                    <Run Text="{Binding PatientVisit.AnkleBrachialPressureIndexLeft, StringFormat={}{0:f2}, Mode=OneWay}" />
+                                    <Run Text=" и " />
+                                    <Run Text="{Binding PatientVisit.AnkleBrachialPressureIndexRight, StringFormat={}{0:f2}, Mode=OneWay}" />
+                                    <Run Text="(слева и справа)" />
+                                </Paragraph>
+                                <Paragraph Margin="5,0">
+                                    <Run Text="биологический возраст магистральных артерий  – " />
+                                    <Run Text="{Binding PatientVisit.BiologicalArteriesAgeLeftMin, StringFormat={}{0:f2}, Mode=OneWay}" />
+                                    <Run Text=" - " />
+                                    <Run Text="{Binding PatientVisit.BiologicalArteriesAgeLeftMax, StringFormat={}{0:f2}, Mode=OneWay}" />
+                                    <Run Text=" и " />
+                                    <Run Text="{Binding PatientVisit.BiologicalArteriesAgeRightMin, StringFormat={}{0:f2}, Mode=OneWay}" />
+                                    <Run Text=" - " />
+                                    <Run Text="{Binding PatientVisit.BiologicalArteriesAgeRightMax, StringFormat={}{0:f2}, Mode=OneWay}" />
+                                    <Run Text="(слева и справа)" />
+                                </Paragraph>
+                                <Paragraph Margin="5,0" Padding="0,0,0,200">
+                                    <Bold>Сердечно-сосудистый риск по шкале SCORE - </Bold>
+                                    <Run Text="{Binding PatientVisit.ScoreRisk, StringFormat={}{0:f2}, Mode=OneWay}" />
+                                    <Run Text="%"/>
+                                </Paragraph>
+                                <Paragraph  Margin="5,35,0,25" FontSize="16">
+                                    <Bold>Заключение:</Bold>
+                                </Paragraph>
+                                <Paragraph Margin="5,0,5,15">
+                                    <Bold>Индивидуальные факторы риска:</Bold>
+                                </Paragraph>
+                                <Paragraph Margin="5,0">
+                                        <Run Text="{Binding IndividualRiskFactorsReport, Mode=OneWay}" />
+                                </Paragraph>
+                                <Paragraph Margin="5,35,0,15">
+                                    <Bold>
+                                        Текущий риск развития артериальной гипертензии –
+                                    </Bold>
+                                    <Run Text="{Binding ClassificationResultPercent, StringFormat={}{0:f2}, Mode=OneWay}" />
+                                    <Bold>%</Bold>
+                                </Paragraph>
+                                <Paragraph Margin="5,5,0,40">
+                                    <Run Text="{Binding PossibleChangesReport, Mode=OneWay}" />
+                                    <Run Text="."/>
                                 </Paragraph>
                                 <Paragraph>
-                                    <Run Text="Наследственный анамнез — " />
-                                    <TextBlock>
-                                        <Run
-                                            Text="{Binding Patient.HypertensionAncestralAnamnesis, Converter={StaticResource HAAConverter}, Mode=OneWay}" />
-                                    </TextBlock>
+                                    <components:IllnessBarChart  Visibility="{Binding HasPossibleClassificationResult, Converter={x:Static converters:BoolConverters.BoolToVisibility}}"
+                                        Height="180" Width="500"  ProbabilityBefore="{Binding ClassificationResult}"
+                                                                ProbabilityAfter="{Binding PossibleClassificationResult}" />
                                 </Paragraph>
                             </FlowDocument>
-
                         </FlowDocumentScrollViewer>
                     </Border>
                 </ScrollViewer>
